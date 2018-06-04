@@ -34,11 +34,11 @@ It is very useful for **AMD Vega GPUs** because it can detect hashdrops and rese
 
 If you download the latest release, there will be a default configuration:
 
-CPU: AMD Ryzen 1600X
-GPU: AMD Vega 64 + AMD Vega 56
-Coins: Bittube, Graft, Haven, Loki, Stellite
-Nicehash: CryptonightV7, CryptonightHeavy
-Pools: Used pools by the developer
+- CPU: AMD Ryzen 1600X
+- GPU: AMD Vega 64 + AMD Vega 56
+- Coins: Bittube, Graft, Haven, Loki, Stellite
+- Nicehash: CryptonightV7, CryptonightHeavy
+- Pools: Used pools by the developer
 
 You have to change the default configuration for your setup, see **How to use?**.
 
