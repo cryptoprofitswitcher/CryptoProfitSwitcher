@@ -14,6 +14,7 @@ It is very useful for **AMD Vega GPUs** because it can detect hash drops and res
   - **Watchdog:** Compares your actual hashrate with the expected hashrate and runs a reset if certain conditions are met.
   - **Reset:** Restarts the miner and runs a user-defined Reset script
   - **Performance:** Resource friendly with 0%-CPU usage
+  - **Supports all algorithms:** CryptonightV7, CryptonightHeavy, CryptonightLite, Cryptonight BitTube Variant
 
 # How to use?
 
