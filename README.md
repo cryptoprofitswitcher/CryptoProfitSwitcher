@@ -16,7 +16,7 @@ It is very useful for **AMD Vega GPUs** because it can detect hash drops and res
   - **Performance:** Resource friendly with 0%-CPU usage
   - **Supports all algorithms:** CryptonightV7, CryptonightHeavy, CryptonightLite, Cryptonight BitTube Variant
   - **Supports all coins:** That are mineable using Xmr-Stak 
-  - **Supports all pools:** Thht are supported by Xmr-Stak
+  - **Supports all pools:** That are supported by Xmr-Stak
 
 
 # How to use?
