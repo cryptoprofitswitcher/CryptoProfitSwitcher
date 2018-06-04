@@ -13,6 +13,7 @@ It is very useful for **AMD Vega GPUs** because it can detect hash drops and res
   - **Profit switching**: Between pool mined coins and NiceHash algorithms
   - **Watchdog:** Compares your actual hashrate with the expected hashrate and runs a reset if certain conditions are met.
   - **Reset:** Restarts the miner and runs a user-defined Reset script
+  - **Performance:** Resource friendly with 0%-CPU usage
 
 # How to use?
 
