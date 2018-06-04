@@ -4,6 +4,10 @@ Cryptonight Profit Switcher is an extensible open-source .Net Core console appli
 
 It is very useful for **AMD Vega GPUs** because it can detect hashdrops and reset the GPU(s) but it can be used with any GPU that is compatible with Xmr-Stak.
 
+### Screenshot
+
+![Screenshot](screenshot.png?raw=true "Screenshot")
+
 # Features
 
   - **Profit switching**: Between pool mined coins and NiceHash algorithms
