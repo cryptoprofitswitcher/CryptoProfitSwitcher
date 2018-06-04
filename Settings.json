@@ -1,0 +1,33 @@
+﻿{
+  /* Set your expected hashrates for the algorithms */
+  "CryptonightV7Hashrate": 4350,
+  "CryptonightHeavyHashrate": 2980,
+  "CryptonightLiteHashrate": 9980,
+  "CryptonightBittubeHashrate": 9980,
+  /* For future usage, currently only Live is supported*/
+  "ProfitTimeframe": "Live",
+  /* On the determination of the optimal mining method your actual Nicehash reward will be multiplied by this factor */
+  "NicehashPreferFactor": 1.15,
+  /* Time in seconds between profit checks */
+  "ProfitCheckInterval": 60,
+  /* Time in seconds between update of current status */
+  "DisplayUpdateInterval": 10,
+  /* Path to script that runs when reset is executed, can be null. */
+  "ResetScript": "ResetScript.bat",
+  /* Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak. */
+  "XmrStakApiPort": 4000,
+  /* Delay in seconds before the mining process starts */
+  "MinerStartDelay": 3,
+  /* Enable or disable caching of JSON Api calls */
+  "EnableCaching": true,
+  /* Enable or disable watchdog (compares actual hashrate with expected hashrate and resets if certain conditions are met) */
+  "EnableWatchdog": true,
+  /* Delay in seconds before watchdog starts */
+  "WatchdogDelay": 60,
+  /* Time in seconds between watchdog checks */
+  "WatchdogInterval": 60,
+  /* If the actual hashrate is under ExpectedHashrate x WatchdogCriticalThreshold then it is an overstep */
+  "WatchdogCriticalThreshold": 0.9,
+  /* Number of allowed consecutive oversteps, if this is exceeded, it will reset. */
+  "WatchdogAllowedOversteps": 10
+}

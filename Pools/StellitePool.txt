@@ -1,0 +1,14 @@
+﻿
+  "pool_list": [
+    {
+      "pool_address": "stellite.ingest.cryptoknight.cc:16221",
+      "wallet_address": "SEiStP7SMy1bvjkWc9dd1t2v1Et5q2DrmaqLqFTQQ9H7JKdZuATcPHUbUL3bRjxzxTDYitHsAPqF8EeCLw3bW8ARe8rYLKNGkev2JRQtW3sMk.90000",
+      "pool_password": "w=rig-Name",
+      "use_nicehash": false,
+      "use_tls": false,
+      "tls_fingerprint": "",
+      "pool_weight": 1,
+      "rig_id": ""
+    }
+  ],
+  "currency": "cryptonight_v7"

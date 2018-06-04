@@ -1,0 +1,14 @@
+﻿
+  "pool_list": [
+    {
+      "pool_address": "cryptonightheavy.eu.nicehash.com:3364",
+      "wallet_address": "31zXAFVEeksCYSnxfGz9VE9Dk6WXfijpuy.HexWorker",
+      "pool_password": "x",
+      "use_nicehash": true,
+      "use_tls": false,
+      "tls_fingerprint": "",
+      "pool_weight": 1,
+      "rig_id": ""
+    }
+  ],
+  "currency": "cryptonight_heavy"

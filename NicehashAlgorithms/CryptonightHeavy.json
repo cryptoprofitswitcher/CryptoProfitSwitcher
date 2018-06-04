@@ -1,0 +1,20 @@
+﻿{
+  /* Displayed name, can be anything. */
+  "DisplayName": "CryptonightHeavy",
+  /* Api ID listed on nicehash.com/doc-api, needed to get profit data */
+  "ApiId": 31,
+  /* Path to Xmr-Stak executable */
+  "XmrStakPath": "XmrStak/xmr-stak.exe",
+  /* Path to Xmr-Stak pool config file */
+  "PoolsPath": "Pools/NicehashCnHeavyPool.txt",
+  /* Path to Xmr-Stak config file */
+  "ConfigPath": "XmrStak/config.txt",
+  /* Path to Xmr-Stak cpu config file, can be null. */
+  "CpuPath": "XmrStak/cpu_heavy.txt",
+  /* Path to Xmr-Stak amd gpu config file, can be null. */
+  "AmdPath": "XmrStak/amd_heavy.txt",
+  /* Path to Xmr-Stak nvidea gpu config file, can be null. */
+  "NvidiaPath": null,
+  /* Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite or CryptonightBittube */
+  "Algorithm": "CryptonightHeavy"
+}

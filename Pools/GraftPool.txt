@@ -1,0 +1,14 @@
+﻿
+  "pool_list": [
+    {
+      "pool_address": "graft.ingest.cryptoknight.cc:9112",
+      "wallet_address": "GMPHYf5KRkcAyik7Jw9oHRfJtUdw2Kj5f4VTFJ25AaFVYxofetir8Cnh7S76Q854oMXzwaguL8p5KEz1tm3rn1SA6rJUXHuUGWsLwktwqG.90000",
+      "pool_password": "w=rig-Name",
+      "use_nicehash": false,
+      "use_tls": false,
+      "tls_fingerprint": "",
+      "pool_weight": 1,
+      "rig_id": ""
+    }
+  ],
+  "currency": "cryptonight_v7"

@@ -1,0 +1,20 @@
+﻿{
+  /* Displayed name, can be anything. */
+  "DisplayName": "Graft",
+  /* Ticker symbol on minecryptonight.net, needed to get profit data */
+  "TickerSymbol": "GRFT",
+  /* Path to Xmr-Stak executable */
+  "XmrStakPath": "XmrStak/xmr-stak.exe",
+  /* Path to Xmr-Stak pool config file */
+  "PoolsPath": "Pools/GraftPool.txt",
+  /* Path to Xmr-Stak config file */
+  "ConfigPath": "XmrStak/config.txt",
+  /* Path to Xmr-Stak cpu config file, can be null. */
+  "CpuPath": "XmrStak/cpu_v7.txt",
+  /* Path to Xmr-Stak amd gpu config file, can be null. */
+  "AmdPath": "XmrStak/amd_v7.txt",
+  /* Path to Xmr-Stak nvidea gpu config file, can be null. */
+  "NvidiaPath": null,
+  /* Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite or CryptonightBittube */
+  "Algorithm": "CryptonightV7"
+}

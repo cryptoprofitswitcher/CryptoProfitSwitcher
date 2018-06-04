@@ -1,0 +1,14 @@
+﻿
+  "pool_list": [
+    {
+      "pool_address": "loki.ingest.cryptoknight.cc:7731",
+      "wallet_address": "LK8CGQ17G9R3ys3Xf33wCeViD2B95jgdpjAhcRsjuheJ784dumXn7g3RPAzedWpFq364jJKYL9dkQ8mY66sZG9BiCvhRZGpP1m1T83Kt4i.90000",
+      "pool_password": "w=rig-Name",
+      "use_nicehash": false,
+      "use_tls": false,
+      "tls_fingerprint": "",
+      "pool_weight": 1,
+      "rig_id": ""
+    }
+  ],
+  "currency": "cryptonight_heavy"
