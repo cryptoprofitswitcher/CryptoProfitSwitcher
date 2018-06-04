@@ -37,7 +37,9 @@ It is very useful for **AMD Vega GPUs** because it can detect hash drops and res
     2. Delete the existing NiceHash algorithms you don't want to mine
     3. Edit the NiceHash algorithms you want to mine
     4. Add the additional NiceHash algorithms you want to mine
-5. Open the file Settings.json and edit the settings, most importantly edit the expected hashrates
+5. Open the file *Settings.json* and edit the settings, most importantly edit the expected hashrates
+6. Start *CryptonightProfitSwitcher.exe* (Optional: As administrator)
+7. PROFIT!!!
 
 ### Default configuration
 
