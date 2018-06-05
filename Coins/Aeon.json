@@ -1,10 +1,10 @@
 ﻿{
   // Displayed name, can be anything.
-  "DisplayName": "Bittube",
+  "DisplayName": "Aeon",
   // Ticker symbol on minecryptonight.net, needed to get profit data
-  "TickerSymbol": "TUBE",
+  "TickerSymbol": "AEON",
   // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite or CryptonightBittube
-  "Algorithm": "CryptonightBittube",
+  "Algorithm": "CryptonightLite",
   // Override the expected hashrate from the settings, can be a number or null.
   "OverrideExpectedHashrate": null,
   // Path to Xmr-Stak executable
@@ -26,8 +26,8 @@
   // OR
 
   // Let the app auto-generate the pool config file using the settings below
-  "PoolAddress": "mining.bit.tube:15555",
-  "PoolWalletAddress": "bxdLhsWY56SNjVN2aQ5Yyb6hhCFfAQJVbYszWCUjeDTJMgHad8wZbNJBdrvujZzPvRY2X5AiWdTDCP626s4WbHcG1TYdEot9f.c39044bac5c8414ca5e3fdcd352a4f23fff7e13870bc471e80da84506fcb537d",
+  "PoolAddress": "pool.aeon.hashvault.pro:5555",
+  "PoolWalletAddress": "WmtK9TQ6yd2ZWZDAkRsebc2ppzUq2Wuo9XRRjHMH2fvqM3ARVqk3styJ6AavJFcpJFPFtxRGAqGFoJMZGJ6YYzQ61TYGfpykX.3f4e6ddbf3e64d8390b4e1eeb7e2dcadbab782ba4ae94dd9a65814538432ed2b+180000",
   "PoolPassword": "x",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",

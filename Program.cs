@@ -156,7 +156,7 @@ namespace CryptonightProfitSwitcher
                                     case "cryptonight-heavy":
                                         rewardUsd = (rewardUsd / (1000 * cnHeavyFactor)) * matchedCoin.GetExpectedHashrate(settings);
                                         break;
-                                    case "cryptonight-lite":
+                                    case "cryptonight-lite-v1":
                                         rewardUsd = (rewardUsd / (1000 * cnLiteFactor)) * matchedCoin.GetExpectedHashrate(settings);
                                         break;
                                     case "cryptonight-lite-tube":

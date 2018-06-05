@@ -15,6 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Coins\Aeon.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Coins\Bittube.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
