@@ -17,7 +17,7 @@ namespace CryptonightProfitSwitcher
 {
     class Program
     {
-        const int VERSION = 1;
+        const int VERSION = 2;
 
         static Process _process = null;
         static Mineable _currentMineable = null;
@@ -144,23 +144,28 @@ namespace CryptonightProfitSwitcher
 
                             }
                             //Adjust profits based on user defined hashrate
-                            switch (algorithm)
+                            Coin matchedCoin = coins.FirstOrDefault(c => c.TickerSymbol == tickerSymbol);
+
+                            if (matchedCoin != null)
                             {
-                                case "cryptonight-v1":
-                                    rewardUsd = (rewardUsd / 1000) * settings.CryptonightV7Hashrate;
-                                    break;
-                                case "cryptonight-heavy":
-                                    rewardUsd = (rewardUsd / (1000 * cnHeavyFactor)) * settings.CryptonightHeavyHashrate;
-                                    break;
-                                case "cryptonight-lite":
-                                    rewardUsd = (rewardUsd / (1000 * cnLiteFactor)) * settings.CryptonightLiteHashrate;
-                                    break;
-                                case "cryptonight-lite-tube":
-                                    rewardUsd = (rewardUsd / (1000 * cnBittubeFactor)) * settings.CryptonightBittubeHashrate;
-                                    break;
+                                switch (algorithm)
+                                {
+                                    case "cryptonight-v1":
+                                        rewardUsd = (rewardUsd / 1000) * matchedCoin.GetExpectedHashrate(settings);
+                                        break;
+                                    case "cryptonight-heavy":
+                                        rewardUsd = (rewardUsd / (1000 * cnHeavyFactor)) * matchedCoin.GetExpectedHashrate(settings);
+                                        break;
+                                    case "cryptonight-lite":
+                                        rewardUsd = (rewardUsd / (1000 * cnLiteFactor)) * matchedCoin.GetExpectedHashrate(settings);
+                                        break;
+                                    case "cryptonight-lite-tube":
+                                        rewardUsd = (rewardUsd / (1000 * cnBittubeFactor)) * matchedCoin.GetExpectedHashrate(settings);
+                                        break;
+                                }
+                                poolProfitsDictionary[tickerSymbol] = rewardUsd;
+                                Console.WriteLine("Got profit data for : " + tickerSymbol); 
                             }
-                            poolProfitsDictionary[tickerSymbol] = rewardUsd;
-                            Console.WriteLine("Got profit data for : " + tickerSymbol);
 
                         }
 
@@ -207,21 +212,7 @@ namespace CryptonightProfitSwitcher
                             if (matchedAlgorithm != null)
                             {
                                 double btcReward = 0;
-                                switch (matchedAlgorithm.Algorithm)
-                                {
-                                    case Algorithm.CryptonightV7:
-                                        btcReward = (price / 1000000) * settings.CryptonightV7Hashrate;
-                                        break;
-                                    case Algorithm.CryptonightHeavy:
-                                        btcReward = (price / 1000000) * settings.CryptonightHeavyHashrate;
-                                        break;
-                                    case Algorithm.CryptonightLite:
-                                        btcReward = (price / 1000000) * settings.CryptonightLiteHashrate;
-                                        break;
-                                    case Algorithm.CryptonightBittube:
-                                        btcReward = (price / 1000000) * settings.CryptonightBittubeHashrate;
-                                        break;
-                                }
+                                btcReward = (price / 1000000) * matchedAlgorithm.GetExpectedHashrate(settings);
                                 var usdReward = btcReward * btcUsdPrice * settings.NicehashPreferFactor;
                                 nicehashProfitsDictionary[matchedAlgorithm.ApiId] = usdReward;
                                 Console.WriteLine("Got profit data for Nicehash: " + matchedAlgorithm.DisplayName);
@@ -342,16 +333,16 @@ namespace CryptonightProfitSwitcher
                             switch (_currentMineable.Algorithm)
                             {
                                 case Algorithm.CryptonightV7:
-                                    currentReward = (estimatedReward / settings.CryptonightV7Hashrate) * currentHashrate;
+                                    currentReward = (estimatedReward / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
                                     break;
                                 case Algorithm.CryptonightHeavy:
-                                    currentReward = (estimatedReward / settings.CryptonightHeavyHashrate) * currentHashrate;
+                                    currentReward = (estimatedReward / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
                                     break;
                                 case Algorithm.CryptonightLite:
-                                    currentReward = (estimatedReward / settings.CryptonightLiteHashrate) * currentHashrate;
+                                    currentReward = (estimatedReward / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
                                     break;
                                 case Algorithm.CryptonightBittube:
-                                    currentReward = (estimatedReward / settings.CryptonightBittubeHashrate) * currentHashrate;
+                                    currentReward = (estimatedReward / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
                                     break;
                             }
 
@@ -421,22 +412,7 @@ namespace CryptonightProfitSwitcher
                     {
                         if (_currentMineable != null)
                         {
-                            double estimatedHashrate = 0;
-                            switch (_currentMineable.Algorithm)
-                            {
-                                case Algorithm.CryptonightV7:
-                                    estimatedHashrate = settings.CryptonightV7Hashrate;
-                                    break;
-                                case Algorithm.CryptonightHeavy:
-                                    estimatedHashrate = settings.CryptonightHeavyHashrate;
-                                    break;
-                                case Algorithm.CryptonightLite:
-                                    estimatedHashrate = settings.CryptonightLiteHashrate;
-                                    break;
-                                case Algorithm.CryptonightBittube:
-                                    estimatedHashrate = settings.CryptonightBittubeHashrate;
-                                    break;
-                            }
+                            double estimatedHashrate = _currentMineable.GetExpectedHashrate(settings);
                             double actualHashrate = GetCurrentHashrate(settings.XmrStakApiPort, settings, appRootFolder);
                             double differenceRatio = actualHashrate / estimatedHashrate;
 
@@ -587,8 +563,19 @@ namespace CryptonightProfitSwitcher
             string configPath = ResolveToFullPath(mineable.ConfigPath, appRoot);
             File.Copy(configPath, Path.Combine(xmrFolderPath, "current_config.txt"), true);
             string args = "-c current_config.txt";
-            string poolPath = ResolveToFullPath(mineable.PoolsPath, appRoot);
-            File.Copy(poolPath, Path.Combine(xmrFolderPath, "current_pool.txt"), true);
+
+            if (!String.IsNullOrEmpty(mineable.PoolsPath))
+            {
+                // Use given pool config
+                string poolPath = ResolveToFullPath(mineable.PoolsPath, appRoot);
+                File.Copy(poolPath, Path.Combine(xmrFolderPath, "current_pool.txt"), true);
+            }
+            else
+            {
+                // Auto-Generate pool config from Mineable
+                string poolConfigJson = GeneratePoolConfigJson(mineable);
+                File.WriteAllText(Path.Combine(xmrFolderPath, "current_pool.txt"), poolConfigJson);
+            }
             args += " -C current_pool.txt";
 
             if (String.IsNullOrEmpty(mineable.CpuPath))
@@ -676,6 +663,59 @@ namespace CryptonightProfitSwitcher
             }
         }
 
+        static string GeneratePoolConfigJson(Mineable mineable)
+        {
+            var dict = new Dictionary<string, object>();
+            dict["pool_list"] = new Dictionary<string, object>[]
+            {
+                new Dictionary<string, object>
+                {
+                    { "pool_address", mineable.PoolAddress },
+                    { "wallet_address", mineable.PoolWalletAddress },
+                    { "pool_password", mineable.PoolPassword },
+                    { "use_nicehash", mineable is NicehashAlgorithm },
+                    { "use_tls", mineable.PoolUseTls },
+                    { "tls_fingerprint", mineable.PoolTlsFingerprint },
+                    { "pool_weight", mineable.PoolWeight },
+                    { "rig_id", mineable.PoolRigId },
+                }
+            };
+            switch (mineable.Algorithm)
+            {
+                case Algorithm.CryptonightV7:
+                    dict["currency"] = "cryptonight_v7";
+                    break;
+                case Algorithm.CryptonightHeavy:
+                    dict["currency"] = "cryptonight_heavy";
+                    break;
+                case Algorithm.CryptonightLite:
+                    dict["currency"] = "cryptonight_lite_v7";
+                    break;
+                case Algorithm.CryptonightBittube:
+                    dict["currency"] = "ipbc";
+                    break;
+                default:
+                    throw new NotImplementedException("Can't get pool algorithm: " + mineable.Algorithm);
+            }
+
+            string generatedJson = JsonConvert.SerializeObject(dict, Formatting.Indented);
+            
+            // Ensure that json starts and ends with an empty line
+            var lines = generatedJson.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).ToList();
+            if (lines.First().Contains("{"))
+            {
+                lines.RemoveAt(0);
+                lines.Insert(0, String.Empty);
+            }
+            if (lines.Last().Contains("}"))
+            {
+                lines.RemoveAt(lines.Count - 1);
+                lines.Add(String.Empty);
+            }
+            string correctedJson = String.Join("\r\n", lines);
+            return correctedJson;
+
+        }
         static string ResolveToFullPath(string path, string appRootPath)
         {
             string resolvedPath = Path.Combine(appRootPath, path);

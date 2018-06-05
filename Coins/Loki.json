@@ -1,20 +1,37 @@
 ﻿{
-  /* Displayed name, can be anything. */
+  // Displayed name, can be anything.
   "DisplayName": "Loki",
-  /* Ticker symbol on minecryptonight.net, needed to get profit data */
+  // Ticker symbol on minecryptonight.net, needed to get profit data
   "TickerSymbol": "LOKI",
-  /* Path to Xmr-Stak executable */
+  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite or CryptonightBittube
+  "Algorithm": "CryptonightHeavy",
+  // Override the expected hashrate from the settings, can be a number or null.
+  "OverrideExpectedHashrate": null,
+  // Path to Xmr-Stak executable
   "XmrStakPath": "XmrStak/xmr-stak.exe",
-  /* Path to Xmr-Stak pool config file */
-  "PoolsPath": "Pools/LokiPool.txt",
-  /* Path to Xmr-Stak config file */
+  // Path to Xmr-Stak config file
   "ConfigPath": "XmrStak/config.txt",
-  /* Path to Xmr-Stak cpu config file, can be null. */
+  // Path to Xmr-Stak cpu config file, can be null.
   "CpuPath": "XmrStak/cpu_heavy.txt",
-  /* Path to Xmr-Stak amd gpu config file, can be null. */
+  // Path to Xmr-Stak amd gpu config file, can be null.
   "AmdPath": "XmrStak/amd_heavy.txt",
-  /* Path to Xmr-Stak nvidea gpu config file, can be null. */
+  // Path to Xmr-Stak nvidea gpu config file, can be null.
   "NvidiaPath": null,
-  /* Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite or CryptonightBittube */
-  "Algorithm": "CryptonightHeavy"
+
+  // POOL CONFIGURATION
+
+  // Set the path to Xmr-Stak pool config file directly (can be null, if you use auto-generation of pool config)
+  "PoolsPath": null,
+
+  // OR
+
+  // Let the app auto-generate the pool config file using the settings below
+  "PoolAddress": "loki.ingest.cryptoknight.cc:7731",
+  "PoolWalletAddress": "LK8CGQ17G9R3ys3Xf33wCeViD2B95jgdpjAhcRsjuheJ784dumXn7g3RPAzedWpFq364jJKYL9dkQ8mY66sZG9BiCvhRZGpP1m1T83Kt4i.90000",
+  "PoolPassword": "x",
+  "PoolUseTls": false,
+  "PoolTlsFingerprint": "",
+  "PoolWeight": 1,
+  "PoolRigId": ""
+
 }

@@ -1,20 +1,37 @@
 ﻿{
-  /* Displayed name, can be anything. */
+  // Displayed name, can be anything.
   "DisplayName": "CryptonightHeavy",
-  /* Api ID listed on nicehash.com/doc-api, needed to get profit data */
+  // Api ID listed on nicehash.com/doc-api, needed to get profit data
   "ApiId": 31,
-  /* Path to Xmr-Stak executable */
+  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite or CryptonightBittube
+  "Algorithm": "CryptonightHeavy",
+  // Override the expected hashrate from the settings, can be a number or null.
+  "OverrideExpectedHashrate": null,
+  // Path to Xmr-Stak executable
   "XmrStakPath": "XmrStak/xmr-stak.exe",
-  /* Path to Xmr-Stak pool config file */
-  "PoolsPath": "Pools/NicehashCnHeavyPool.txt",
-  /* Path to Xmr-Stak config file */
+  // Path to Xmr-Stak config file
   "ConfigPath": "XmrStak/config.txt",
-  /* Path to Xmr-Stak cpu config file, can be null. */
+  // Path to Xmr-Stak cpu config file, can be null.
   "CpuPath": "XmrStak/cpu_heavy.txt",
-  /* Path to Xmr-Stak amd gpu config file, can be null. */
+  // Path to Xmr-Stak amd gpu config file, can be null.
   "AmdPath": "XmrStak/amd_heavy.txt",
-  /* Path to Xmr-Stak nvidea gpu config file, can be null. */
+  // Path to Xmr-Stak nvidea gpu config file, can be null.
   "NvidiaPath": null,
-  /* Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite or CryptonightBittube */
-  "Algorithm": "CryptonightHeavy"
+
+  // POOL CONFIGURATION
+
+  // Set the path to Xmr-Stak pool config file directly (can be null, if you use auto-generation of pool config)
+  "PoolsPath": null,
+
+  // OR
+
+  // Let the app auto-generate the pool config file using the settings below
+  "PoolAddress": "cryptonightheavy.eu.nicehash.com:3364",
+  "PoolWalletAddress": "31zXAFVEeksCYSnxfGz9VE9Dk6WXfijpuy.Worker",
+  "PoolPassword": "x",
+  "PoolUseTls": false,
+  "PoolTlsFingerprint": "",
+  "PoolWeight": 1,
+  "PoolRigId": ""
+
 }

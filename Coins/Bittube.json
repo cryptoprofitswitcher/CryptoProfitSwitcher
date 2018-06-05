@@ -1,20 +1,36 @@
 ﻿{
-  /* Displayed name, can be anything. */
+  // Displayed name, can be anything.
   "DisplayName": "Bittube",
-  /* Ticker symbol on minecryptonight.net, needed to get profit data */
+  // Ticker symbol on minecryptonight.net, needed to get profit data
   "TickerSymbol": "TUBE",
-  /* Path to Xmr-Stak executable */
+  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite or CryptonightBittube
+  "Algorithm": "CryptonightBittube",
+  // Override the expected hashrate from the settings, can be a number or null.
+  "OverrideExpectedHashrate": null,
+  // Path to Xmr-Stak executable
   "XmrStakPath": "XmrStak/xmr-stak.exe",
-  /* Path to Xmr-Stak pool config file */
-  "PoolsPath": "Pools/BittubePool.txt",
-  /* Path to Xmr-Stak config file */
+  // Path to Xmr-Stak config file
   "ConfigPath": "XmrStak/config.txt",
-  /* Path to Xmr-Stak cpu config file, can be null. */
+  // Path to Xmr-Stak cpu config file, can be null.
   "CpuPath": "XmrStak/cpu_lite.txt",
-  /* Path to Xmr-Stak amd gpu config file, can be null. */
+  // Path to Xmr-Stak amd gpu config file, can be null.
   "AmdPath": "XmrStak/amd_lite.txt",
-  /* Path to Xmr-Stak nvidea gpu config file, can be null. */
+  // Path to Xmr-Stak nvidea gpu config file, can be null.
   "NvidiaPath": null,
-  /* Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite or CryptonightBittube */
-  "Algorithm": "CryptonightBittube"
+
+  // POOL CONFIGURATION
+
+  // Set the path to Xmr-Stak pool config file directly (can be null, if you use auto-generation of pool config)
+  "PoolsPath": null,
+
+  // OR
+
+  // Let the app auto-generate the pool config file using the settings below
+  "PoolAddress": "mining.bit.tube:15555",
+  "PoolWalletAddress": "bxdwuY9EkYpQ1gowtdTQziRwrFreQrFpF4BrWdebzruQhFYKhFXLuf8APmakW4v1guf4daKBGXYTaF2FaXpPBYS213fcFnJw7.8b90bbbc8eab0ca9706d18cd683ed2b7b213bbc5be09fc6f9d5069fdcebae3ea",
+  "PoolPassword": "x",
+  "PoolUseTls": false,
+  "PoolTlsFingerprint": "",
+  "PoolWeight": 1,
+  "PoolRigId": ""
 }

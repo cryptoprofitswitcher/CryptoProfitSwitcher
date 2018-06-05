@@ -49,7 +49,6 @@ If you download the latest release, there will be a default configuration:
 - GPU: AMD Vega 64 + AMD Vega 56
 - Coins: Bittube, Graft, Haven, Loki, Stellite
 - NiceHash: CryptonightV7, CryptonightHeavy
-- Pools: Used pools by the developer
 
 You have to change the default configuration for your setup, see **How to use?**.
 

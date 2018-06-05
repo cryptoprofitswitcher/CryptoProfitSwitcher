@@ -1,20 +1,37 @@
 ﻿{
-  /* Displayed name, can be anything. */
+  // Displayed name, can be anything.
   "DisplayName": "Haven Protocol",
-  /* Ticker symbol on minecryptonight.net, needed to get profit data */
+  // Ticker symbol on minecryptonight.net, needed to get profit data
   "TickerSymbol": "XHV",
-  /* Path to Xmr-Stak executable */
+  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite or CryptonightBittube
+  "Algorithm": "CryptonightHeavy",
+  // Override the expected hashrate from the settings, can be a number or null.
+  "OverrideExpectedHashrate": null,
+  // Path to Xmr-Stak executable
   "XmrStakPath": "XmrStak/xmr-stak.exe",
-  /* Path to Xmr-Stak pool config file */
-  "PoolsPath": "Pools/HavenPool.txt",
-  /* Path to Xmr-Stak config file */
+  // Path to Xmr-Stak config file
   "ConfigPath": "XmrStak/config.txt",
-  /* Path to Xmr-Stak cpu config file, can be null. */
+  // Path to Xmr-Stak cpu config file, can be null.
   "CpuPath": "XmrStak/cpu_heavy.txt",
-  /* Path to Xmr-Stak amd gpu config file, can be null. */
+  // Path to Xmr-Stak amd gpu config file, can be null.
   "AmdPath": "XmrStak/amd_heavy.txt",
-  /* Path to Xmr-Stak nvidea gpu config file, can be null. */
+  // Path to Xmr-Stak nvidea gpu config file, can be null.
   "NvidiaPath": null,
-  /* Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite or CryptonightBittube */
-  "Algorithm": "CryptonightHeavy"
+
+  // POOL CONFIGURATION
+
+  // Set the path to Xmr-Stak pool config file directly (can be null, if you use auto-generation of pool config)
+  "PoolsPath": null,
+
+  // OR
+
+  // Let the app auto-generate the pool config file using the settings below
+  "PoolAddress": "haven.ingest.cryptoknight.cc:5532",
+  "PoolWalletAddress": "hvi1aCqoAZF19J8pijvqnrUkeAeP8Rvr4XyfDMGJcarhbL15KgYKM1hN7kiHMu3fer5k8JJ8YRLKCahDKFgLFgJMYAfncw5wUCX9LC2XKuoza.90000",
+  "PoolPassword": "x",
+  "PoolUseTls": false,
+  "PoolTlsFingerprint": "",
+  "PoolWeight": 1,
+  "PoolRigId": ""
+
 }
