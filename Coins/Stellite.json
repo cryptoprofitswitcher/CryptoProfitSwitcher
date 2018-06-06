@@ -1,4 +1,6 @@
 ﻿{
+  /* GENERAL CONFIGURATION - ALWAYS NEEDED */
+
   // Displayed name, can be anything.
   "DisplayName": "Stellite",
   // Ticker symbol on minecryptonight.net, needed to get profit data
@@ -7,31 +9,57 @@
   "Algorithm": "CryptonightV7",
   // Override the expected hashrate from the settings, can be a number or null.
   "OverrideExpectedHashrate": null,
-  // Path to Xmr-Stak executable
-  "XmrStakPath": "XmrStak/xmr-stak.exe",
-  // Path to Xmr-Stak config file
-  "ConfigPath": "XmrStak/config.txt",
-  // Path to Xmr-Stak cpu config file, can be null.
-  "CpuPath": "XmrStak/cpu_v7.txt",
-  // Path to Xmr-Stak amd gpu config file, can be null.
-  "AmdPath": "XmrStak/amd_v7.txt",
-  // Path to Xmr-Stak nvidea gpu config file, can be null.
-  "NvidiaPath": null,
+  // Used Miner, can be XmrStak, CastXmr or SRBMiner (Recommended: XmrStak)
+  "Miner": "XmrStak",
 
-  // POOL CONFIGURATION
+  /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  // Set the path to Xmr-Stak pool config file directly (can be null, if you use auto-generation of pool config)
-  "PoolsPath": null,
-
-  // OR
-
-  // Let the app auto-generate the pool config file using the settings below
   "PoolAddress": "stellite.ingest.cryptoknight.cc:16221",
   "PoolWalletAddress": "SEiStP7SMy1bvjkWc9dd1t2v1Et5q2DrmaqLqFTQQ9H7JKdZuATcPHUbUL3bRjxzxTDYitHsAPqF8EeCLw3bW8ARe8rYLKNGkev2JRQtW3sMk.90000",
   "PoolPassword": "x",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
   "PoolWeight": 1,
-  "PoolRigId": ""
+  "PoolRigId": "",
+
+  /* XMR-STAK CONFIGURATION - NEEDED IF MINER IS XMRSTAK OR FOR CPU MINING WITH CASTXMR*/
+
+  // Path to Xmr-Stak executable
+  "XmrStakPath": "XmrStak/xmr-stak.exe",
+  // Path to Xmr-Stak config file
+  "ConfigPath": "XmrStak/config.txt",
+  // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak.
+  "XmrStakApiPort": 4000,
+  // Path to Xmr-Stak cpu config file, can be null.
+  "CpuPath": "XmrStak/cpu_v7.txt",
+  // Path to Xmr-Stak amd gpu config file, can be null.
+  "AmdPath": "XmrStak/amd_v7.txt",
+  // Path to Xmr-Stak nvidea gpu config file, can be null.
+  "NvidiaPath": null,
+  // Set the path to Xmr-Stak pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
+  "PoolsPath": null,
+
+  /* CASTXMR CONFIGURATION - NEEDED IF MINER IS CASTXMR */
+
+  // Path to CastXmr executable
+  "CastXmrPath": "CastXmr/cast_xmr-vega.exe",
+  // Extra arguments for setting the GPUs or tuning
+  "CastXmrExtraArguments": "-G 0,1",
+  // Set if you want to also start Xmr-Stak for CPU Mining
+  "CastXmrUseXmrStakCPUMining": true,
+
+  /* SRBMINER CONFIGURATION - NEEDED IF MINER IS SRBMINER*/
+
+  // Path to SRBMiner executable
+  "SRBMinerPath": "SRBMiner/SRBMiner-CN.exe",
+  // Path to SRBMiner config file
+  "SRBMinerConfigPath": "SRBMiner/config_v7.txt",
+  // Port of the SRBMiner REST API, should match the port in the config file of SRBMiner.
+  "SRBMinerApiPort": 21555,
+  // Set the path to SRBMiner pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
+  "SRBMinerPoolsPath": null,
+  // Set if you want to also start Xmr-Stak for CPU Mining
+  "SRBMinerUseXmrStakCPUMining": true
+
 
 }

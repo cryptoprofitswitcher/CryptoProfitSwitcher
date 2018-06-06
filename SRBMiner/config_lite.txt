@@ -1,0 +1,28 @@
+{
+/* Type can be : normal, normalv7, lite, litev7, heavy, ipbc, artocash, alloy, marketcash, b2n, stellitev4  */
+"cryptonight_type" : "litev7",
+
+/* Intensity 0-> auto intensity, or value from 1-300  */
+"intensity" : 0,
+
+/* To use 2 threads per card set double_threads to true  */
+"double_threads" : false,
+
+"api_enabled" : true,
+"api_port" : 21555,
+
+/* THERE ARE A LOT OF OPTIONS/PARAMETERS YOU CAN USE HERE */
+/* YOU CAN FIND THEM IN THE README FILE */
+
+/* Advanced settings for each GPU manually */
+/* Put in devices that you want to use, if you for ex. don't want to use gpu 2, just don't insert it,like in this example */
+/* Id starts from 0 , not from 1 !! */
+/* To get a list of available devices with their id's, use --listdevices parameter */
+/* This is just an example, edit it and remove comment lines !! */
+
+"gpu_conf" : 
+[ 
+	{ "id" : 0, "intensity" : 115, "worksize" : 8, "threads" : 2},
+	{ "id" : 1, "intensity" : 105, "worksize" : 8, "threads" : 2},
+]
+}

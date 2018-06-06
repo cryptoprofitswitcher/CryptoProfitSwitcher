@@ -1,4 +1,7 @@
-﻿namespace CryptonightProfitSwitcher
+﻿using CryptonightProfitSwitcher.Enums;
+using System;
+
+namespace CryptonightProfitSwitcher
 {
     public class Settings
     {
@@ -8,7 +11,6 @@
         public int CryptonightBittubeHashrate { get; set; }
         public double NicehashPreferFactor { get; set; }
         public ProfitTimeframe ProfitTimeframe { get; set; }
-        public int XmrStakApiPort { get; set; }
         public int MinerStartDelay { get; set; }
         public int ProfitCheckInterval { get; set; }
         public int DisplayUpdateInterval { get; set; }
@@ -20,6 +22,7 @@
         public int WatchdogInterval { get; set; }
         public int WatchdogAllowedOversteps { get; set; }
 
-
+        [Obsolete("XmrStakApiPort in Settings is deprecated, please use port from Mineable.")]
+        public int XmrStakApiPort { get; set; }
     }
 }

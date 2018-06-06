@@ -14,8 +14,6 @@
   "DisplayUpdateInterval": 10,
   // Path to script that runs when reset is executed, can be null. 
   "ResetScript": "ResetScript.bat",
-  // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak. 
-  "XmrStakApiPort": 4000,
   // Delay in seconds before the mining process starts 
   "MinerStartDelay": 3,
   // Enable or disable caching of JSON Api calls 

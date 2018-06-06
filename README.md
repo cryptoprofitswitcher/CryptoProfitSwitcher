@@ -1,8 +1,8 @@
 ﻿# Cryptonight Profit Switcher
 
-Cryptonight Profit Switcher is an extensible open-source .Net Core console application that helps you to **always mine the most profitable coin on a pool or an algorithm on NiceHash with Xmr-Stak**.
+Cryptonight Profit Switcher is an extensible open-source .Net Core console application that helps you to **always mine the most profitable coin on a pool or an algorithm on NiceHash**.
 
-It is very useful for **AMD Vega GPUs** because it can detect hash drops and reset the GPU(s) but it can be used with any GPU that is compatible with Xmr-Stak.
+It is very useful for **AMD Vega GPUs** because it can detect hash drops and reset the GPU(s) but it can be used with any GPU that is compatible with the miner.
 
 ### Screenshot
 
@@ -14,9 +14,10 @@ It is very useful for **AMD Vega GPUs** because it can detect hash drops and res
   - **Watchdog:** Compares your actual hashrate with the expected hashrate and runs a reset if certain conditions are met.
   - **Reset:** Restarts the miner and runs a user-defined Reset script
   - **Performance:** Resource friendly with 0%-CPU usage
-  - **Supports all algorithms:** CryptonightV7, CryptonightHeavy, CryptonightLite, Cryptonight BitTube Variant
-  - **Supports all coins:** That are mineable using Xmr-Stak 
-  - **Supports all pools:** That are supported by Xmr-Stak
+  - **Miners:** Xmr-Stak (Recommended), Cast XMR, SRBMiner
+  - **Supports all algorithms:** CryptonightV7, CryptonightHeavy, CryptonightLiteV7, Cryptonight BitTube Variant
+  - **Supports all coins:** That are mineable using the miners
+  - **Supports all pools:** That are supported by the miners
 
 
 # How to use?
@@ -41,14 +42,18 @@ It is very useful for **AMD Vega GPUs** because it can detect hash drops and res
 6. Start *CryptonightProfitSwitcher.exe* (Optional: As administrator)
 7. PROFIT!!!
 
+You can also use it with Cast XMR or SRBMiner. The steps are similar like above.
+Just look at the comments in the JSON files and you will understand how to use other miners.
+
 ### Default configuration
 
 If you download the latest release, there will be a default configuration:
 
 - CPU: AMD Ryzen 1600X
 - GPU: AMD Vega 64 + AMD Vega 56
-- Coins: Bittube, Graft, Haven, Loki, Stellite
+- Coins: Bittube, Graft, Haven, Loki, Stellite, AEON
 - NiceHash: CryptonightV7, CryptonightHeavy
+- Miner: XmrStak
 
 You have to change the default configuration for your setup, see **How to use?**.
 
@@ -76,7 +81,7 @@ You have to change the default configuration for your setup, see **How to use?**
 
 ### Reset
 
-1. App will terminate Xmr-Stak
+1. App will terminate the miner.
 2. App will run the reset script, if it is set.
 3. App will restart itself.
 
@@ -89,6 +94,8 @@ You have to change the default configuration for your setup, see **How to use?**
 # Credits
 
 * [fireice-uk's and psychocrypt's Xmr-Stak](https://github.com/fireice-uk/xmr-stak)
+* [Gandalph3000's Cast XMR](http://www.gandalph3000.com/)
+* [doktor83's SRBMiner](https://bitcointalk.org/index.php?topic=3167363.0)
 * [MineCryptoNight API](http://minecryptonight.net/api)
 * [NiceHash API](https://www.nicehash.com/doc-api)
 * [CoinMarketCap API](https://coinmarketcap.com/api/)
