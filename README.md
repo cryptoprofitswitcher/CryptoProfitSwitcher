@@ -77,7 +77,7 @@ You have to change the default configuration for your setup, see **How to use?**
 1. App will load pool mined coins from the *Coins* folder.
 2. App will load NiceHash algorithms from the *NicehashAlgorithms* folder.
 3. App will load settings from Settings.json.
-4. App will periodically check the profitability using the NiceHash API and http://minecryptonight.net/api
+4. App will periodically check the profitability
 5. App will start the most profitable mining method.
 
 ### Reset
