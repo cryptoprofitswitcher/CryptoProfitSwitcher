@@ -6,10 +6,11 @@
     <TrimUnusedDependencies>true</TrimUnusedDependencies>
     <LinkDuringPublish>true</LinkDuringPublish>
     <ShowLinkerSizeComparison>true</ShowLinkerSizeComparison>
-    <Version>2.0.0</Version>
+    <Version>2.5.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Alba.CsConsoleFormat-NoXaml" Version="1.0.0" />
     <PackageReference Include="Microsoft.Packaging.Tools.Trimming" Version="1.1.0-preview1-26601-01" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
@@ -25,6 +26,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Coins\Bittube.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Coins\Electroneum.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Coins\Graft.json">

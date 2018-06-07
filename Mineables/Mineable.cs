@@ -6,6 +6,7 @@ namespace CryptonightProfitSwitcher.Mineables
     public abstract class Mineable
     {
         public string DisplayName { get; set; }
+        public double? PreferFactor { get; set; }
         public string XmrStakPath { get; set; }
         public string ConfigPath { get; set; }
         public int XmrStakApiPort { get; set; }
@@ -14,6 +15,7 @@ namespace CryptonightProfitSwitcher.Mineables
         public string NvidiaPath { get; set; }
         public Algorithm Algorithm { get; set; }
         public int? OverrideExpectedHashrate { get; set; }
+        public ProfitTimeframe? OverrideProfitTimeframe { get; set; }
         public string PoolsPath { get; set; }
         public string PoolAddress { get; set; }
         public string PoolWalletAddress { get; set; }

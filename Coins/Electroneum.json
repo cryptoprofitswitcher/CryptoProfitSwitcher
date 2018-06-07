@@ -2,9 +2,9 @@
   /* GENERAL CONFIGURATION - ALWAYS NEEDED */
 
   // Displayed name, can be anything.
-  "DisplayName": "Stellite",
+  "DisplayName": "Electroneum",
   // Ticker symbol on minecryptonight.net, needed to get profit data
-  "TickerSymbol": "XTL",
+  "TickerSymbol": "ETN",
   // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite or CryptonightBittube
   "Algorithm": "CryptonightV7",
   // Used Miner, can be XmrStak, CastXmr or SRBMiner (Recommended: XmrStak)
@@ -23,8 +23,8 @@
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "stellite.ingest.cryptoknight.cc:16221",
-  "PoolWalletAddress": "SEiStP7SMy1bvjkWc9dd1t2v1Et5q2DrmaqLqFTQQ9H7JKdZuATcPHUbUL3bRjxzxTDYitHsAPqF8EeCLw3bW8ARe8rYLKNGkev2JRQtW3sMk.90000",
+  "PoolAddress": "etn-eu1.nanopool.org:13333",
+  "PoolWalletAddress": "etnkK41HsyNUvtnBX7hsrn3z9VZquSfUGb5Y1uTxQav8GQn9KNjpucgYa5C9wSb5TndUXBfZwajbmPLTjdEr1WG6Ag1KbzcNi1.ca52b65cc87313c0ef3ffbaad4f2bdbd775b7e6cb5bcc42850fe14147692dbec",
   "PoolPassword": "x",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
@@ -69,6 +69,5 @@
   "SRBMinerPoolsPath": null,
   // Set if you want to also start Xmr-Stak for CPU Mining
   "SRBMinerUseXmrStakCPUMining": true
-
 
 }

@@ -7,10 +7,18 @@
   "ApiId": 30,
   // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite or CryptonightBittube
   "Algorithm": "CryptonightV7",
-  // Override the expected hashrate from the settings, can be a number or null.
-  "OverrideExpectedHashrate": null,
   // Used Miner, can be XmrStak, CastXmr or SRBMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
+
+  /* OVERRIDE SETTINGS - NOT NEEDED */
+
+  // Override the expected hashrate, can be a number or null.
+  "OverrideExpectedHashrate": null,
+  // Override the profit timeframe, can be Live, Day or null.
+  "OverrideProfitTimeframe": "Live",
+  // On the determination of the most profitable algorithm, the actual estimated profit will be multiplied by this.
+  // Can be a decimal or null. It is recommended to prefer NiceHash algorithms.
+  "PreferFactor": 1.15,
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
@@ -22,7 +30,7 @@
   "PoolWeight": 1,
   "PoolRigId": "",
 
-  /* XMR-STAK CONFIGURATION - NEEDED IF MINER IS XMRSTAK OR FOR CPU MINING WITH CASTXMR*/
+  /* XMR-STAK CONFIGURATION - NEEDED IF MINER IS XMRSTAK OR FOR CPU MINING*/
 
   // Path to Xmr-Stak executable
   "XmrStakPath": "XmrStak/xmr-stak.exe",

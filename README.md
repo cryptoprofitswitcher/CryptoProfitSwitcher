@@ -15,6 +15,7 @@ It is very useful for **AMD Vega GPUs** because it can detect hash drops and res
   - **Reset:** Restarts the miner and runs a user-defined Reset script
   - **Performance:** Resource friendly with 0%-CPU usage
   - **Miners:** Xmr-Stak (Recommended), Cast XMR, SRBMiner
+  - **Profit data:** [MineCryptoNight API](http://minecryptonight.net/api), [miner.rocks API](https://miner.rocks/)
   - **Supports all algorithms:** CryptonightV7, CryptonightHeavy, CryptonightLiteV7, Cryptonight BitTube Variant
   - **Supports all coins:** That are mineable using the miners
   - **Supports all pools:** That are supported by the miners
@@ -97,6 +98,9 @@ You have to change the default configuration for your setup, see **How to use?**
 * [Gandalph3000's Cast XMR](http://www.gandalph3000.com/)
 * [doktor83's SRBMiner](https://bitcointalk.org/index.php?topic=3167363.0)
 * [MineCryptoNight API](http://minecryptonight.net/api)
+* [miner.rocks API](https://miner.rocks/)
 * [NiceHash API](https://www.nicehash.com/doc-api)
 * [CoinMarketCap API](https://coinmarketcap.com/api/)
+* [CsConsoleFormat](https://github.com/Athari/CsConsoleFormat)
+* [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
 

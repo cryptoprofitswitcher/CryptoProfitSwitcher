@@ -9,8 +9,8 @@ namespace CryptonightProfitSwitcher
         public int CryptonightHeavyHashrate { get; set; }
         public int CryptonightLiteHashrate { get; set; }
         public int CryptonightBittubeHashrate { get; set; }
-        public double NicehashPreferFactor { get; set; }
         public ProfitTimeframe ProfitTimeframe { get; set; }
+        public string PoolProfitProviders { get; set; }
         public int MinerStartDelay { get; set; }
         public int ProfitCheckInterval { get; set; }
         public int DisplayUpdateInterval { get; set; }
@@ -21,6 +21,9 @@ namespace CryptonightProfitSwitcher
         public double WatchdogCriticalThreshold { get; set; }
         public int WatchdogInterval { get; set; }
         public int WatchdogAllowedOversteps { get; set; }
+
+        [Obsolete("NicehashPreferFactor is deprecated, please use PreferFactor from Mineable.")]
+        public double NicehashPreferFactor { get; set; }
 
         [Obsolete("XmrStakApiPort in Settings is deprecated, please use port from Mineable.")]
         public int XmrStakApiPort { get; set; }

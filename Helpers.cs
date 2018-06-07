@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using CryptonightProfitSwitcher.Enums;
+using CryptonightProfitSwitcher.Mineables;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -7,6 +9,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Threading;
 
 namespace CryptonightProfitSwitcher
 {
@@ -48,6 +51,68 @@ namespace CryptonightProfitSwitcher
             string fullPath = Path.GetFullPath(resolvedPath);
             return "\"" + fullPath + "\"";
         }
+
+        internal static Profit GetPoolProfitForCoin(Coin coin, Dictionary<ProfitProvider, Dictionary<string, Profit>> poolProfitsDictionary, Settings settings)
+        {
+            Profit profit = new Profit();
+            List<ProfitProvider> orderedProfitProviders = GetPoolProfitProviders(settings, coin);
+            while (profit.Reward == 0 && orderedProfitProviders.Count > 0)
+            {
+                ProfitProvider profitProvider = orderedProfitProviders[0];
+                var poolProfits = poolProfitsDictionary.GetValueOrDefault(profitProvider, null);
+                if (poolProfits != null)
+                {
+                    profit = poolProfits.GetValueOrDefault(coin.TickerSymbol, new Profit());
+                }
+                orderedProfitProviders.RemoveAt(0);
+            }
+            return profit;
+        }
+        internal static List<ProfitProvider> GetPoolProfitProviders(Settings settings, Coin coin)
+        {
+            var result = new List<ProfitProvider>();
+
+            if (coin != null && !String.IsNullOrEmpty(coin.OverridePoolProfitProviders))
+            {
+                var overrrideProfitProvidersSplitted = coin.OverridePoolProfitProviders.Split(",");
+                foreach (var profitProviderString in overrrideProfitProvidersSplitted)
+                {
+                    ProfitProvider profitProvider;
+                    if (Enum.TryParse(profitProviderString, out profitProvider))
+                    {
+                        if (!result.Contains(profitProvider))
+                        {
+                            result.Add(profitProvider);
+                        }
+                    }
+                }
+            }
+
+            if (!String.IsNullOrEmpty(settings.PoolProfitProviders))
+            {
+                var profitProvidersSplitted = settings.PoolProfitProviders.Split(",");
+                foreach(var profitProviderString in profitProvidersSplitted)
+                {
+                    ProfitProvider profitProvider;
+                    if (Enum.TryParse(profitProviderString, out profitProvider))
+                    {
+                        if (!result.Contains(profitProvider))
+                        {
+                            result.Add(profitProvider);
+                        }
+                    }
+                }
+            }
+
+            if (result.Count == 0)
+            {
+                // Return default providers
+                result.Add(ProfitProvider.MineCryptonightApi);
+                result.Add(ProfitProvider.MinerRocksApi);
+            }
+            return result;
+        }
+        static ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
         internal static string GetJsonFromUrl(string url, Settings settings, DirectoryInfo appRootFolder)
         {
             var cacheFolder = appRootFolder.CreateSubdirectory("Cache");
@@ -74,17 +139,20 @@ namespace CryptonightProfitSwitcher
                                 if (urlMapFile == null)
                                 {
                                     var serialized2 = JsonConvert.SerializeObject(new Dictionary<string, string>());
+                                    _lock.EnterWriteLock();
                                     File.WriteAllText(ResolveToFullPath("Cache/urlmap.json", appRootFolder.FullName), serialized2);
+                                    _lock.ExitWriteLock();
                                     urlMapFile = cacheFolder.GetFiles("urlmap.json").FirstOrDefault();
                                 }
-
+                                _lock.EnterReadLock();
                                 var urlMapJson = File.ReadAllText(urlMapFile.FullName);
+                                _lock.ExitReadLock();
                                 var urlMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(urlMapJson);
                                 if (urlMap.ContainsKey(url))
                                 {
                                     var cachedFilename = urlMap[url];
-                                    var cachedFile = cacheFolder.GetFiles(cachedFilename).First();
-                                    cachedFile.Delete();
+                                    var cachedFile = cacheFolder.GetFiles(cachedFilename).FirstOrDefault();
+                                    cachedFile?.Delete();
                                 }
                                 string saveFilename = Guid.NewGuid().ToString() + ".json";
                                 string savePath = ResolveToFullPath($"Cache/{saveFilename}", appRootFolder.FullName);
@@ -92,7 +160,10 @@ namespace CryptonightProfitSwitcher
                                 urlMap[url] = saveFilename;
                                 string serialized = JsonConvert.SerializeObject(urlMap);
                                 string urlMapPath = ResolveToFullPath("Cache/urlmap.json", appRootFolder.FullName);
+                                _lock.EnterWriteLock();
                                 File.WriteAllText(urlMapPath, serialized);
+                                _lock.ExitWriteLock();
+
                             }
                             catch (Exception ex)
                             {

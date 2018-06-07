@@ -1,13 +1,12 @@
-﻿using CryptonightProfitSwitcher.Enums;
+﻿using Alba.CsConsoleFormat;
+using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Mineables;
 using CryptonightProfitSwitcher.Miners;
+using CryptonightProfitSwitcher.ProfitPoviders;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -17,7 +16,7 @@ namespace CryptonightProfitSwitcher
 {
     class Program
     {
-        const int VERSION = 3;
+        const int VERSION = 4;
 
         static IMiner _currentMiner = null;
         static Mineable _currentMineable = null;
@@ -118,63 +117,55 @@ namespace CryptonightProfitSwitcher
                     try
                     {
                         ResetConsole();
-                        var poolProfitsDictionary = new Dictionary<string, double>();
-                        var profitsJson = Helpers.GetJsonFromUrl("https://minecryptonight.net/api/rewards?hr=1000", settings, appRootFolder);
-                        dynamic profits = JsonConvert.DeserializeObject<ExpandoObject>(profitsJson, new ExpandoObjectConverter());
-                        long baseHashrate = profits.hash_rate;
-                        double cnHeavyFactor = Helpers.GetProperty<double>(profits, "cryptonight-heavy_factor");
-                        double cnLiteFactor = Helpers.GetProperty<double>(profits, "cryptonight-lite_factor");
-                        double cnBittubeFactor = Helpers.GetProperty<double>(profits, "cryptonight-lite-tube_factor");
-                        foreach (dynamic reward in profits.rewards)
-                        {
-                            string tickerSymbol = reward.ticker_symbol;
-                            string algorithm = reward.algorithm;
-                            double rewardUsd = 0;
-                            switch (settings.ProfitTimeframe)
-                            {
-                                case ProfitTimeframe.Live:
-                                    rewardUsd = reward.reward_24h.usd;
-                                    break;
-                                case ProfitTimeframe.OneHour:
-                                case ProfitTimeframe.ThreeHours:
-                                case ProfitTimeframe.Day:
-                                case ProfitTimeframe.Week:
-                                    throw new NotImplementedException("Currently only ProfitTimeframe.Live is supported.");
-                            }
-                            //Adjust profits based on user defined hashrate
-                            Coin matchedCoin = coins.FirstOrDefault(c => c.TickerSymbol == tickerSymbol);
 
-                            if (matchedCoin != null)
+                        // Get pool mined coins profitability
+                        var profitProviders = Helpers.GetPoolProfitProviders(settings, null);
+                        foreach (var coin in coins.Where(c => !String.IsNullOrEmpty(c.OverridePoolProfitProviders)))
+                        {
+                            var overrrideProfitProvidersSplitted = coin.OverridePoolProfitProviders.Split(",");
+                            foreach (var profitProviderString in overrrideProfitProvidersSplitted)
                             {
-                                switch (algorithm)
+                                ProfitProvider profitProvider;
+                                if (Enum.TryParse(profitProviderString, out profitProvider))
                                 {
-                                    case "cryptonight-v1":
-                                        rewardUsd = (rewardUsd / 1000) * matchedCoin.GetExpectedHashrate(settings);
-                                        break;
-                                    case "cryptonight-heavy":
-                                        rewardUsd = (rewardUsd / (1000 * cnHeavyFactor)) * matchedCoin.GetExpectedHashrate(settings);
-                                        break;
-                                    case "cryptonight-lite-v1":
-                                        rewardUsd = (rewardUsd / (1000 * cnLiteFactor)) * matchedCoin.GetExpectedHashrate(settings);
-                                        break;
-                                    case "cryptonight-lite-tube":
-                                        rewardUsd = (rewardUsd / (1000 * cnBittubeFactor)) * matchedCoin.GetExpectedHashrate(settings);
-                                        break;
+                                    if (!profitProviders.Contains(profitProvider))
+                                    {
+                                        profitProviders.Add(profitProvider);
+                                    }
                                 }
-                                poolProfitsDictionary[tickerSymbol] = rewardUsd;
-                                Console.WriteLine("Got profit data for : " + tickerSymbol);
                             }
                         }
-
+                        var poolProfitsDictionary = new Dictionary<ProfitProvider, Dictionary<string, Profit>>();
+                        foreach (var profitProvider in profitProviders)
+                        {
+                            if (!poolProfitsDictionary.ContainsKey(profitProvider))
+                            {
+                                IPoolProfitProvider profitProviderClass;
+                                switch (profitProvider)
+                                {
+                                    case ProfitProvider.MineCryptonightApi:
+                                        profitProviderClass = new MineCryptonightApi();
+                                        break;
+                                    case ProfitProvider.MinerRocksApi:
+                                        profitProviderClass = new MinerRocksApi();
+                                        break;
+                                    default:
+                                        throw new NotImplementedException("Doesn't support ProfitProvider: " + profitProvider);
+                                }
+                                var poolProfits = profitProviderClass.GetProfits(appRootFolder, settings, coins);
+                                poolProfitsDictionary[profitProvider] = poolProfits;
+                            }
+                        }
                         // Get best pool mined coin
                         Coin bestPoolminedCoin = null;
                         double bestPoolminedCoinProfit = 0;
                         foreach (var coin in coins)
                         {
-                            double profit = poolProfitsDictionary.GetValueOrDefault(coin.TickerSymbol, 0);
-                            if (bestPoolminedCoin == null || profit > bestPoolminedCoinProfit)
+                            var profit = Helpers.GetPoolProfitForCoin(coin, poolProfitsDictionary, settings);
+                            double calcProfit = coin.PreferFactor.HasValue ? profit.Reward * coin.PreferFactor.Value : profit.Reward;
+                            if (bestPoolminedCoin == null || calcProfit > bestPoolminedCoinProfit)
                             {
-                                bestPoolminedCoinProfit = profit;
+                                bestPoolminedCoinProfit = calcProfit;
                                 bestPoolminedCoin = coin;
                             }
                         }
@@ -188,43 +179,34 @@ namespace CryptonightProfitSwitcher
                             Console.WriteLine("Couldn't determine best pool mined coin.");
                         }
 
-                        //Get BTC quote
-                        var btcJson = Helpers.GetJsonFromUrl("https://api.coinmarketcap.com/v2/ticker/1/?convert=USD", settings, appRootFolder);
-                        dynamic btc = JObject.Parse(btcJson);
-                        double btcUsdPrice = btc.data.quotes.USD.price;
-                        Console.WriteLine("Got BTC exchange rate: " + btcUsdPrice);
+
 
                         //Get Nicehash Profit
-                       var nicehashProfitsDictionary = new Dictionary<int, double>();
-                        var nicehashProfitsJson = Helpers.GetJsonFromUrl("https://api.nicehash.com/api?method=stats.global.current", settings, appRootFolder);
-                        dynamic nicehashProfits = JObject.Parse(nicehashProfitsJson);
-                        var result = nicehashProfits.result;
-
-                        foreach (dynamic stat in result.stats)
-                        {
-                            int algo = stat.algo;
-                            double price = stat.price;
-
-                            var matchedAlgorithm = nicehashAlgorithms.FirstOrDefault(na => na.ApiId == algo);
-                            if (matchedAlgorithm != null)
-                            {
-                                double btcReward = 0;
-                                btcReward = (price / 1000000) * matchedAlgorithm.GetExpectedHashrate(settings);
-                                var usdReward = btcReward * btcUsdPrice * settings.NicehashPreferFactor;
-                                nicehashProfitsDictionary[matchedAlgorithm.ApiId] = usdReward;
-                                Console.WriteLine("Got profit data for Nicehash: " + matchedAlgorithm.DisplayName);
-                            }
-                        }
+                        var nicehashProfitsDictionary = NicehashApi.GetProfits(appRootFolder, settings, nicehashAlgorithms);
 
                         //Get best nicehash algorithm
                         NicehashAlgorithm bestNicehashAlgorithm = null;
                         double bestNicehashAlgorithmProfit = 0;
                         foreach (var nicehashAlgorithm in nicehashAlgorithms)
                         {
-                            double profit = nicehashProfitsDictionary.GetValueOrDefault(nicehashAlgorithm.ApiId, 0);
-                            if (bestNicehashAlgorithm == null || profit > bestNicehashAlgorithmProfit)
+                            Profit profit = nicehashProfitsDictionary.GetValueOrDefault(nicehashAlgorithm.ApiId, new Profit());
+                            double preferFactor = 1;
+                            if (nicehashAlgorithm.PreferFactor.HasValue)
                             {
-                                bestNicehashAlgorithmProfit = profit;
+                                preferFactor = nicehashAlgorithm.PreferFactor.Value;
+                            }
+                            else
+                            {
+                                //Backwards compatibility
+                                if (settings.NicehashPreferFactor >= 0)
+                                {
+                                    preferFactor = settings.NicehashPreferFactor;
+                                }
+                            }
+                            double calcProfit = profit.Reward * preferFactor;
+                            if (bestNicehashAlgorithm == null || calcProfit > bestNicehashAlgorithmProfit)
+                            {
+                                bestNicehashAlgorithmProfit = calcProfit;
                                 bestNicehashAlgorithm = nicehashAlgorithm;
                             }
                         }
@@ -235,15 +217,15 @@ namespace CryptonightProfitSwitcher
                         }
                         else
                         {
-                            Console.WriteLine("Couldn't determine berst nicehash algorithm.");
+                            Console.WriteLine("Couldn't determine best nicehash algorithm.");
                         }
 
                         //Print table
-                        PrintProfitTable(coins, poolProfitsDictionary, nicehashAlgorithms, nicehashProfitsDictionary);
+                        PrintProfitTable(coins, poolProfitsDictionary, nicehashAlgorithms, nicehashProfitsDictionary, settings);
 
                         //Mine using best algorithm/coin
                         Console.WriteLine();
-                        if (bestPoolminedCoin != null && bestPoolminedCoinProfit > (bestNicehashAlgorithmProfit * settings.NicehashPreferFactor))
+                        if (bestPoolminedCoin != null && bestPoolminedCoinProfit > bestNicehashAlgorithmProfit)
                         {
                             Console.WriteLine($"Determined best mining method: Mine {bestPoolminedCoin.DisplayName} in a pool at {Helpers.ToCurrency(bestPoolminedCoinProfit, "$")} per day.");
                             if (_currentMineable == null || _currentMineable.Id != bestPoolminedCoin.Id)
@@ -289,7 +271,7 @@ namespace CryptonightProfitSwitcher
                         statusCts.Cancel();
                         return;
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Console.WriteLine("Profit switcher task failed: " + ex.Message);
                         statusCts.Cancel();
@@ -298,7 +280,7 @@ namespace CryptonightProfitSwitcher
             }, token);
         }
 
-        static Task StatusUpdaterTask(DateTimeOffset estReset, Settings settings, DirectoryInfo appRootFolder, List<Coin> coins, Dictionary<string, double> poolProfitsDictionary, List<NicehashAlgorithm> nicehashAlgorithms, Dictionary<int, double> nicehashProfitsDictionary, CancellationToken token)
+        static Task StatusUpdaterTask(DateTimeOffset estReset, Settings settings, DirectoryInfo appRootFolder, List<Coin> coins, Dictionary<ProfitProvider, Dictionary<string, Profit>> poolProfitsDictionary, List<NicehashAlgorithm> nicehashAlgorithms, Dictionary<int, Profit> nicehashProfitsDictionary, CancellationToken token)
         {
             return Task.Run(() =>
             {
@@ -307,74 +289,126 @@ namespace CryptonightProfitSwitcher
                     while (!token.IsCancellationRequested)
                     {
                         ResetConsole();
-                        Console.WriteLine("Press 'p' to refresh profits immediately.");
-                        Console.WriteLine("Press 'r' to reset the app and run the reset script if set.");
-                        Console.WriteLine("Press 'q' to quit.");
 
-                        PrintProfitTable(coins, poolProfitsDictionary, nicehashAlgorithms, nicehashProfitsDictionary);
+                        Console.Write(" Press '");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("p");
+                        Console.ResetColor();
+                        Console.WriteLine("' to refresh profits immediately.");
 
-                        WriteInCyan("CURRENT STATUS: ");
+                        Console.Write(" Press '");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("r");
+                        Console.ResetColor();
+                        Console.WriteLine("' to reset the app and run the reset script if it is set.");
+
+                        Console.Write(" Press '");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("q");
+                        Console.ResetColor();
+                        Console.WriteLine("' to quit.");
+
+                        PrintProfitTable(coins, poolProfitsDictionary, nicehashAlgorithms, nicehashProfitsDictionary, settings);
+
+                        WriteInCyan(" CURRENT STATUS: ");
 
                         if (_currentMineable != null && _currentMiner != null)
                         {
                             var currentHashrate = _currentMiner.GetCurrentHashrate(settings, appRootFolder);
-                            var estimatedReward = _currentMineable is Coin ? poolProfitsDictionary[((Coin)_currentMineable).TickerSymbol] : nicehashProfitsDictionary[((NicehashAlgorithm)_currentMineable).ApiId];
-                            double currentReward = (estimatedReward / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
+                            var roundedHashRate = Math.Round(currentHashrate, 2, MidpointRounding.AwayFromZero);
+                            var estimatedProfit = _currentMineable is Coin ? Helpers.GetPoolProfitForCoin((Coin)_currentMineable, poolProfitsDictionary, settings) : nicehashProfitsDictionary[((NicehashAlgorithm)_currentMineable).ApiId];
+                            double currentReward = (estimatedProfit.Reward / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
 
                             if (_currentMineable is NicehashAlgorithm)
                             {
-                                Console.WriteLine($"Providing hashpower on NiceHash: '{_currentMineable.DisplayName}' at {currentHashrate}H/s ({Helpers.ToCurrency(currentReward, "$")} per day)");
+                                Console.Write(" Hashing: '");
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.Write(_currentMineable.DisplayName);
+                                Console.ResetColor();
+                                Console.Write("' on NiceHash at ");
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.Write(roundedHashRate + "H/s");
+                                Console.ResetColor();
+                                Console.Write(" (");
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.Write(Helpers.ToCurrency(currentReward, "$"));
+                                Console.ResetColor();
+                                Console.WriteLine(" per day)");
                             }
                             else
                             {
-                                Console.WriteLine($"Mining: '{_currentMineable.DisplayName}' at {currentHashrate}H/s ({Helpers.ToCurrency(currentReward, "$")} per day)");
+                                Console.Write(" Mining: '");
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.Write(_currentMineable.DisplayName);
+                                Console.ResetColor();
+                                Console.Write("' at ");
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.Write(roundedHashRate + "H/s");
+                                Console.ResetColor();
+                                Console.Write(" (");
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.Write(Helpers.ToCurrency(currentReward, "$"));
+                                Console.ResetColor();
+                                Console.WriteLine(" per day)");
                             }
 
                             if (settings.EnableWatchdog)
                             {
-                                Console.WriteLine($"Watchdog: {_watchdogOvershots} consecutive overshots out of {settings.WatchdogAllowedOversteps} allowed.");
+                                Console.Write(" Watchdog: ");
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.Write(_watchdogOvershots);
+                                Console.ResetColor();
+                                Console.Write(" consecutive overshot(s) out of ");
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.Write(settings.WatchdogAllowedOversteps);
+                                Console.ResetColor();
+                                Console.WriteLine(" allowed.");
                             }
                             else
                             {
-                                Console.WriteLine("Watchdog: Not activated.");
+                                Console.WriteLine(" Watchdog: Not activated.");
                             }
                         }
                         else
                         {
-                            Console.WriteLine("Not mining.");
+                            Console.WriteLine(" Not mining.");
                         }
 
                         Console.WriteLine();
                         if (settings.ProfitCheckInterval > 0)
                         {
                             int remainingSeconds = (int)estReset.Subtract(DateTimeOffset.Now).TotalSeconds;
-                            Console.WriteLine($"Will refresh automatically in {remainingSeconds} seconds.");
+                            Console.Write(" Will refresh automatically in ");
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.Write(remainingSeconds);
+                            Console.ResetColor();
+                            Console.WriteLine(" seconds.");
                         }
                         else
                         {
-                            Console.WriteLine("Won't refresh automatically.");
+                            Console.WriteLine(" Won't refresh automatically.");
                         }
                         Task.Delay(TimeSpan.FromSeconds(settings.DisplayUpdateInterval), token).Wait();
                     }
                 }
                 catch (TaskCanceledException)
                 {
-                    Console.WriteLine("Cancelled status task.");
+                    Console.WriteLine(" Cancelled status task.");
                     return;
                 }
                 catch (AggregateException)
                 {
-                    Console.WriteLine("Cancelled status task.");
+                    Console.WriteLine(" Cancelled status task.");
                     return;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Status task failed: " + ex.Message);
+                    Console.WriteLine(" Status task failed: " + ex.Message);
                 }
             }, token);
         }
 
-        static Task WatchdogTask(Settings settings,string appFolderPath, DirectoryInfo appRootFolder, CancellationToken token)
+        static Task WatchdogTask(Settings settings, string appFolderPath, DirectoryInfo appRootFolder, CancellationToken token)
         {
             return Task.Run(() =>
             {
@@ -480,20 +514,13 @@ namespace CryptonightProfitSwitcher
         }
         static void ResetConsole()
         {
+            Console.CursorVisible = false;
             Console.Clear();
-            WriteInCyan("CRYPTONIGHT PROFIT SWITCHER");
-            if (!_newVersionAvailable)
-            {
-                Console.WriteLine("Version: " + Helpers.GetApplicationVersion());
-            }
-            else
-            {
-                Console.Write("Version: " + Helpers.GetApplicationVersion());
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine(" (Update available!)");
-                Console.ResetColor();
-            }
-            Console.WriteLine("On Github: https://github.com/cryptoprofitswitcher/CryptonightProfitSwitcher");
+            string updateText = _newVersionAvailable ? " (NEW UPDATE AVAILABLE!)" : String.Empty;
+            WriteInCyan($" CRYPTONIGHT PROFIT SWITCHER | VERSION: {Helpers.GetApplicationVersion()}{updateText}");
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine(" https://github.com/cryptoprofitswitcher/CryptonightProfitSwitcher");
+            Console.ResetColor();
             Console.WriteLine();
         }
 
@@ -504,22 +531,94 @@ namespace CryptonightProfitSwitcher
             Console.ResetColor();
         }
 
-        static void PrintProfitTable(List<Coin> coins, Dictionary<string, double> poolProfitsDictionary, List<NicehashAlgorithm> nicehashAlgorithms, Dictionary<int, double> nicehashProfitsDictionary)
+        static void PrintProfitTable(List<Coin> coins, Dictionary<ProfitProvider, Dictionary<string, Profit>> poolProfitsDictionary, List<NicehashAlgorithm> nicehashAlgorithms, Dictionary<int, Profit> nicehashProfitsDictionary, Settings settings)
         {
             Console.WriteLine();
-            WriteInCyan("POOL MINED COINS SUMMARY: ");
+
+            WriteInCyan(" POOL MINED COINS SUMMARY: ");
+
+            var headerThickness = new LineThickness(LineWidth.Double, LineWidth.Single);
+            var poolGrid = new Grid
+            {
+                Color = ConsoleColor.White,
+                Margin = new Thickness(1, 0, 0, 0),
+                Columns = { GridLength.Auto },
+                Children =
+                {
+                        new Cell("Name") { Stroke = headerThickness, Color = ConsoleColor.Magenta, Padding = new Thickness(2,0,10,0) },
+                },
+            };
+
+            foreach (var profits in poolProfitsDictionary)
+            {
+                poolGrid.Columns.Add(GridLength.Auto);
+                poolGrid.Children.Add(new Cell(profits.Key.ToString()) { Stroke = headerThickness, Color = ConsoleColor.Magenta, Padding = new Thickness(2, 0, 2, 0) });
+            }
+
             foreach (var coin in coins)
             {
-                double reward = poolProfitsDictionary.GetValueOrDefault(coin.TickerSymbol, 0);
-                Console.WriteLine($"{coin.DisplayName}: {Helpers.ToCurrency(reward, "$")}");
+                poolGrid.Children.Add(new Cell(coin.DisplayName) { Color = ConsoleColor.Yellow, Padding = new Thickness(2, 0, 10, 0) });
+                foreach (var profits in poolProfitsDictionary)
+                {
+                    var profit = profits.Value.GetValueOrDefault(coin.TickerSymbol, new Profit());
+                    if (profit.Reward <= 0)
+                    {
+                        poolGrid.Children.Add(new Cell("No data") { Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) });
+                    }
+                    else
+                    {
+                        poolGrid.Children.Add(new Cell(profit.ToString()) { Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) });
+                    }
+                }
+
             }
+            var poolDoc = new Document(poolGrid);
+            ConsoleRenderer.RenderDocument(poolDoc);
             Console.WriteLine();
-            WriteInCyan("NICEHASH ALGORITHMS SUMMARY: ");
+            WriteInCyan(" NICEHASH ALGORITHMS SUMMARY: ");
+
+            int firstColumnWidth = 0;
+            int otherColumnWidth = 0;
+            for (int i = 0; i < poolGrid.Columns.Count; i++)
+            {
+                if (i == 0)
+                {
+                    firstColumnWidth = poolGrid.Columns[i].ActualWidth;
+                }
+                else
+                {
+                    otherColumnWidth += poolGrid.Columns[i].ActualWidth;
+                }
+            }
+            var nicehashGrid = new Grid
+            {
+                Color = ConsoleColor.White,
+                MinWidth = poolGrid.ActualWidth,
+                Margin = new Thickness(1, 0, 0, 0),
+                Columns = { new GridLength(firstColumnWidth, GridUnit.Char), new GridLength(otherColumnWidth, GridUnit.Char) },
+                Children =
+                {
+                        new Cell("Name") { Stroke = headerThickness, Color = ConsoleColor.Magenta , Padding = new Thickness(2, 0, 2, 0)},
+                        new Cell("NiceHash API") { Stroke = headerThickness, Color = ConsoleColor.Magenta, Padding = new Thickness(2, 0, 2, 0) }
+                }
+            };
+
             foreach (var nicehashAlgorithm in nicehashAlgorithms)
             {
-                double reward = nicehashProfitsDictionary.GetValueOrDefault(nicehashAlgorithm.ApiId, 0);
-                Console.WriteLine($"{nicehashAlgorithm.DisplayName}: {Helpers.ToCurrency(reward, "$")}");
+                nicehashGrid.Children.Add(new Cell(nicehashAlgorithm.DisplayName) { Color = ConsoleColor.Yellow, Padding = new Thickness(2, 0, 2, 0) });
+                var profit = nicehashProfitsDictionary.GetValueOrDefault(nicehashAlgorithm.ApiId, new Profit());
+                if (profit.Reward <= 0)
+                {
+                    nicehashGrid.Children.Add(new Cell("No data") { Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) });
+                }
+                else
+                {
+                    nicehashGrid.Children.Add(new Cell(profit.ToString()) { Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) });
+                }
             }
+            var nicehashDoc = new Document(nicehashGrid);
+            ConsoleRenderer.RenderDocument(nicehashDoc);
+
             Console.WriteLine();
         }
 
@@ -559,7 +658,7 @@ namespace CryptonightProfitSwitcher
             if (settings.EnableWatchdog)
             {
                 _watchdogCts = new CancellationTokenSource();
-                var watchdogTask = WatchdogTask(settings,appRoot, appRootFolder, _watchdogCts.Token);
+                var watchdogTask = WatchdogTask(settings, appRoot, appRootFolder, _watchdogCts.Token);
             }
         }
 
