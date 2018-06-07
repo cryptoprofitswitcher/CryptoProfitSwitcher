@@ -52,7 +52,7 @@ If you download the latest release, there will be a default configuration:
 
 - CPU: AMD Ryzen 1600X
 - GPU: AMD Vega 64 + AMD Vega 56
-- Coins: Bittube, Graft, Haven, Loki, Stellite, AEON
+- Coins: Bittube, Graft, Haven, Loki, Stellite, AEON, Electroneum
 - NiceHash: CryptonightV7, CryptonightHeavy
 - Miner: XmrStak
 
