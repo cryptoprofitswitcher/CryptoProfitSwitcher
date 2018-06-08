@@ -6,6 +6,7 @@
         CryptonightHeavy,
         CryptonightLite,
         CryptonightBittube,
-        CryptonightStellite
+        CryptonightStellite,
+        CryptonightHaven
     }
 }

@@ -47,6 +47,7 @@ namespace CryptonightProfitSwitcher.Mineables
                 case Algorithm.CryptonightStellite:
                     return settings.CryptonightV7Hashrate;
                 case Algorithm.CryptonightHeavy:
+                case Algorithm.CryptonightHaven:
                     return settings.CryptonightHeavyHashrate;
                 case Algorithm.CryptonightBittube:
                     // Backwards compatibilty
