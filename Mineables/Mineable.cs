@@ -7,6 +7,8 @@ namespace CryptonightProfitSwitcher.Mineables
     {
         public string DisplayName { get; set; }
         public double? PreferFactor { get; set; }
+        public string PrepareScript { get; set; }
+        public bool? Enabled { get; set; }
         public string XmrStakPath { get; set; }
         public string ConfigPath { get; set; }
         public int XmrStakApiPort { get; set; }
@@ -35,6 +37,10 @@ namespace CryptonightProfitSwitcher.Mineables
         public bool SRBMinerUseXmrStakCPUMining { get; set; }
         public abstract string Id { get; }
 
+        public bool IsEnabled()
+        {
+            return Enabled ?? true;
+        }
         public int GetExpectedHashrate(Settings settings)
         {
             if (OverrideExpectedHashrate.HasValue)
@@ -44,13 +50,20 @@ namespace CryptonightProfitSwitcher.Mineables
             switch (Algorithm)
             {
                 case Algorithm.CryptonightV7:
+                case Algorithm.CryptonightStellite:
                     return settings.CryptonightV7Hashrate;
                 case Algorithm.CryptonightHeavy:
+                case Algorithm.CryptonightHaven:
                     return settings.CryptonightHeavyHashrate;
+                case Algorithm.CryptonightBittube:
+                    // Backwards compatibilty
+                    if (settings.CryptonightBittubeHashrate > 0)
+                    {
+                        return settings.CryptonightBittubeHashrate;
+                    }
+                    return settings.CryptonightLiteHashrate;
                 case Algorithm.CryptonightLite:
                     return settings.CryptonightLiteHashrate;
-                case Algorithm.CryptonightBittube:
-                    return settings.CryptonightBittubeHashrate;
                 default:
                     throw new NotImplementedException("Can't get expected hashrate for algorithm: " + Algorithm);
             }

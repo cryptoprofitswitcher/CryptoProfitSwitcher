@@ -2,8 +2,10 @@
 using CryptonightProfitSwitcher.Mineables;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace CryptonightProfitSwitcher.Miners
@@ -47,32 +49,59 @@ namespace CryptonightProfitSwitcher.Miners
             _process = new Process();
             string minerPath = Helpers.ResolveToFullPath(mineable.CastXmrPath, appRoot);
             string minerFolderPath = Path.GetDirectoryName(minerPath);
-            var minerDirectory = new DirectoryInfo(minerFolderPath);
             _process.StartInfo.FileName = minerPath;
 
-            string args = $"-S \"{mineable.PoolAddress}\"";
-            args += $" -u \"{mineable.PoolWalletAddress}\"";
-            switch (mineable.Algorithm)
-            {
-                case Algorithm.CryptonightV7:
-                    args += " --algo=1";
-                    break;
-                case Algorithm.CryptonightHeavy:
-                    args += " --algo=2";
-                    break;
-                case Algorithm.CryptonightLite:
-                    args += " --algo=4";
-                    break;
-                case Algorithm.CryptonightBittube:
-                    args += " --algo=5";
-                    break;
-                default:
-                    throw new NotImplementedException("Couldn't start CastXmr, unknown algo: " + mineable.Algorithm);
-            }
-            args += " --remoteaccess";
+            List<string> userDefindedArgs = new List<string>();
             if (!String.IsNullOrEmpty(mineable.CastXmrExtraArguments))
             {
-                args += " " + mineable.CastXmrExtraArguments;
+                userDefindedArgs.AddRange(mineable.CastXmrExtraArguments.Split(" "));
+            }
+
+            string args = "";
+            string space = "";
+            if (!userDefindedArgs.Contains("-S"))
+            {
+                args = $"{space}-S \"{mineable.PoolAddress}\"";
+                space = " ";
+            }
+            if (!userDefindedArgs.Contains("-u"))
+            {
+                args += $"{space}-u \"{mineable.PoolWalletAddress}\"";
+                space = " ";
+            }
+            if (!userDefindedArgs.Any(a => a.Contains("--algo=")))
+            {
+                switch (mineable.Algorithm)
+                {
+                    case Algorithm.CryptonightV7:
+                        args += $"{space}--algo=1";
+                        break;
+                    case Algorithm.CryptonightHeavy:
+                        args += $"{space}--algo=2";
+                        break;
+                    case Algorithm.CryptonightLite:
+                        args += $"{space}--algo=4";
+                        break;
+                    case Algorithm.CryptonightBittube:
+                        args += $"{space}--algo=5";
+                        break;
+                    case Algorithm.CryptonightStellite:
+                        args += $"{space}--algo=6";
+                        break;
+                    default:
+                        throw new NotImplementedException("Couldn't start CastXmr, unknown algo: {mineable.Algorithm}\n" +
+                                                          "You can set --algo yourself in the extra arguments.");
+                }
+                space = " ";
+            }
+            if (!userDefindedArgs.Contains("--remoteaccess"))
+            {
+                args += $"{space}--remoteaccess";
+                space = " ";
+            }
+            if (!String.IsNullOrEmpty(mineable.CastXmrExtraArguments))
+            {
+                args += space + mineable.CastXmrExtraArguments;
             }
             _process.StartInfo.Arguments = args;
             _process.StartInfo.UseShellExecute = true;

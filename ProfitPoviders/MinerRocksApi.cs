@@ -26,14 +26,13 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         decimal diff;
                         switch (timeFrame)
                         {
-                            case ProfitTimeframe.Live:
-                                diff = lastStats.network.difficulty;
-                                break;
                             case ProfitTimeframe.Day:
                                 diff = lastStats.pool.stats.diffs["wavg24h"];
                                 break;
                             default:
-                                throw new NotImplementedException("Unsupported profit time frame for MinerRocksApi: " + timeFrame);
+                                timeFrame = ProfitTimeframe.Live;
+                                diff = lastStats.network.difficulty;
+                                break;
                         }
 
                         decimal reward = lastStats.network.reward;

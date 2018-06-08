@@ -149,6 +149,9 @@ namespace CryptonightProfitSwitcher
                                     case ProfitProvider.MinerRocksApi:
                                         profitProviderClass = new MinerRocksApi();
                                         break;
+                                    case ProfitProvider.MoneroOceanApi:
+                                        profitProviderClass = new MoneroOceanApi();
+                                        break;
                                     default:
                                         throw new NotImplementedException("Doesn't support ProfitProvider: " + profitProvider);
                                 }
@@ -159,7 +162,7 @@ namespace CryptonightProfitSwitcher
                         // Get best pool mined coin
                         Coin bestPoolminedCoin = null;
                         double bestPoolminedCoinProfit = 0;
-                        foreach (var coin in coins)
+                        foreach (var coin in coins.Where(c => c.IsEnabled()))
                         {
                             var profit = Helpers.GetPoolProfitForCoin(coin, poolProfitsDictionary, settings);
                             double calcProfit = coin.PreferFactor.HasValue ? profit.Reward * coin.PreferFactor.Value : profit.Reward;
@@ -187,7 +190,7 @@ namespace CryptonightProfitSwitcher
                         //Get best nicehash algorithm
                         NicehashAlgorithm bestNicehashAlgorithm = null;
                         double bestNicehashAlgorithmProfit = 0;
-                        foreach (var nicehashAlgorithm in nicehashAlgorithms)
+                        foreach (var nicehashAlgorithm in nicehashAlgorithms.Where(na => na.IsEnabled()))
                         {
                             Profit profit = nicehashProfitsDictionary.GetValueOrDefault(nicehashAlgorithm.ApiId, new Profit());
                             double preferFactor = 1;
@@ -301,6 +304,12 @@ namespace CryptonightProfitSwitcher
                         Console.Write("r");
                         Console.ResetColor();
                         Console.WriteLine("' to reset the app and run the reset script if it is set.");
+
+                        Console.Write(" Press '");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("s");
+                        Console.ResetColor();
+                        Console.WriteLine("' to reload the app without reset.");
 
                         Console.Write(" Press '");
                         Console.ForegroundColor = ConsoleColor.Yellow;
@@ -435,7 +444,7 @@ namespace CryptonightProfitSwitcher
                             if (_watchdogOvershots > settings.WatchdogAllowedOversteps)
                             {
                                 Console.WriteLine("Watchdog: Too many overshots -> Requesting reset");
-                                ResetApp(settings, appFolderPath);
+                                ResetApp(settings, appFolderPath,true);
                             }
                         }
                         Task.Delay(TimeSpan.FromSeconds(settings.WatchdogInterval), token).Wait();
@@ -486,10 +495,15 @@ namespace CryptonightProfitSwitcher
                                 _profitSwitcherTaskCts = new CancellationTokenSource();
                                 _profitSwitcherTask = ProfitSwitcherTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms, _profitSwitcherTaskCts.Token);
                             }
+                            else if (readKey.Key == ConsoleKey.S)
+                            {
+                                //Relaunch app without reset script
+                                ResetApp(settings, appFolderPath, false);
+                            }
                             else if (readKey.Key == ConsoleKey.R)
                             {
                                 //Reset app
-                                ResetApp(settings, appFolderPath);
+                                ResetApp(settings, appFolderPath, true);
                             }
                         }
                     }
@@ -557,18 +571,13 @@ namespace CryptonightProfitSwitcher
 
             foreach (var coin in coins)
             {
-                poolGrid.Children.Add(new Cell(coin.DisplayName) { Color = ConsoleColor.Yellow, Padding = new Thickness(2, 0, 10, 0) });
+                poolGrid.Children.Add(new Cell(coin.DisplayName) { Color = coin.IsEnabled() ? ConsoleColor.Yellow : ConsoleColor.DarkGray, Padding = new Thickness(2, 0, 10, 0) });
                 foreach (var profits in poolProfitsDictionary)
                 {
                     var profit = profits.Value.GetValueOrDefault(coin.TickerSymbol, new Profit());
-                    if (profit.Reward <= 0)
-                    {
-                        poolGrid.Children.Add(new Cell("No data") { Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) });
-                    }
-                    else
-                    {
-                        poolGrid.Children.Add(new Cell(profit.ToString()) { Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) });
-                    }
+                    poolGrid.Children.Add(profit.Reward <= 0
+                        ? new Cell("No data") { Color = ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)}
+                        : new Cell(profit.ToString()) { Color = coin.IsEnabled() ? ConsoleColor.Gray : ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)});
                 }
 
             }
@@ -605,16 +614,11 @@ namespace CryptonightProfitSwitcher
 
             foreach (var nicehashAlgorithm in nicehashAlgorithms)
             {
-                nicehashGrid.Children.Add(new Cell(nicehashAlgorithm.DisplayName) { Color = ConsoleColor.Yellow, Padding = new Thickness(2, 0, 2, 0) });
+                nicehashGrid.Children.Add(new Cell(nicehashAlgorithm.DisplayName) { Color = nicehashAlgorithm.IsEnabled() ? ConsoleColor.Yellow : ConsoleColor.DarkGray, Padding = new Thickness(2, 0, 2, 0) });
                 var profit = nicehashProfitsDictionary.GetValueOrDefault(nicehashAlgorithm.ApiId, new Profit());
-                if (profit.Reward <= 0)
-                {
-                    nicehashGrid.Children.Add(new Cell("No data") { Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) });
-                }
-                else
-                {
-                    nicehashGrid.Children.Add(new Cell(profit.ToString()) { Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) });
-                }
+                nicehashGrid.Children.Add(profit.Reward <= 0
+                    ? new Cell("No data") { Color = ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)}
+                    : new Cell(profit.ToString()) { Color = nicehashAlgorithm.IsEnabled() ? ConsoleColor.Gray : ConsoleColor.DarkGray,Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)});
             }
             var nicehashDoc = new Document(nicehashGrid);
             ConsoleRenderer.RenderDocument(nicehashDoc);
@@ -622,13 +626,16 @@ namespace CryptonightProfitSwitcher
             Console.WriteLine();
         }
 
-        static void ResetApp(Settings settings, string appFolderPath)
+        static void ResetApp(Settings settings, string appFolderPath, bool runResetScript)
         {
             _profitSwitcherTaskCts.Cancel();
             _profitSwitcherTask.Wait();
             StopMiner();
             Thread.Sleep(settings.MinerStartDelay);
-            ExecuteResetScript(settings, appFolderPath);
+            if (runResetScript)
+            {
+                ExecuteScript(settings.ResetScript, appFolderPath);
+            }
             _keyPressesCts?.Cancel();
             _mainResetCts?.Cancel();
         }
@@ -637,6 +644,8 @@ namespace CryptonightProfitSwitcher
             StopMiner();
 
             _currentMineable = mineable;
+
+            ExecuteScript(mineable.PrepareScript, appRoot);
 
             switch (mineable.Miner)
             {
@@ -671,14 +680,16 @@ namespace CryptonightProfitSwitcher
             _watchdogOvershots = 0;
         }
 
-        static void ExecuteResetScript(Settings settings, string appFolderPath)
+        static void ExecuteScript(string scriptPath, string appFolderPath)
         {
-            if (!String.IsNullOrEmpty(settings.ResetScript))
+            if (!String.IsNullOrEmpty(scriptPath))
             {
+                //TODO: This is Windows specific, so add a variant for Linux and MacOS -> PRs are welcome.
+                
                 //Execute reset script
                 var resetProcess = new Process();
                 resetProcess.StartInfo.FileName = "cmd.exe";
-                resetProcess.StartInfo.Arguments = $"/c {Helpers.ResolveToArgumentPath(settings.ResetScript, appFolderPath)}";
+                resetProcess.StartInfo.Arguments = $"/c {Helpers.ResolveToArgumentPath(scriptPath, appFolderPath)}";
                 resetProcess.StartInfo.UseShellExecute = true;
                 resetProcess.StartInfo.CreateNoWindow = false;
                 resetProcess.StartInfo.RedirectStandardOutput = false;

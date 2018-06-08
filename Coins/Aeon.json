@@ -5,10 +5,15 @@
   "DisplayName": "Aeon",
   // Ticker symbol on minecryptonight.net, needed to get profit data
   "TickerSymbol": "AEON",
-  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite or CryptonightBittube
+  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite or CryptonightHaven
   "Algorithm": "CryptonightLite",
   // Used Miner, can be XmrStak, CastXmr or SRBMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
+  // Path to script that runs before the miner starts, can be null.
+  // For example:: Path to batch file that sets specific OverdriveN settings for this coin
+  "PrepareScript": null,
+  // Enables or disables this coin, can be true or false (default: true)
+  "Enabled": true,
 
   /* OVERRIDE SETTINGS - NOT NEEDED */
 

@@ -1,0 +1,78 @@
+﻿{
+  /* GENERAL CONFIGURATION - ALWAYS NEEDED */
+
+  // Displayed name, can be anything.
+  "DisplayName": "MoneroOcean",
+  // Ticker symbol, needed to get profit data (SPECIAL: MoneroOcean)
+  "TickerSymbol": "MoneroOcean",
+  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite or CryptonightHaven
+  "Algorithm": "CryptonightV7",
+  // Used Miner, can be XmrStak, CastXmr or SRBMiner (Recommended: XmrStak)
+  "Miner": "XmrStak",
+  // Path to script that runs before the miner starts, can be null.
+  // For example:: Path to batch file that sets specific OverdriveN settings for this coin
+  "PrepareScript": null,
+  // Enables or disables this coin, can be true or false (default: true)
+  "Enabled": true,
+
+  /* OVERRIDE SETTINGS - NOT NEEDED */
+
+  // Override the expected hashrate, can be a number or null.
+  "OverrideExpectedHashrate": null,
+  // Override the profit timeframe, can be Live, Day or null.
+  "OverrideProfitTimeframe": null,
+  // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, MinerRocksApi) or null.
+  "OverridePoolProfitProviders": "MoneroOceanApi",
+  // On the determination of the most profitable coin, the actual estimated profit will be multiplied by this, can be a decimal or null.
+  "PreferFactor": 1.05,
+
+  /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
+
+  "PoolAddress": "gulf.moneroocean.stream:10064",
+  "PoolWalletAddress": "4GdoN7NCTi8a5gZug7PrwZNKjvHFmKeV11L6pNJPgj5QNEHsN6eeX3DaAQFwZ1ufD4LYCZKArktt113W7QjWvQ7CWBPzu9XXtDTKJEKu2r",
+  "PoolPassword": "worker:pw",
+  "PoolUseTls": false,
+  "PoolTlsFingerprint": "",
+  "PoolWeight": 1,
+  "PoolRigId": "",
+
+  /* XMR-STAK CONFIGURATION - NEEDED IF MINER IS XMRSTAK OR FOR CPU MINING*/
+
+  // Path to Xmr-Stak executable
+  "XmrStakPath": "XmrStak/xmr-stak.exe",
+  // Path to Xmr-Stak config file
+  "ConfigPath": "XmrStak/config.txt",
+  // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak.
+  "XmrStakApiPort": 4000,
+  // Path to Xmr-Stak cpu config file, can be null.
+  "CpuPath": "XmrStak/cpu_v7.txt",
+  // Path to Xmr-Stak amd gpu config file, can be null.
+  "AmdPath": "XmrStak/amd_v7.txt",
+  // Path to Xmr-Stak nvidea gpu config file, can be null.
+  "NvidiaPath": null,
+  // Set the path to Xmr-Stak pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
+  "PoolsPath": null,
+
+  /* CASTXMR CONFIGURATION - NEEDED IF MINER IS CASTXMR */
+
+  // Path to CastXmr executable
+  "CastXmrPath": "CastXmr/cast_xmr-vega.exe",
+  // Extra arguments for setting the GPUs or tuning
+  "CastXmrExtraArguments": "-G 0,1",
+  // Set if you want to also start Xmr-Stak for CPU Mining
+  "CastXmrUseXmrStakCPUMining": true,
+
+  /* SRBMINER CONFIGURATION - NEEDED IF MINER IS SRBMINER*/
+
+  // Path to SRBMiner executable
+  "SRBMinerPath": "SRBMiner/SRBMiner-CN.exe",
+  // Path to SRBMiner config file
+  "SRBMinerConfigPath": "SRBMiner/config_v7.txt",
+  // Port of the SRBMiner REST API, should match the port in the config file of SRBMiner.
+  "SRBMinerApiPort": 21555,
+  // Set the path to SRBMiner pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
+  "SRBMinerPoolsPath": null,
+  // Set if you want to also start Xmr-Stak for CPU Mining
+  "SRBMinerUseXmrStakCPUMining": true
+
+}

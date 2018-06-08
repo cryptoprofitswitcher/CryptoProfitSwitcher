@@ -15,8 +15,8 @@ It is very useful for **AMD Vega GPUs** because it can detect hash drops and res
   - **Reset:** Restarts the miner and runs a user-defined Reset script
   - **Performance:** Resource friendly with 0%-CPU usage
   - **Miners:** Xmr-Stak (Recommended), Cast XMR, SRBMiner
-  - **Profit data:** [MineCryptoNight API](http://minecryptonight.net/api), [miner.rocks API](https://miner.rocks/)
-  - **Supports all algorithms:** CryptonightV7, CryptonightHeavy, CryptonightLiteV7, Cryptonight BitTube Variant
+  - **Profit data:** [MineCryptoNight API](http://minecryptonight.net/api), [miner.rocks API](https://miner.rocks/), [MoneroOcean](https://moneroocean.stream)
+  - **Supports all algorithms:** CryptonightV7, CryptonightHeavy, CryptonightLiteV7 and the variants of Bittube, Stellite and Haven Protocol
   - **Supports all coins:** That are mineable using the miners
   - **Supports all pools:** That are supported by the miners
 
@@ -52,7 +52,7 @@ If you download the latest release, there will be a default configuration:
 
 - CPU: AMD Ryzen 1600X
 - GPU: AMD Vega 64 + AMD Vega 56
-- Coins: Bittube, Graft, Haven, Loki, Stellite, AEON, Electroneum
+- Coins: Bittube, Graft, Haven Protocol, Loki, Stellite, AEON, Electroneum, MoneroOcean
 - NiceHash: CryptonightV7, CryptonightHeavy
 - Miner: XmrStak
 
@@ -99,6 +99,7 @@ You have to change the default configuration for your setup, see **How to use?**
 * [doktor83's SRBMiner](https://bitcointalk.org/index.php?topic=3167363.0)
 * [MineCryptoNight API](http://minecryptonight.net/api)
 * [miner.rocks API](https://miner.rocks/)
+* [MoneroOcean API](https://moneroocean.stream)
 * [NiceHash API](https://www.nicehash.com/doc-api)
 * [CoinMarketCap API](https://coinmarketcap.com/api/)
 * [CsConsoleFormat](https://github.com/Athari/CsConsoleFormat)
