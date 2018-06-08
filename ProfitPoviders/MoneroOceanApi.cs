@@ -32,7 +32,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         decimal usdRewardDec = profitXmrPerDay * usdPriceXmr;
                         double usdReward = (double)usdRewardDec;
 
-                        poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdReward, ProfitProvider.MoneroOcean, ProfitTimeframe.Live);
+                        poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdReward, ProfitProvider.MoneroOceanApi, ProfitTimeframe.Live);
                     }
                     catch (Exception ex)
                     {

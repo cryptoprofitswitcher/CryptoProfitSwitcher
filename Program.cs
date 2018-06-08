@@ -149,7 +149,7 @@ namespace CryptonightProfitSwitcher
                                     case ProfitProvider.MinerRocksApi:
                                         profitProviderClass = new MinerRocksApi();
                                         break;
-                                    case ProfitProvider.MoneroOcean:
+                                    case ProfitProvider.MoneroOceanApi:
                                         profitProviderClass = new MoneroOceanApi();
                                         break;
                                     default:

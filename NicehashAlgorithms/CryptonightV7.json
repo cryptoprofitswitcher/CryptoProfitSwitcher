@@ -5,7 +5,7 @@
   "DisplayName": "CryptonightV7",
   // Api ID listed on nicehash.com/doc-api, needed to get profit data
   "ApiId": 30,
-  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite, CryptonightBittube or CryptonightStellite
+  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite or CryptonightHaven
   "Algorithm": "CryptonightV7",
   // Used Miner, can be XmrStak, CastXmr or SRBMiner (Recommended: XmrStak)
   "Miner": "XmrStak",

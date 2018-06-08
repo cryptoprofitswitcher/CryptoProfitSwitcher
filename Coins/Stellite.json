@@ -5,7 +5,7 @@
   "DisplayName": "Stellite",
   // Ticker symbol on minecryptonight.net, needed to get profit data
   "TickerSymbol": "XTL",
-  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite, CryptonightBittube or CryptonightStellite
+  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite or CryptonightHaven
   "Algorithm": "CryptonightStellite",
   // Used Miner, can be XmrStak, CastXmr or SRBMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
