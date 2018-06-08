@@ -307,6 +307,12 @@ namespace CryptonightProfitSwitcher
 
                         Console.Write(" Press '");
                         Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("s");
+                        Console.ResetColor();
+                        Console.WriteLine("' to reload the app without reset.");
+
+                        Console.Write(" Press '");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("q");
                         Console.ResetColor();
                         Console.WriteLine("' to quit.");
@@ -438,7 +444,7 @@ namespace CryptonightProfitSwitcher
                             if (_watchdogOvershots > settings.WatchdogAllowedOversteps)
                             {
                                 Console.WriteLine("Watchdog: Too many overshots -> Requesting reset");
-                                ResetApp(settings, appFolderPath);
+                                ResetApp(settings, appFolderPath,true);
                             }
                         }
                         Task.Delay(TimeSpan.FromSeconds(settings.WatchdogInterval), token).Wait();
@@ -489,10 +495,15 @@ namespace CryptonightProfitSwitcher
                                 _profitSwitcherTaskCts = new CancellationTokenSource();
                                 _profitSwitcherTask = ProfitSwitcherTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms, _profitSwitcherTaskCts.Token);
                             }
+                            else if (readKey.Key == ConsoleKey.S)
+                            {
+                                //Relaunch app without reset script
+                                ResetApp(settings, appFolderPath, false);
+                            }
                             else if (readKey.Key == ConsoleKey.R)
                             {
                                 //Reset app
-                                ResetApp(settings, appFolderPath);
+                                ResetApp(settings, appFolderPath, true);
                             }
                         }
                     }
@@ -615,13 +626,16 @@ namespace CryptonightProfitSwitcher
             Console.WriteLine();
         }
 
-        static void ResetApp(Settings settings, string appFolderPath)
+        static void ResetApp(Settings settings, string appFolderPath, bool runResetScript)
         {
             _profitSwitcherTaskCts.Cancel();
             _profitSwitcherTask.Wait();
             StopMiner();
             Thread.Sleep(settings.MinerStartDelay);
-            ExecuteScript(settings.ResetScript, appFolderPath);
+            if (runResetScript)
+            {
+                ExecuteScript(settings.ResetScript, appFolderPath);
+            }
             _keyPressesCts?.Cancel();
             _mainResetCts?.Cancel();
         }
