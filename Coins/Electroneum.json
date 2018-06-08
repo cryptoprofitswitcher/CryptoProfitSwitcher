@@ -9,6 +9,11 @@
   "Algorithm": "CryptonightV7",
   // Used Miner, can be XmrStak, CastXmr or SRBMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
+  // Path to script that runs before the miner starts, can be null.
+  // For example:: Path to batch file that sets specific OverdriveN settings for this coin
+  "PrepareScript": null,
+  // Enables or disables this coin, can be true or false (default: true)
+  "Enabled": true,
 
   /* OVERRIDE SETTINGS - NOT NEEDED */
 

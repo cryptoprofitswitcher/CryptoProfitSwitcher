@@ -7,6 +7,8 @@ namespace CryptonightProfitSwitcher.Mineables
     {
         public string DisplayName { get; set; }
         public double? PreferFactor { get; set; }
+        public string PrepareScript { get; set; }
+        public bool? Enabled { get; set; }
         public string XmrStakPath { get; set; }
         public string ConfigPath { get; set; }
         public int XmrStakApiPort { get; set; }
@@ -35,6 +37,10 @@ namespace CryptonightProfitSwitcher.Mineables
         public bool SRBMinerUseXmrStakCPUMining { get; set; }
         public abstract string Id { get; }
 
+        public bool IsEnabled()
+        {
+            return Enabled ?? true;
+        }
         public int GetExpectedHashrate(Settings settings)
         {
             if (OverrideExpectedHashrate.HasValue)
