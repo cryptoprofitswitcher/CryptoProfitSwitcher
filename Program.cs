@@ -149,6 +149,9 @@ namespace CryptonightProfitSwitcher
                                     case ProfitProvider.MinerRocksApi:
                                         profitProviderClass = new MinerRocksApi();
                                         break;
+                                    case ProfitProvider.MoneroOcean:
+                                        profitProviderClass = new MoneroOceanApi();
+                                        break;
                                     default:
                                         throw new NotImplementedException("Doesn't support ProfitProvider: " + profitProvider);
                                 }
@@ -563,7 +566,7 @@ namespace CryptonightProfitSwitcher
                     var profit = profits.Value.GetValueOrDefault(coin.TickerSymbol, new Profit());
                     poolGrid.Children.Add(profit.Reward <= 0
                         ? new Cell("No data") { Color = ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)}
-                        : new Cell(profit.ToString()) { Color = coin.IsEnabled() ? ConsoleColor.White : ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)});
+                        : new Cell(profit.ToString()) { Color = coin.IsEnabled() ? ConsoleColor.Gray : ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)});
                 }
 
             }
@@ -604,7 +607,7 @@ namespace CryptonightProfitSwitcher
                 var profit = nicehashProfitsDictionary.GetValueOrDefault(nicehashAlgorithm.ApiId, new Profit());
                 nicehashGrid.Children.Add(profit.Reward <= 0
                     ? new Cell("No data") { Color = ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)}
-                    : new Cell(profit.ToString()) { Color = nicehashAlgorithm.IsEnabled() ? ConsoleColor.White : ConsoleColor.DarkGray,Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)});
+                    : new Cell(profit.ToString()) { Color = nicehashAlgorithm.IsEnabled() ? ConsoleColor.Gray : ConsoleColor.DarkGray,Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)});
             }
             var nicehashDoc = new Document(nicehashGrid);
             ConsoleRenderer.RenderDocument(nicehashDoc);
