@@ -5,6 +5,7 @@
 * [doktor83's SRBMiner](https://bitcointalk.org/index.php?topic=3167363.0)
 * [MineCryptoNight API](http://minecryptonight.net/api)
 * [miner.rocks API](https://miner.rocks/)
+* [MoneroOcean API](https://moneroocean.stream)
 * [NiceHash API](https://www.nicehash.com/doc-api)
 * [CoinMarketCap API](https://coinmarketcap.com/api/)
 * [CsConsoleFormat](https://github.com/Athari/CsConsoleFormat)
