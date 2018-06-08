@@ -66,6 +66,9 @@ namespace CryptonightProfitSwitcher.Miners
                 case Algorithm.CryptonightBittube:
                     args += " --algo=5";
                     break;
+                case Algorithm.CryptonightStellite:
+                    args += " --algo=6";
+                    break;
                 default:
                     throw new NotImplementedException("Couldn't start CastXmr, unknown algo: " + mineable.Algorithm);
             }

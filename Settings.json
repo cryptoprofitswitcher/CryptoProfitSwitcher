@@ -3,7 +3,6 @@
   "CryptonightV7Hashrate": 4350,
   "CryptonightHeavyHashrate": 2980,
   "CryptonightLiteHashrate": 9980,
-  "CryptonightBittubeHashrate": 9980,
   // Timeframe for the profit calculation, can be Live or Day
   "ProfitTimeframe": "Live",
   // Comma seperated string with the pool profit providers. Order is important, the first ones are preferred. Available: MineCryptonightApi, MinerRocksApi

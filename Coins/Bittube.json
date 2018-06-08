@@ -5,7 +5,7 @@
   "DisplayName": "Bittube",
   // Ticker symbol on minecryptonight.net, needed to get profit data
   "TickerSymbol": "TUBE",
-  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite or CryptonightBittube
+  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite, CryptonightBittube or CryptonightStellite
   "Algorithm": "CryptonightBittube",
   // Used Miner, can be XmrStak, CastXmr or SRBMiner
   "Miner": "XmrStak",

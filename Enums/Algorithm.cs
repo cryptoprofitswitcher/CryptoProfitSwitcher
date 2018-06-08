@@ -5,6 +5,7 @@
         CryptonightV7,
         CryptonightHeavy,
         CryptonightLite,
-        CryptonightBittube
+        CryptonightBittube,
+        CryptonightStellite
     }
 }

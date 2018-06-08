@@ -2,11 +2,11 @@
   /* GENERAL CONFIGURATION - ALWAYS NEEDED */
 
   // Displayed name, can be anything.
-  "DisplayName": "CryptonightHeavy",
-  // Api ID listed on nicehash.com/doc-api, needed to get profit data
-  "ApiId": 31,
+  "DisplayName": "Monero",
+  // Ticker symbol on minecryptonight.net, needed to get profit data
+  "TickerSymbol": "XMR",
   // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite, CryptonightBittube or CryptonightStellite
-  "Algorithm": "CryptonightHeavy",
+  "Algorithm": "CryptonightV7",
   // Used Miner, can be XmrStak, CastXmr or SRBMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
 
@@ -15,16 +15,16 @@
   // Override the expected hashrate, can be a number or null.
   "OverrideExpectedHashrate": null,
   // Override the profit timeframe, can be Live, Day or null.
-  "OverrideProfitTimeframe": "Live",
-  // On the determination of the most profitable algorithm, the actual estimated profit will be multiplied by this.
-  // Can be a decimal or null. It is recommended to prefer NiceHash algorithms.
-  "PreferFactor": 1.15,
-
+  "OverrideProfitTimeframe": null,
+  // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, MinerRocksApi) or null.
+  "OverridePoolProfitProviders": null,
+  // On the determination of the most profitable coin, the actual estimated profit will be multiplied by this, can be a decimal or null.
+  "PreferFactor": 1.0,
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "cryptonightheavy.eu.nicehash.com:3364",
-  "PoolWalletAddress": "31zXAFVEeksCYSnxfGz9VE9Dk6WXfijpuy.Worker",
+  "PoolAddress": "xmr-eu1.nanopool.org:14444",
+  "PoolWalletAddress": "4GdoN7NCTi8a5gZug7PrwZNKjvHFmKeV11L6pNJPgj5QNEHsN6eeX3DaAQFwZ1ufD4LYCZKArktt113W7QjWvQ7CWBPzu9XXtDTKJEKu2r",
   "PoolPassword": "x",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
@@ -40,9 +40,9 @@
   // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak.
   "XmrStakApiPort": 4000,
   // Path to Xmr-Stak cpu config file, can be null.
-  "CpuPath": "XmrStak/cpu_heavy.txt",
+  "CpuPath": "XmrStak/cpu_v7.txt",
   // Path to Xmr-Stak amd gpu config file, can be null.
-  "AmdPath": "XmrStak/amd_heavy.txt",
+  "AmdPath": "XmrStak/amd_v7.txt",
   // Path to Xmr-Stak nvidea gpu config file, can be null.
   "NvidiaPath": null,
   // Set the path to Xmr-Stak pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
@@ -62,13 +62,12 @@
   // Path to SRBMiner executable
   "SRBMinerPath": "SRBMiner/SRBMiner-CN.exe",
   // Path to SRBMiner config file
-  "SRBMinerConfigPath": "SRBMiner/config_heavy.txt",
+  "SRBMinerConfigPath": "SRBMiner/config_v7.txt",
   // Port of the SRBMiner REST API, should match the port in the config file of SRBMiner.
   "SRBMinerApiPort": 21555,
   // Set the path to SRBMiner pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
   "SRBMinerPoolsPath": null,
   // Set if you want to also start Xmr-Stak for CPU Mining
   "SRBMinerUseXmrStakCPUMining": true
-
 
 }

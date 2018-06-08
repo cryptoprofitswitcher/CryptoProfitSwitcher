@@ -44,13 +44,19 @@ namespace CryptonightProfitSwitcher.Mineables
             switch (Algorithm)
             {
                 case Algorithm.CryptonightV7:
+                case Algorithm.CryptonightStellite:
                     return settings.CryptonightV7Hashrate;
                 case Algorithm.CryptonightHeavy:
                     return settings.CryptonightHeavyHashrate;
+                case Algorithm.CryptonightBittube:
+                    // Backwards compatibilty
+                    if (settings.CryptonightBittubeHashrate > 0)
+                    {
+                        return settings.CryptonightBittubeHashrate;
+                    }
+                    return settings.CryptonightLiteHashrate;
                 case Algorithm.CryptonightLite:
                     return settings.CryptonightLiteHashrate;
-                case Algorithm.CryptonightBittube:
-                    return settings.CryptonightBittubeHashrate;
                 default:
                     throw new NotImplementedException("Can't get expected hashrate for algorithm: " + Algorithm);
             }

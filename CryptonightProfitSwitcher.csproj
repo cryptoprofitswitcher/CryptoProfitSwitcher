@@ -31,6 +31,9 @@
     <None Update="Coins\Electroneum.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Coins\Monero.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Coins\Graft.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
