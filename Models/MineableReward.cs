@@ -1,7 +1,4 @@
 ﻿using CryptonightProfitSwitcher.Mineables;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CryptonightProfitSwitcher.Models
 {

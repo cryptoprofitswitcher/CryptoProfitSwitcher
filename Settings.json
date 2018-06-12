@@ -8,9 +8,9 @@
   // Comma seperated string with the pool profit providers. Order is important, the first ones are preferred. Available: MineCryptonightApi, MinerRocksApi
   "PoolProfitProviders": "MineCryptonightApi,MinerRocksApi",
   // Set the strategy of profit switching, can be:
-  // MaximizeFiat: Will maximize the profit in US dollar
+  // MaximizeFiat: Will maximize the profit in US dollar (default)
   // MaximizeCoins: Will try to maximize coin reward by comparing the current reward with the reward of the last 24 hours, this setting will ignore the price of the coins and is only compatible with miner.rocks profit provider
-  "ProfitSwitchingStrategy": "MaximizeCoins",
+  "ProfitSwitchingStrategy": "MaximizeFiat",
   // Time in seconds between profit checks
   "ProfitCheckInterval": 60,
   // Time in seconds until a profit switch can happen again

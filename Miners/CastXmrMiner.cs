@@ -1,7 +1,6 @@
 ﻿using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Mineables;
 using CryptonightProfitSwitcher.Models;
-using CryptonightProfitSwitcher.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;

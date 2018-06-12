@@ -1,8 +1,6 @@
 ﻿using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Miners;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CryptonightProfitSwitcher.Factories
 {
