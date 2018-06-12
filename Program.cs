@@ -167,7 +167,7 @@ namespace CryptonightProfitSwitcher
                         var nicehashProfitsDictionary = NicehashApi.GetProfits(appRootFolder, settings, nicehashAlgorithms);
 
                         //Get best nicehash algorithm
-                        MineableReward bestNicehashAlgorithm = profitSwitchingStrategy.GetBestNicehashAlgorithm(nicehashAlgorithms, nicehashProfitsDictionary,settings);
+                        MineableReward bestNicehashAlgorithm = profitSwitchingStrategy.GetBestNicehashAlgorithm(nicehashAlgorithms, nicehashProfitsDictionary, settings);
                         if (bestNicehashAlgorithm?.Mineable != null)
                         {
                             Console.WriteLine("Got best nicehash algorithm: " + bestNicehashAlgorithm.Mineable.DisplayName);
@@ -430,7 +430,7 @@ namespace CryptonightProfitSwitcher
                             if (_watchdogOvershots > settings.WatchdogAllowedOversteps)
                             {
                                 Console.WriteLine("Watchdog: Too many overshots -> Requesting reset");
-                                ResetApp(settings, appFolderPath,true);
+                                ResetApp(settings, appFolderPath, true);
                             }
                         }
                         Task.Delay(TimeSpan.FromSeconds(settings.WatchdogInterval), token).Wait();
@@ -563,8 +563,8 @@ namespace CryptonightProfitSwitcher
                 {
                     var profit = profits.Value.GetValueOrDefault(coin.TickerSymbol, new Profit());
                     poolGrid.Children.Add(profit.UsdRewardLive <= 0
-                        ? new Cell("No data") { Color = ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)}
-                        : new Cell(profit.ToString()) { Color = coin.IsEnabled() ? ConsoleColor.Gray : ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)});
+                        ? new Cell("No data") { Color = ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) }
+                        : new Cell(profit.ToString()) { Color = coin.IsEnabled() ? ConsoleColor.Gray : ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) });
                 }
             }
             var poolDoc = new Document(poolGrid);
@@ -603,8 +603,8 @@ namespace CryptonightProfitSwitcher
                 nicehashGrid.Children.Add(new Cell(nicehashAlgorithm.DisplayName) { Color = nicehashAlgorithm.IsEnabled() ? ConsoleColor.Yellow : ConsoleColor.DarkGray, Padding = new Thickness(2, 0, 2, 0) });
                 var profit = nicehashProfitsDictionary.GetValueOrDefault(nicehashAlgorithm.ApiId, new Profit());
                 nicehashGrid.Children.Add(profit.UsdRewardLive <= 0
-                    ? new Cell("No data") { Color = ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)}
-                    : new Cell(profit.ToString()) { Color = nicehashAlgorithm.IsEnabled() ? ConsoleColor.Gray : ConsoleColor.DarkGray,Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)});
+                    ? new Cell("No data") { Color = ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) }
+                    : new Cell(profit.ToString()) { Color = nicehashAlgorithm.IsEnabled() ? ConsoleColor.Gray : ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) });
             }
             var nicehashDoc = new Document(nicehashGrid);
             ConsoleRenderer.RenderDocument(nicehashDoc);
@@ -664,19 +664,50 @@ namespace CryptonightProfitSwitcher
 
         static void ExecuteScript(string scriptPath, string appFolderPath)
         {
-            if (!String.IsNullOrEmpty(scriptPath))
+            try
             {
-                //TODO: This is Windows specific, so add a variant for Linux and MacOS -> PRs are welcome.
-
-                //Execute reset script
-                var resetProcess = new Process();
-                resetProcess.StartInfo.FileName = "cmd.exe";
-                resetProcess.StartInfo.Arguments = $"/c {Helpers.ResolveToArgumentPath(scriptPath, appFolderPath)}";
-                resetProcess.StartInfo.UseShellExecute = true;
-                resetProcess.StartInfo.CreateNoWindow = false;
-                resetProcess.StartInfo.RedirectStandardOutput = false;
-                resetProcess.Start();
-                resetProcess.WaitForExit();
+                if (!String.IsNullOrEmpty(scriptPath))
+                {
+                    //Execute reset script
+                    var fileInfo = new FileInfo(Helpers.ResolveToFullPath(scriptPath, appFolderPath));
+                    switch (fileInfo.Extension)
+                    {
+                        case ".bat":
+                        case ".BAT":
+                        case ".cmd":
+                        case ".CMD":
+                            {
+                                // Run batch in Windows
+                                var resetProcess = new Process();
+                                resetProcess.StartInfo.FileName = "cmd.exe";
+                                resetProcess.StartInfo.Arguments = $"/c {Helpers.ResolveToArgumentPath(scriptPath, appFolderPath)}";
+                                resetProcess.StartInfo.UseShellExecute = true;
+                                resetProcess.StartInfo.CreateNoWindow = false;
+                                resetProcess.StartInfo.RedirectStandardOutput = false;
+                                resetProcess.Start();
+                                resetProcess.WaitForExit();
+                                break;
+                            }
+                        case ".sh":
+                            {
+                                // Run sh script in Linux
+                                var resetProcess = new Process();
+                                resetProcess.StartInfo.FileName = "sh";
+                                resetProcess.StartInfo.Arguments = Helpers.ResolveToArgumentPath(scriptPath, appFolderPath);
+                                resetProcess.StartInfo.UseShellExecute = true;
+                                resetProcess.StartInfo.CreateNoWindow = false;
+                                resetProcess.StartInfo.RedirectStandardOutput = false;
+                                resetProcess.Start();
+                                resetProcess.WaitForExit();
+                                break;
+                            }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Couldn't execute script: " + scriptPath);
+                Console.WriteLine(ex.Message);
             }
         }
     }
