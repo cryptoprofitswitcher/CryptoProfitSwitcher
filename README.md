@@ -78,18 +78,18 @@ You have to change the default configuration for your setup, see **How to use?**
 1. App will load pool mined coins from the *Coins* folder.
 2. App will load NiceHash algorithms from the *NicehashAlgorithms* folder.
 3. App will load settings from Settings.json.
-4. App will periodically check the profitability
-5. App will start the most profitable mining method based on the definded strategy
+4. App will periodically check the profitability.
+5. App will start the most profitable mining method based on the defined strategy.
 
 #### Strategy 1: MaximizeFiat (default)
 Will select the coin / NiceHash algorithm that has the most profit in USD per day.
 #### Strategy 2: MaximizeCoins
 Will select the coin that has the least difficulty to mine compared to the 24h average difficulty.
-This strategy will ignore the price of the coin and does only work with coins that get their profit data from miner.rocks.
+This strategy will ignore the price of the coin and does only work with coins that get their profit data from [miner.rocks API](https://miner.rocks/).
 #### Strategy 3: WeightedCoinsPrice
 This strategy is a combination of the above two strategies.
 It will multiplicate the profit in USD per day with the relative coin difficulty and maximize this new value.
-This strategy will work with all coins / NiceHash algorithms because it will use 1 for the relative coin difficulty if it can't get the actual relative coin difficulty.
+This strategy will work with all coins / NiceHash algorithms because it will use *1* for the relative coin difficulty if it can't get the actual relative coin difficulty.
 
 ### Reset
 
