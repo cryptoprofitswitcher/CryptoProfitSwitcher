@@ -29,6 +29,7 @@ namespace CryptonightProfitSwitcher
         static CancellationTokenSource _keyPressesCts = null;
         static CancellationTokenSource _profitSwitcherTaskCts = null;
         static Task _profitSwitcherTask;
+        static DateTimeOffset _lastProfitSwitch = DateTimeOffset.MinValue;
 
         static void Main(string[] args)
         {
@@ -628,21 +629,30 @@ namespace CryptonightProfitSwitcher
         }
         static void StartMiner(Mineable mineable, Settings settings, string appRoot, DirectoryInfo appRootFolder)
         {
-            StopMiner();
-
-            _currentMineable = mineable;
-
-            ExecuteScript(mineable.PrepareScript, appRoot);
-
-            _currentMiner = MinerFactory.GetMiner(mineable.Miner);
-
-            _currentMiner.StartMiner(mineable, settings, appRoot, appRootFolder);
-
-            if (settings.EnableWatchdog)
+            var differenceToLastProfitSwitch = DateTimeOffset.Now.Subtract(_lastProfitSwitch).TotalSeconds;
+            if (differenceToLastProfitSwitch > settings.ProfitSwitchCooldown)
             {
-                _watchdogCts = new CancellationTokenSource();
-                var watchdogTask = WatchdogTask(settings, appRoot, appRootFolder, _watchdogCts.Token);
+                StopMiner();
+
+                _currentMineable = mineable;
+
+                ExecuteScript(mineable.PrepareScript, appRoot);
+
+                _currentMiner = MinerFactory.GetMiner(mineable.Miner);
+                _lastProfitSwitch = DateTimeOffset.Now;
+                _currentMiner.StartMiner(mineable, settings, appRoot, appRootFolder);
+
+                if (settings.EnableWatchdog)
+                {
+                    _watchdogCts = new CancellationTokenSource();
+                    var watchdogTask = WatchdogTask(settings, appRoot, appRootFolder, _watchdogCts.Token);
+                }
             }
+            else
+            {
+                Console.WriteLine($"Didn't switched to {mineable.DisplayName}! Waiting {settings.ProfitSwitchCooldown} seconds to cooldown.");
+            }
+            
         }
 
         static void StopMiner()

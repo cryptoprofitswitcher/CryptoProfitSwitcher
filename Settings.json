@@ -9,6 +9,8 @@
   "PoolProfitProviders": "MineCryptonightApi,MinerRocksApi",
   // Time in seconds between profit checks
   "ProfitCheckInterval": 60,
+  // Time in seconds until a profit switch can happen again
+  "ProfitSwitchCooldown": 0,
   // Time in seconds between update of current status
   "DisplayUpdateInterval": 10,
   // Path to script that runs when reset is executed, can be null.
