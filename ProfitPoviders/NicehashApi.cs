@@ -79,7 +79,6 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                             Console.WriteLine("Couldn't get daily profits data from NiceHash: " + ex.Message);
                         }
                     }
-
                 }
             }
             catch (Exception ex)

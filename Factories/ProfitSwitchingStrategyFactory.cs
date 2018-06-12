@@ -11,6 +11,8 @@ namespace CryptonightProfitSwitcher.Factories
             {
                 case ProfitSwitchingStrategy.MaximizeCoins:
                     return new MaximizeCoinsStrategy();
+                case ProfitSwitchingStrategy.WeightedCoinsPrice:
+                    return new WeightedCoinsPriceStrategy();
                 default:
                     return new MaximizeFiatStrategy();
             }

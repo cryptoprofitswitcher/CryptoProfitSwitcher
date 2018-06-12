@@ -345,7 +345,6 @@ namespace CryptonightProfitSwitcher
                                     Console.ResetColor();
                                     Console.WriteLine(" per day)");
                                 }
-                                
                             }
 
                             if (settings.EnableWatchdog)
@@ -513,6 +512,7 @@ namespace CryptonightProfitSwitcher
                 }
             }, token);
         }
+
         static void ResetConsole()
         {
             Console.CursorVisible = false;
@@ -566,7 +566,6 @@ namespace CryptonightProfitSwitcher
                         ? new Cell("No data") { Color = ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)}
                         : new Cell(profit.ToString()) { Color = coin.IsEnabled() ? ConsoleColor.Gray : ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)});
                 }
-
             }
             var poolDoc = new Document(poolGrid);
             ConsoleRenderer.RenderDocument(poolDoc);
@@ -626,6 +625,7 @@ namespace CryptonightProfitSwitcher
             _keyPressesCts?.Cancel();
             _mainResetCts?.Cancel();
         }
+
         static void StartMiner(Mineable mineable, Settings settings, string appRoot, DirectoryInfo appRootFolder)
         {
             var differenceToLastProfitSwitch = DateTimeOffset.Now.Subtract(_lastProfitSwitch).TotalSeconds;
@@ -651,7 +651,6 @@ namespace CryptonightProfitSwitcher
             {
                 Console.WriteLine($"Didn't switched to {mineable.DisplayName}! Waiting {settings.ProfitSwitchCooldown} seconds to cooldown.");
             }
-            
         }
 
         static void StopMiner()
@@ -668,7 +667,7 @@ namespace CryptonightProfitSwitcher
             if (!String.IsNullOrEmpty(scriptPath))
             {
                 //TODO: This is Windows specific, so add a variant for Linux and MacOS -> PRs are welcome.
-                
+
                 //Execute reset script
                 var resetProcess = new Process();
                 resetProcess.StartInfo.FileName = "cmd.exe";

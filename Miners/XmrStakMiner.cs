@@ -17,6 +17,7 @@ namespace CryptonightProfitSwitcher.Miners
         Process _process = null;
         Mineable _mineable = null;
         bool _cpuOnly = false;
+
         public XmrStakMiner(bool cpuOnly)
         {
             _cpuOnly = cpuOnly;

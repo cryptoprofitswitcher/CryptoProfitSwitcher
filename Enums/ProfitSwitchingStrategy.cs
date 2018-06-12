@@ -3,6 +3,7 @@
     public enum ProfitSwitchingStrategy
     {
         MaximizeFiat,
-        MaximizeCoins
+        MaximizeCoins,
+        WeightedCoinsPrice
     }
 }

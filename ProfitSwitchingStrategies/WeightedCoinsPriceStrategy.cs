@@ -7,7 +7,7 @@ using CryptonightProfitSwitcher.Models;
 
 namespace CryptonightProfitSwitcher.ProfitSwitchingStrategies
 {
-    public class MaximizeCoinsStrategy : IProfitSwitchingStrategy
+    public class WeightedCoinsPriceStrategy : IProfitSwitchingStrategy
     {
         public MineableReward GetBestPoolminedCoin(IList<Coin> coins, Dictionary<ProfitProvider, Dictionary<string, Profit>> poolProfitsDictionary, Settings settings)
         {
@@ -29,16 +29,21 @@ namespace CryptonightProfitSwitcher.ProfitSwitchingStrategies
 
         public MineableReward GetBestNicehashAlgorithm(IList<NicehashAlgorithm> nicehashAlgorithms, Dictionary<int, Profit> nicehashProfitsDictionary, Settings settings)
         {
-            Console.WriteLine("This ProfitSwitchingStrategy is incompatible with NiceHash algorithms!");
-            return null;
+            var maximizeFiatStrategy = new MaximizeFiatStrategy();
+            return maximizeFiatStrategy.GetBestNicehashAlgorithm(nicehashAlgorithms, nicehashProfitsDictionary, settings);
         }
 
         public MineableReward GetBestMineable(MineableReward bestPoolminedCoin, MineableReward bestNicehashAlgorithm)
         {
-            if (bestPoolminedCoin.Mineable != null)
+            if (bestPoolminedCoin.Mineable != null && bestPoolminedCoin.Reward > bestNicehashAlgorithm.Reward)
             {
-                Console.WriteLine($"Determined best mining method: Mine {bestPoolminedCoin.Mineable.DisplayName} in a pool with relative factor {bestPoolminedCoin.Reward}.");
+                Console.WriteLine($"Determined best mining method: Mine {bestPoolminedCoin.Mineable.DisplayName} in a pool at {Helpers.ToCurrency(bestPoolminedCoin.Reward, "$")} per day.");
                 return bestPoolminedCoin;
+            }
+            else if (bestNicehashAlgorithm.Mineable != null)
+            {
+                Console.WriteLine($"Determined best mining method: Provide hash power for {bestNicehashAlgorithm.Mineable.DisplayName} on NiceHash at {Helpers.ToCurrency(bestNicehashAlgorithm.Reward, "$")} per day.");
+                return bestNicehashAlgorithm;
             }
             else
             {
@@ -49,10 +54,20 @@ namespace CryptonightProfitSwitcher.ProfitSwitchingStrategies
 
         public double GetReward(Profit profit, Mineable mineable, ProfitTimeframe timeframe)
         {
+            timeframe = mineable.OverrideProfitTimeframe.HasValue ? mineable.OverrideProfitTimeframe.Value : timeframe;
             double reward = 0;
+            switch (timeframe)
+            {
+                case ProfitTimeframe.Day:
+                    reward = profit.UsdRewardDay;
+                    break;
+                default:
+                    reward = profit.UsdRewardLive;
+                    break;
+            }
             if (profit.CoinRewardDay > 0 && profit.CoinRewardLive > 0)
             {
-                reward = profit.CoinRewardLive / profit.CoinRewardDay;
+                reward *= (profit.CoinRewardLive / profit.CoinRewardDay);
             }
             return reward;
         }

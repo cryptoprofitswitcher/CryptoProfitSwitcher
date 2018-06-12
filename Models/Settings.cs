@@ -26,8 +26,10 @@ namespace CryptonightProfitSwitcher.Models
 
         [Obsolete("CryptonightBittubeHashrate is deprecated, use CryptonightLiteHashrate or the override in Mineable.")]
         public int CryptonightBittubeHashrate { get; set; }
+
         [Obsolete("NicehashPreferFactor is deprecated, please use PreferFactor from Mineable.")]
         public double NicehashPreferFactor { get; set; }
+
         [Obsolete("XmrStakApiPort in Settings is deprecated, please use port from Mineable.")]
         public int XmrStakApiPort { get; set; }
     }

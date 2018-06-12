@@ -26,7 +26,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         ProfitTimeframe timeFrame = coin.OverrideProfitTimeframe.HasValue ? coin.OverrideProfitTimeframe.Value : settings.ProfitTimeframe;
                         decimal diffDay = lastStats.pool.stats.diffs["wavg24h"];
                         decimal diffLive = lastStats.network.difficulty;
-                       
+
                         decimal reward = lastStats.network.reward;
 
                         decimal profitDay = (coin.GetExpectedHashrate(settings) * (86400 / diffDay)) * reward;
@@ -39,7 +39,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
 
                         //Get usd price
                         decimal usdPrice = lastStats.coinPrice["coin-usd"];
-                        
+
                         //Multiplicate
                         decimal usdRewardDecDay = amountDay * usdPrice;
                         double usdRewardDay = (double)usdRewardDecDay;
@@ -48,7 +48,6 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         double usdRewardLive = (double)usdRewardDecLive;
 
                         poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdRewardLive, usdRewardDay, (double)amountLive, (double)amountDay, ProfitProvider.MinerRocksApi, timeFrame);
-
                     }
                 }
                 catch (Exception ex)

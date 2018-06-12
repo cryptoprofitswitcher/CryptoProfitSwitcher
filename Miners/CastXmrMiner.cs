@@ -16,6 +16,7 @@ namespace CryptonightProfitSwitcher.Miners
         Process _process = null;
         Mineable _mineable = null;
         IMiner _cpuMiner = null;
+
         public double GetCurrentHashrate(Settings settings, DirectoryInfo appRootFolder)
         {
             double gpuHashrate = 0;

@@ -42,6 +42,7 @@ namespace CryptonightProfitSwitcher.Mineables
         {
             return Enabled ?? true;
         }
+
         public int GetExpectedHashrate(Settings settings)
         {
             if (OverrideExpectedHashrate.HasValue)

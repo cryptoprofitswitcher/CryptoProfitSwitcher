@@ -16,7 +16,8 @@ namespace CryptonightProfitSwitcher.ProfitSwitchingStrategies
             foreach (var coin in coins.Where(c => c.IsEnabled()))
             {
                 var profit = Helpers.GetPoolProfitForCoin(coin, poolProfitsDictionary, settings);
-                double calcProfit = coin.PreferFactor.HasValue ? GetReward(profit) * coin.PreferFactor.Value : GetReward(profit);
+                double reward = GetReward(profit, coin, settings.ProfitTimeframe);
+                double calcProfit = coin.PreferFactor.HasValue ? reward * coin.PreferFactor.Value : reward;
                 if (bestPoolminedCoin == null || calcProfit > bestPoolminedCoinProfit)
                 {
                     bestPoolminedCoinProfit = calcProfit;
@@ -25,6 +26,7 @@ namespace CryptonightProfitSwitcher.ProfitSwitchingStrategies
             }
             return new MineableReward(bestPoolminedCoin, bestPoolminedCoinProfit);
         }
+
         public MineableReward GetBestNicehashAlgorithm(IList<NicehashAlgorithm> nicehashAlgorithms, Dictionary<int, Profit> nicehashProfitsDictionary, Settings settings)
         {
             NicehashAlgorithm bestNicehashAlgorithm = null;
@@ -45,7 +47,7 @@ namespace CryptonightProfitSwitcher.ProfitSwitchingStrategies
                         preferFactor = settings.NicehashPreferFactor;
                     }
                 }
-                double calcProfit = GetReward(profit) * preferFactor;
+                double calcProfit = GetReward(profit, nicehashAlgorithm, settings.ProfitTimeframe) * preferFactor;
                 if (bestNicehashAlgorithm == null || calcProfit > bestNicehashAlgorithmProfit)
                 {
                     bestNicehashAlgorithmProfit = calcProfit;
@@ -73,17 +75,21 @@ namespace CryptonightProfitSwitcher.ProfitSwitchingStrategies
                 return null;
             }
         }
-        private double GetReward(Profit profit)
+
+        public double GetReward(Profit profit, Mineable mineable, ProfitTimeframe timeframe)
         {
-            switch (profit.Timeframe)
+            timeframe = mineable.OverrideProfitTimeframe.HasValue ? mineable.OverrideProfitTimeframe.Value : timeframe;
+            double reward = 0;
+            switch (timeframe)
             {
-                case ProfitTimeframe.Live:
-                    return profit.UsdRewardLive;
                 case ProfitTimeframe.Day:
-                    return profit.UsdRewardDay;
+                    reward = profit.UsdRewardDay;
+                    break;
                 default:
-                    throw new NotImplementedException("Unknown ProfitTimeframe: " + profit.Timeframe);
+                    reward = profit.UsdRewardLive;
+                    break;
             }
+            return reward;
         }
     }
 }
