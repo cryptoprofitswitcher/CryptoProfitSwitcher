@@ -1,5 +1,6 @@
 ﻿using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Mineables;
+using CryptonightProfitSwitcher.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -16,6 +17,7 @@ namespace CryptonightProfitSwitcher.Miners
         Process _process = null;
         Mineable _mineable = null;
         bool _cpuOnly = false;
+
         public XmrStakMiner(bool cpuOnly)
         {
             _cpuOnly = cpuOnly;
@@ -107,6 +109,7 @@ namespace CryptonightProfitSwitcher.Miners
             _process.StartInfo.CreateNoWindow = false;
             _process.StartInfo.RedirectStandardOutput = false;
             _process.StartInfo.WorkingDirectory = xmrFolderPath;
+            _process.StartInfo.WindowStyle = settings.StartMinerMinimized ? ProcessWindowStyle.Minimized : ProcessWindowStyle.Normal;
             Thread.Sleep(TimeSpan.FromSeconds(settings.MinerStartDelay));
             _process.Start();
         }
@@ -165,6 +168,9 @@ namespace CryptonightProfitSwitcher.Miners
                     break;
                 case Algorithm.CryptonightHaven:
                     dict["currency"] = "haven";
+                    break;
+                case Algorithm.CryptonightMasari:
+                    dict["currency"] = "masari";
                     break;
                 default:
                     throw new NotImplementedException("Can't get pool algorithm: " + mineable.Algorithm);

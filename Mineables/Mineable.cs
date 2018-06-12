@@ -1,4 +1,5 @@
 ﻿using CryptonightProfitSwitcher.Enums;
+using CryptonightProfitSwitcher.Models;
 using System;
 
 namespace CryptonightProfitSwitcher.Mineables
@@ -41,6 +42,7 @@ namespace CryptonightProfitSwitcher.Mineables
         {
             return Enabled ?? true;
         }
+
         public int GetExpectedHashrate(Settings settings)
         {
             if (OverrideExpectedHashrate.HasValue)
@@ -51,6 +53,7 @@ namespace CryptonightProfitSwitcher.Mineables
             {
                 case Algorithm.CryptonightV7:
                 case Algorithm.CryptonightStellite:
+                case Algorithm.CryptonightMasari:
                     return settings.CryptonightV7Hashrate;
                 case Algorithm.CryptonightHeavy:
                 case Algorithm.CryptonightHaven:

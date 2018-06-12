@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Mineables;
+using CryptonightProfitSwitcher.Models;
 using Newtonsoft.Json.Linq;
 
 namespace CryptonightProfitSwitcher.ProfitPoviders
@@ -78,7 +79,6 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                             Console.WriteLine("Couldn't get daily profits data from NiceHash: " + ex.Message);
                         }
                     }
-
                 }
             }
             catch (Exception ex)
@@ -104,7 +104,14 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                     double btcReward = 0;
                     btcReward = (price / 1000000) * matchedAlgorithm.GetExpectedHashrate(settings);
                     var usdReward = btcReward * btcUsdPrice;
-                    nicehashProfitsDictionary[matchedAlgorithm.ApiId] = new Profit(usdReward, ProfitProvider.NiceHashApi, timeframe);
+                    if (timeframe == ProfitTimeframe.Day)
+                    {
+                        nicehashProfitsDictionary[matchedAlgorithm.ApiId] = new Profit(0,usdReward,0,0,ProfitProvider.NiceHashApi, timeframe);
+                    }
+                    else
+                    {
+                        nicehashProfitsDictionary[matchedAlgorithm.ApiId] = new Profit(usdReward,0,0,0,ProfitProvider.NiceHashApi, timeframe);
+                    }
                     Console.WriteLine("Got profit data for Nicehash: " + matchedAlgorithm.DisplayName);
                 }
             }

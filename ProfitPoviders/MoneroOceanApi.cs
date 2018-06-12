@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Mineables;
+using CryptonightProfitSwitcher.Models;
 using Newtonsoft.Json.Linq;
 
 namespace CryptonightProfitSwitcher.ProfitPoviders
@@ -32,7 +32,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         decimal usdRewardDec = profitXmrPerDay * usdPriceXmr;
                         double usdReward = (double)usdRewardDec;
 
-                        poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdReward, ProfitProvider.MoneroOceanApi, ProfitTimeframe.Live);
+                        poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdReward,0,0,0,ProfitProvider.MoneroOceanApi, ProfitTimeframe.Live);
                     }
                     catch (Exception ex)
                     {

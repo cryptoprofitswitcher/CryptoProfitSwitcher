@@ -1,5 +1,6 @@
 ﻿using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Mineables;
+using CryptonightProfitSwitcher.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace CryptonightProfitSwitcher.Miners
         Process _process = null;
         Mineable _mineable = null;
         IMiner _cpuMiner = null;
+
         public double GetCurrentHashrate(Settings settings, DirectoryInfo appRootFolder)
         {
             double gpuHashrate = 0;
@@ -88,6 +90,9 @@ namespace CryptonightProfitSwitcher.Miners
                     case Algorithm.CryptonightStellite:
                         args += $"{space}--algo=6";
                         break;
+                    case Algorithm.CryptonightHaven:
+                        args += $"{space}--algo=7";
+                        break;
                     default:
                         throw new NotImplementedException("Couldn't start CastXmr, unknown algo: {mineable.Algorithm}\n" +
                                                           "You can set --algo yourself in the extra arguments.");
@@ -108,6 +113,8 @@ namespace CryptonightProfitSwitcher.Miners
             _process.StartInfo.CreateNoWindow = false;
             _process.StartInfo.RedirectStandardOutput = false;
             _process.StartInfo.WorkingDirectory = minerFolderPath;
+            _process.StartInfo.WindowStyle = settings.StartMinerMinimized ? ProcessWindowStyle.Minimized : ProcessWindowStyle.Normal;
+
             Thread.Sleep(TimeSpan.FromSeconds(settings.MinerStartDelay));
             _process.Start();
 

@@ -1,5 +1,6 @@
 ﻿using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Mineables;
+using CryptonightProfitSwitcher.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -27,8 +28,9 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                 {
                     string tickerSymbol = reward.ticker_symbol;
                     string algorithm = reward.algorithm;
-                    double rewardUsd = reward.reward_24h.usd; ;
-                   
+                    double rewardUsd = reward.reward_24h.usd;
+                    double rewardCoins = reward.reward_24h.coins;
+
                     //Adjust profits based on user defined hashrate
                     Coin matchedCoin = coins.FirstOrDefault(c => c.TickerSymbol == tickerSymbol);
 
@@ -38,18 +40,22 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         {
                             case "cryptonight-v1":
                                 rewardUsd = (rewardUsd / 1000) * matchedCoin.GetExpectedHashrate(settings);
+                                rewardCoins = (rewardCoins / 1000) * matchedCoin.GetExpectedHashrate(settings);
                                 break;
                             case "cryptonight-heavy":
                                 rewardUsd = (rewardUsd / (1000 * cnHeavyFactor)) * matchedCoin.GetExpectedHashrate(settings);
+                                rewardCoins = (rewardCoins / (1000 * cnHeavyFactor)) * matchedCoin.GetExpectedHashrate(settings);
                                 break;
                             case "cryptonight-lite-v1":
                                 rewardUsd = (rewardUsd / (1000 * cnLiteFactor)) * matchedCoin.GetExpectedHashrate(settings);
+                                rewardCoins = (rewardCoins / (1000 * cnLiteFactor)) * matchedCoin.GetExpectedHashrate(settings);
                                 break;
                             case "cryptonight-lite-tube":
                                 rewardUsd = (rewardUsd / (1000 * cnBittubeFactor)) * matchedCoin.GetExpectedHashrate(settings);
+                                rewardCoins = (rewardCoins / (1000 * cnBittubeFactor)) * matchedCoin.GetExpectedHashrate(settings);
                                 break;
                         }
-                        poolProfitsDictionary[tickerSymbol] = new Profit(rewardUsd, ProfitProvider.MineCryptonightApi, ProfitTimeframe.Live);
+                        poolProfitsDictionary[tickerSymbol] = new Profit(rewardUsd,0,rewardCoins,0, ProfitProvider.MineCryptonightApi, ProfitTimeframe.Live);
                         Console.WriteLine("Got profit data for : " + tickerSymbol);
                     }
                 }

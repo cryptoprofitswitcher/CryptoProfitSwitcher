@@ -1,5 +1,7 @@
 ﻿using CryptonightProfitSwitcher.Enums;
+using CryptonightProfitSwitcher.Factories;
 using CryptonightProfitSwitcher.Mineables;
+using CryptonightProfitSwitcher.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,6 +22,7 @@ namespace CryptonightProfitSwitcher
             var rounded = Math.Round(val, 2, MidpointRounding.AwayFromZero);
             return rounded.ToString() + currencySymbol;
         }
+
         internal static T GetProperty<T>(ExpandoObject expando, string propertyName)
         {
             var expandoDict = expando as IDictionary<string, object>;
@@ -38,6 +41,7 @@ namespace CryptonightProfitSwitcher
             var ver = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
             return ver;
         }
+
         internal static string ResolveToFullPath(string path, string appRootPath)
         {
             string resolvedPath = Path.Combine(appRootPath, path);
@@ -56,7 +60,8 @@ namespace CryptonightProfitSwitcher
         {
             Profit profit = new Profit();
             List<ProfitProvider> orderedProfitProviders = GetPoolProfitProviders(settings, coin);
-            while (profit.Reward == 0 && orderedProfitProviders.Count > 0)
+            var profitSwitchingStrategy = ProfitSwitchingStrategyFactory.GetProfitSwitchingStrategy(settings.ProfitSwitchingStrategy);
+            while (profitSwitchingStrategy.GetReward(profit,coin,settings.ProfitTimeframe) == 0 && orderedProfitProviders.Count > 0)
             {
                 ProfitProvider profitProvider = orderedProfitProviders[0];
                 var poolProfits = poolProfitsDictionary.GetValueOrDefault(profitProvider, null);
@@ -68,6 +73,7 @@ namespace CryptonightProfitSwitcher
             }
             return profit;
         }
+
         internal static List<ProfitProvider> GetPoolProfitProviders(Settings settings, Coin coin)
         {
             var result = new List<ProfitProvider>();
@@ -112,7 +118,9 @@ namespace CryptonightProfitSwitcher
             }
             return result;
         }
+
         static ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+
         internal static string GetJsonFromUrl(string url, Settings settings, DirectoryInfo appRootFolder)
         {
             var cacheFolder = appRootFolder.CreateSubdirectory("Cache");
@@ -163,7 +171,6 @@ namespace CryptonightProfitSwitcher
                                 _lock.EnterWriteLock();
                                 File.WriteAllText(urlMapPath, serialized);
                                 _lock.ExitWriteLock();
-
                             }
                             catch (Exception ex)
                             {

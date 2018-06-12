@@ -6,7 +6,7 @@
     <TrimUnusedDependencies>true</TrimUnusedDependencies>
     <LinkDuringPublish>true</LinkDuringPublish>
     <ShowLinkerSizeComparison>true</ShowLinkerSizeComparison>
-    <Version>3.0.0</Version>
+    <Version>3.5.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,6 +29,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Coins\Electroneum.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Coins\Masari.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Coins\MoneroOcean.json">

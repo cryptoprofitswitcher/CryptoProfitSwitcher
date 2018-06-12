@@ -1,4 +1,5 @@
 ﻿using CryptonightProfitSwitcher.Mineables;
+using CryptonightProfitSwitcher.Models;
 using System.IO;
 
 namespace CryptonightProfitSwitcher.Miners

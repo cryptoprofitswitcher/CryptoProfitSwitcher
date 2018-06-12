@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Mineables;
+using CryptonightProfitSwitcher.Models;
 using Newtonsoft.Json.Linq;
 
 namespace CryptonightProfitSwitcher.ProfitPoviders
@@ -23,33 +24,30 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         var profitsJson = Helpers.GetJsonFromUrl(apiUrl, settings, appRootFolder);
                         dynamic lastStats = JObject.Parse(profitsJson);
                         ProfitTimeframe timeFrame = coin.OverrideProfitTimeframe.HasValue ? coin.OverrideProfitTimeframe.Value : settings.ProfitTimeframe;
-                        decimal diff;
-                        switch (timeFrame)
-                        {
-                            case ProfitTimeframe.Day:
-                                diff = lastStats.pool.stats.diffs["wavg24h"];
-                                break;
-                            default:
-                                timeFrame = ProfitTimeframe.Live;
-                                diff = lastStats.network.difficulty;
-                                break;
-                        }
+                        decimal diffDay = lastStats.pool.stats.diffs["wavg24h"];
+                        decimal diffLive = lastStats.network.difficulty;
 
                         decimal reward = lastStats.network.reward;
-                        decimal profit = (coin.GetExpectedHashrate(settings) * (86400 / diff)) * reward;
+
+                        decimal profitDay = (coin.GetExpectedHashrate(settings) * (86400 / diffDay)) * reward;
+                        decimal profitLive = (coin.GetExpectedHashrate(settings) * (86400 / diffLive)) * reward;
 
                         // Get amount of coins
                         decimal coinUnits = lastStats.config.coinUnits;
-                        decimal amount = profit / coinUnits;
+                        decimal amountDay = profitDay / coinUnits;
+                        decimal amountLive = profitLive / coinUnits;
+
                         //Get usd price
                         decimal usdPrice = lastStats.coinPrice["coin-usd"];
+
                         //Multiplicate
-                        decimal usdRewardDec = amount * usdPrice;
+                        decimal usdRewardDecDay = amountDay * usdPrice;
+                        double usdRewardDay = (double)usdRewardDecDay;
 
-                        double usdReward = (double)usdRewardDec;
+                        decimal usdRewardDecLive = amountLive * usdPrice;
+                        double usdRewardLive = (double)usdRewardDecLive;
 
-                        poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdReward, ProfitProvider.MinerRocksApi, timeFrame);
-
+                        poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdRewardLive, usdRewardDay, (double)amountLive, (double)amountDay, ProfitProvider.MinerRocksApi, timeFrame);
                     }
                 }
                 catch (Exception ex)
