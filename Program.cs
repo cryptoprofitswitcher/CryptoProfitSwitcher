@@ -1,5 +1,6 @@
 ﻿using Alba.CsConsoleFormat;
 using CryptonightProfitSwitcher.Enums;
+using CryptonightProfitSwitcher.Factories;
 using CryptonightProfitSwitcher.Mineables;
 using CryptonightProfitSwitcher.Miners;
 using CryptonightProfitSwitcher.ProfitPoviders;
@@ -140,21 +141,7 @@ namespace CryptonightProfitSwitcher
                         {
                             if (!poolProfitsDictionary.ContainsKey(profitProvider))
                             {
-                                IPoolProfitProvider profitProviderClass;
-                                switch (profitProvider)
-                                {
-                                    case ProfitProvider.MineCryptonightApi:
-                                        profitProviderClass = new MineCryptonightApi();
-                                        break;
-                                    case ProfitProvider.MinerRocksApi:
-                                        profitProviderClass = new MinerRocksApi();
-                                        break;
-                                    case ProfitProvider.MoneroOceanApi:
-                                        profitProviderClass = new MoneroOceanApi();
-                                        break;
-                                    default:
-                                        throw new NotImplementedException("Doesn't support ProfitProvider: " + profitProvider);
-                                }
+                                IPoolProfitProvider profitProviderClass = PoolProfitProviderFactory.GetPoolProfitProvider(profitProvider);
                                 var poolProfits = profitProviderClass.GetProfits(appRootFolder, settings, coins);
                                 poolProfitsDictionary[profitProvider] = poolProfits;
                             }
@@ -647,20 +634,7 @@ namespace CryptonightProfitSwitcher
 
             ExecuteScript(mineable.PrepareScript, appRoot);
 
-            switch (mineable.Miner)
-            {
-                case Miner.XmrStak:
-                    _currentMiner = new XmrStakMiner(false);
-                    break;
-                case Miner.CastXmr:
-                    _currentMiner = new CastXmrMiner();
-                    break;
-                case Miner.SRBMiner:
-                    _currentMiner = new SrbMiner();
-                    break;
-                default:
-                    throw new NotImplementedException("Couldn't start miner, unknown miner: " + mineable.Miner);
-            }
+            _currentMiner = MinerFactory.GetMiner(mineable.Miner);
 
             _currentMiner.StartMiner(mineable, settings, appRoot, appRootFolder);
 
