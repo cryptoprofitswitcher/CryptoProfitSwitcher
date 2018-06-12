@@ -89,6 +89,9 @@ namespace CryptonightProfitSwitcher.Miners
                     case Algorithm.CryptonightStellite:
                         args += $"{space}--algo=6";
                         break;
+                    case Algorithm.CryptonightHaven:
+                        args += $"{space}--algo=7";
+                        break;
                     default:
                         throw new NotImplementedException("Couldn't start CastXmr, unknown algo: {mineable.Algorithm}\n" +
                                                           "You can set --algo yourself in the extra arguments.");
