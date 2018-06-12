@@ -2,11 +2,11 @@
   /* GENERAL CONFIGURATION - ALWAYS NEEDED */
 
   // Displayed name, can be anything.
-  "DisplayName": "Loki",
+  "DisplayName": "Masari",
   // Ticker symbol on minecryptonight.net, needed to get profit data
-  "TickerSymbol": "LOKI",
+  "TickerSymbol": "MSR",
   // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
-  "Algorithm": "CryptonightHeavy",
+  "Algorithm": "CryptonightMasari",
   // Used Miner, can be XmrStak, CastXmr or SRBMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
   // Path to script that runs before the miner starts, can be null.
@@ -24,12 +24,12 @@
   // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, MinerRocksApi) or null.
   "OverridePoolProfitProviders": null,
   // On the determination of the most profitable coin, the actual estimated profit will be multiplied by this, can be a decimal or null.
-  "PreferFactor": 1.0,
+  "PreferFactor": 100.0,
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "loki.ingest.cryptoknight.cc:7731",
-  "PoolWalletAddress": "LK8CGQ17G9R3ys3Xf33wCeViD2B95jgdpjAhcRsjuheJ784dumXn7g3RPAzedWpFq364jJKYL9dkQ8mY66sZG9BiCvhRZGpP1m1T83Kt4i.90000",
+  "PoolAddress": "pool.masaricoin.com:7777",
+  "PoolWalletAddress": "5t5mEm254JNJ9HqRjY9vCiTE8aZALHX3v8TqhyQ3TTF9VHKZQXkRYjPDweT9kK4rJw7dDLtZXGjav2z9y24vXCdRc6BSJwUmapXC7NmVAM+90000",
   "PoolPassword": "x",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",

@@ -1,4 +1,4 @@
-SRBMiner Cryptonight AMD GPU Miner V1.5.8
+SRBMiner Cryptonight AMD GPU Miner V1.6.0
 -------------------------------------------
 
 Download:
@@ -17,6 +17,8 @@ Supports:
 - Cryptonight MarketCash
 - Cryptonight B2N
 - Cryptonight StelliteV4
+- Cryptonight Fast
+- Cryptonight Haven
 
 
 Supports Nicehash & SSL/TLS connections
@@ -105,6 +107,7 @@ Some additional parameters you can use in gpu_conf:
 "target_temperature" : A NUMBER BETWEEN 0-99, MINER WILL TRY TO MAINTAIN THIS TEMPERATURE FOR GPU. IF TARGET_TEMPERATURE OPTION NOT SET TO ZERO ON CONFIG TOP, THIS SETTING IS IGNORED (ADL TYPE 1 (OVERDRIVEN) ONLY)
 "target_fan_speed" : A NUMBER BETWEEN 0-6000, THE RPM (ROUNDS PER MINUTE) SPEED FOR FAN. (ADL MUST BE ENABLED)
 "adl_type" : 1 OR 2 , 1 - USE OVERDRIVEN , 2 - USE OVERDRIVE 5, DEFAULT IS 1 IF NOT SET, IF YOU DON'T HAVE TEMP OR CLOCKS DISPLAYED, TRY USING 2 (MOSTLY FOR OLDER CARDS)
+"persistent_memory" : TRUE OR FALSE, IF TRUE TRIES TO ALLOCATE EXTRA MEMORY FOR THE GPU IF AVAILABLE - CAUTION, MINER CAN BECOME UNSTABLE AND CRASH IN SOME OCCASIONS  
 
 
 #IF USING --usecpuopencl YOU MUST SET CPU_CONF IN CONFIG FILE#
@@ -140,6 +143,7 @@ Some additional parameters you can use in pools config:
 "keepalive" : TRUE OR FALSE, POOL MUST SUPPORT KEEPALIVE COMMAND
 "pool_use_tls": TRUE OR FALSE, SET TO TRUE IF CONNECTING TO A SSL/TLS POOL
 "job_timeout" : NUMBER IN SECONDS, IF NO NEW JOB RECEIVED FOR 'job_timeout' SECONDS, MINER RECONNECTS TO THE POOL TO GET NEW JOB, IF NOT SET DEFAULT IS 900 (15 MIN)
+"max_difficulty" : NUMBER, IF POOL DIFFICULTY IS ABOVE THIS VALUE, MINER WILL DISCONNECT AND RECONNECT TO THE POOL
 
 
 If you want to create a separate config and pools for a different coin, use --config and --pools parameter.

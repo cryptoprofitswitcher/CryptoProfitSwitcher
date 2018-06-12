@@ -5,7 +5,7 @@
   "DisplayName": "Graft",
   // Ticker symbol on minecryptonight.net, needed to get profit data
   "TickerSymbol": "GRFT",
-  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite or CryptonightHaven
+  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
   "Algorithm": "CryptonightV7",
   // Used Miner, can be XmrStak, CastXmr or SRBMiner (Recommended: XmrStak)
   "Miner": "XmrStak",

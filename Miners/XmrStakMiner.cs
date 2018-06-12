@@ -166,6 +166,9 @@ namespace CryptonightProfitSwitcher.Miners
                 case Algorithm.CryptonightHaven:
                     dict["currency"] = "haven";
                     break;
+                case Algorithm.CryptonightMasari:
+                    dict["currency"] = "masari";
+                    break;
                 default:
                     throw new NotImplementedException("Can't get pool algorithm: " + mineable.Algorithm);
             }
