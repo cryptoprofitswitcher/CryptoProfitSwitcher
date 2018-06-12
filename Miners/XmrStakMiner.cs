@@ -107,6 +107,7 @@ namespace CryptonightProfitSwitcher.Miners
             _process.StartInfo.CreateNoWindow = false;
             _process.StartInfo.RedirectStandardOutput = false;
             _process.StartInfo.WorkingDirectory = xmrFolderPath;
+            _process.StartInfo.WindowStyle = settings.StartMinerMinimized ? ProcessWindowStyle.Minimized : ProcessWindowStyle.Normal;
             Thread.Sleep(TimeSpan.FromSeconds(settings.MinerStartDelay));
             _process.Start();
         }

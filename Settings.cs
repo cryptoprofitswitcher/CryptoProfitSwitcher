@@ -11,6 +11,7 @@ namespace CryptonightProfitSwitcher
         public ProfitTimeframe ProfitTimeframe { get; set; }
         public string PoolProfitProviders { get; set; }
         public int MinerStartDelay { get; set; }
+        public bool StartMinerMinimized { get; set; }
         public int ProfitCheckInterval { get; set; }
         public int DisplayUpdateInterval { get; set; }
         public string ResetScript { get; set; }

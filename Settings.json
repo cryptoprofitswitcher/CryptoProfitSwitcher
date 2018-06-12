@@ -15,9 +15,11 @@
   "ResetScript": "ResetScript.bat",
   // Delay in seconds before the mining process starts
   "MinerStartDelay": 3,
-  // Enable or disable caching of JSON Api calls
+  // Set if the miner should start minimized, can be true or false
+  "StartMinerMinimized": false,
+  // Enable or disable caching of JSON Api calls, can be true or false
   "EnableCaching": true,
-  // Enable or disable watchdog (compares actual hashrate with expected hashrate and resets if certain conditions are met)
+  // Enable or disable watchdog (compares actual hashrate with expected hashrate and resets if certain conditions are met), can be true or false
   "EnableWatchdog": true,
   // Delay in seconds before watchdog starts
   "WatchdogDelay": 60,
