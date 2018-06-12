@@ -1,5 +1,6 @@
 ﻿using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Mineables;
+using CryptonightProfitSwitcher.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -56,7 +57,8 @@ namespace CryptonightProfitSwitcher
         {
             Profit profit = new Profit();
             List<ProfitProvider> orderedProfitProviders = GetPoolProfitProviders(settings, coin);
-            while (profit.Reward == 0 && orderedProfitProviders.Count > 0)
+            
+            while (profit.GetReward(coin,settings) == 0 && orderedProfitProviders.Count > 0)
             {
                 ProfitProvider profitProvider = orderedProfitProviders[0];
                 var poolProfits = poolProfitsDictionary.GetValueOrDefault(profitProvider, null);

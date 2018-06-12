@@ -2,6 +2,7 @@
 using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Factories;
 using CryptonightProfitSwitcher.Mineables;
+using CryptonightProfitSwitcher.Models;
 using CryptonightProfitSwitcher.Miners;
 using CryptonightProfitSwitcher.ProfitPoviders;
 using Newtonsoft.Json;
@@ -12,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CryptonightProfitSwitcher.ProfitSwitchingStrategies;
 
 namespace CryptonightProfitSwitcher
 {
@@ -147,64 +149,28 @@ namespace CryptonightProfitSwitcher
                                 poolProfitsDictionary[profitProvider] = poolProfits;
                             }
                         }
-                        // Get best pool mined coin
-                        Coin bestPoolminedCoin = null;
-                        double bestPoolminedCoinProfit = 0;
-                        foreach (var coin in coins.Where(c => c.IsEnabled()))
-                        {
-                            var profit = Helpers.GetPoolProfitForCoin(coin, poolProfitsDictionary, settings);
-                            double calcProfit = coin.PreferFactor.HasValue ? profit.Reward * coin.PreferFactor.Value : profit.Reward;
-                            if (bestPoolminedCoin == null || calcProfit > bestPoolminedCoinProfit)
-                            {
-                                bestPoolminedCoinProfit = calcProfit;
-                                bestPoolminedCoin = coin;
-                            }
-                        }
 
-                        if (bestPoolminedCoin != null)
+                        IProfitSwitchingStrategy profitSwitchingStrategy = ProfitSwitchingStrategyFactory.GetProfitSwitchingStrategy(settings.ProfitSwitchingStrategy);
+
+                        // Get best pool mined coin
+                        MineableReward bestPoolminedCoin = profitSwitchingStrategy.GetBestPoolminedCoin(coins, poolProfitsDictionary, settings);
+                        if (bestPoolminedCoin?.Mineable != null)
                         {
-                            Console.WriteLine("Got best pool mined coin: " + bestPoolminedCoin.DisplayName);
+                            Console.WriteLine("Got best pool mined coin: " + bestPoolminedCoin.Mineable.DisplayName);
                         }
                         else
                         {
                             Console.WriteLine("Couldn't determine best pool mined coin.");
                         }
 
-
-
                         //Get Nicehash Profit
                         var nicehashProfitsDictionary = NicehashApi.GetProfits(appRootFolder, settings, nicehashAlgorithms);
 
                         //Get best nicehash algorithm
-                        NicehashAlgorithm bestNicehashAlgorithm = null;
-                        double bestNicehashAlgorithmProfit = 0;
-                        foreach (var nicehashAlgorithm in nicehashAlgorithms.Where(na => na.IsEnabled()))
+                        MineableReward bestNicehashAlgorithm = profitSwitchingStrategy.GetBestNicehashAlgorithm(nicehashAlgorithms, nicehashProfitsDictionary,settings);
+                        if (bestNicehashAlgorithm?.Mineable != null)
                         {
-                            Profit profit = nicehashProfitsDictionary.GetValueOrDefault(nicehashAlgorithm.ApiId, new Profit());
-                            double preferFactor = 1;
-                            if (nicehashAlgorithm.PreferFactor.HasValue)
-                            {
-                                preferFactor = nicehashAlgorithm.PreferFactor.Value;
-                            }
-                            else
-                            {
-                                //Backwards compatibility
-                                if (settings.NicehashPreferFactor >= 0)
-                                {
-                                    preferFactor = settings.NicehashPreferFactor;
-                                }
-                            }
-                            double calcProfit = profit.Reward * preferFactor;
-                            if (bestNicehashAlgorithm == null || calcProfit > bestNicehashAlgorithmProfit)
-                            {
-                                bestNicehashAlgorithmProfit = calcProfit;
-                                bestNicehashAlgorithm = nicehashAlgorithm;
-                            }
-                        }
-
-                        if (bestNicehashAlgorithm != null)
-                        {
-                            Console.WriteLine("Got best nicehash algorithm: " + bestNicehashAlgorithm.DisplayName);
+                            Console.WriteLine("Got best nicehash algorithm: " + bestNicehashAlgorithm.Mineable.DisplayName);
                         }
                         else
                         {
@@ -216,20 +182,13 @@ namespace CryptonightProfitSwitcher
 
                         //Mine using best algorithm/coin
                         Console.WriteLine();
-                        if (bestPoolminedCoin != null && bestPoolminedCoinProfit > bestNicehashAlgorithmProfit)
+                        MineableReward bestOverallMineable = profitSwitchingStrategy.GetBestMineable(bestPoolminedCoin, bestNicehashAlgorithm);
+                        if (bestOverallMineable?.Mineable != null)
                         {
-                            Console.WriteLine($"Determined best mining method: Mine {bestPoolminedCoin.DisplayName} in a pool at {Helpers.ToCurrency(bestPoolminedCoinProfit, "$")} per day.");
-                            if (_currentMineable == null || _currentMineable.Id != bestPoolminedCoin.Id)
+                            Console.WriteLine($"Determined best mining method: {bestOverallMineable.Mineable.DisplayName}");
+                            if (_currentMineable == null || _currentMineable.Id != bestOverallMineable.Mineable.Id)
                             {
-                                StartMiner(bestPoolminedCoin, settings, appFolderPath, appRootFolder);
-                            }
-                        }
-                        else if (bestNicehashAlgorithm != null)
-                        {
-                            Console.WriteLine($"Determined best mining method: Provide hash power for {bestNicehashAlgorithm.DisplayName} on NiceHash at {Helpers.ToCurrency(bestNicehashAlgorithmProfit, "$")} per day.");
-                            if (_currentMineable == null || _currentMineable.Id != bestNicehashAlgorithm.Id)
-                            {
-                                StartMiner(bestNicehashAlgorithm, settings, appFolderPath, appRootFolder);
+                                StartMiner(bestOverallMineable.Mineable, settings, appFolderPath, appRootFolder);
                             }
                         }
                         else
@@ -314,7 +273,15 @@ namespace CryptonightProfitSwitcher
                             var currentHashrate = _currentMiner.GetCurrentHashrate(settings, appRootFolder);
                             var roundedHashRate = Math.Round(currentHashrate, 2, MidpointRounding.AwayFromZero);
                             var estimatedProfit = _currentMineable is Coin ? Helpers.GetPoolProfitForCoin((Coin)_currentMineable, poolProfitsDictionary, settings) : nicehashProfitsDictionary[((NicehashAlgorithm)_currentMineable).ApiId];
-                            double currentReward = (estimatedProfit.Reward / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
+                            double currentReward = 0;
+                            if (settings.ProfitSwitchingStrategy == ProfitSwitchingStrategy.MaximizeCoins)
+                            {
+                                currentReward = (estimatedProfit.CoinRewardLive / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
+                            }
+                            else
+                            {
+                                currentReward = (estimatedProfit.UsdRewardLive / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
+                            }
 
                             if (_currentMineable is NicehashAlgorithm)
                             {
@@ -331,6 +298,7 @@ namespace CryptonightProfitSwitcher
                                 Console.Write(Helpers.ToCurrency(currentReward, "$"));
                                 Console.ResetColor();
                                 Console.WriteLine(" per day)");
+
                             }
                             else
                             {
@@ -344,9 +312,18 @@ namespace CryptonightProfitSwitcher
                                 Console.ResetColor();
                                 Console.Write(" (");
                                 Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.Write(Helpers.ToCurrency(currentReward, "$"));
-                                Console.ResetColor();
-                                Console.WriteLine(" per day)");
+                                if (settings.ProfitSwitchingStrategy == ProfitSwitchingStrategy.MaximizeCoins && _currentMineable is Coin currentCoin)
+                                {
+                                    Console.Write(currentReward);
+                                    Console.ResetColor();
+                                    Console.WriteLine($" {currentCoin.TickerSymbol} per day)");
+                                }
+                                else
+                                {
+                                    Console.Write(Helpers.ToCurrency(currentReward, "$"));
+                                    Console.ResetColor();
+                                    Console.WriteLine(" per day)");
+                                }
                             }
 
                             if (settings.EnableWatchdog)
@@ -563,7 +540,7 @@ namespace CryptonightProfitSwitcher
                 foreach (var profits in poolProfitsDictionary)
                 {
                     var profit = profits.Value.GetValueOrDefault(coin.TickerSymbol, new Profit());
-                    poolGrid.Children.Add(profit.Reward <= 0
+                    poolGrid.Children.Add(profit.UsdRewardLive <= 0
                         ? new Cell("No data") { Color = ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)}
                         : new Cell(profit.ToString()) { Color = coin.IsEnabled() ? ConsoleColor.Gray : ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)});
                 }
@@ -604,7 +581,7 @@ namespace CryptonightProfitSwitcher
             {
                 nicehashGrid.Children.Add(new Cell(nicehashAlgorithm.DisplayName) { Color = nicehashAlgorithm.IsEnabled() ? ConsoleColor.Yellow : ConsoleColor.DarkGray, Padding = new Thickness(2, 0, 2, 0) });
                 var profit = nicehashProfitsDictionary.GetValueOrDefault(nicehashAlgorithm.ApiId, new Profit());
-                nicehashGrid.Children.Add(profit.Reward <= 0
+                nicehashGrid.Children.Add(profit.UsdRewardLive <= 0
                     ? new Cell("No data") { Color = ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)}
                     : new Cell(profit.ToString()) { Color = nicehashAlgorithm.IsEnabled() ? ConsoleColor.Gray : ConsoleColor.DarkGray,Align = Align.Center, Padding = new Thickness(2, 0, 2, 0)});
             }

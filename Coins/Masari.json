@@ -24,7 +24,7 @@
   // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, MinerRocksApi) or null.
   "OverridePoolProfitProviders": null,
   // On the determination of the most profitable coin, the actual estimated profit will be multiplied by this, can be a decimal or null.
-  "PreferFactor": 100.0,
+  "PreferFactor": 1.0,
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 

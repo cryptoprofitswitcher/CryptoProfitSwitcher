@@ -1,4 +1,5 @@
 ﻿using CryptonightProfitSwitcher.Enums;
+using CryptonightProfitSwitcher.Models;
 using System;
 
 namespace CryptonightProfitSwitcher.Mineables

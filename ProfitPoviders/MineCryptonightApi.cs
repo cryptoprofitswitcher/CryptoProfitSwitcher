@@ -1,5 +1,6 @@
 ﻿using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Mineables;
+using CryptonightProfitSwitcher.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -49,7 +50,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                                 rewardUsd = (rewardUsd / (1000 * cnBittubeFactor)) * matchedCoin.GetExpectedHashrate(settings);
                                 break;
                         }
-                        poolProfitsDictionary[tickerSymbol] = new Profit(rewardUsd, ProfitProvider.MineCryptonightApi, ProfitTimeframe.Live);
+                        poolProfitsDictionary[tickerSymbol] = new Profit(rewardUsd,0,0,0, ProfitProvider.MineCryptonightApi, ProfitTimeframe.Live);
                         Console.WriteLine("Got profit data for : " + tickerSymbol);
                     }
                 }

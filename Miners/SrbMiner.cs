@@ -1,4 +1,5 @@
 ﻿using CryptonightProfitSwitcher.Mineables;
+using CryptonightProfitSwitcher.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

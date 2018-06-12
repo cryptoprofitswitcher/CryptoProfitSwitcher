@@ -1,7 +1,7 @@
 ﻿using CryptonightProfitSwitcher.Enums;
 using System;
 
-namespace CryptonightProfitSwitcher
+namespace CryptonightProfitSwitcher.Models
 {
     public class Settings
     {
@@ -9,6 +9,7 @@ namespace CryptonightProfitSwitcher
         public int CryptonightHeavyHashrate { get; set; }
         public int CryptonightLiteHashrate { get; set; }
         public ProfitTimeframe ProfitTimeframe { get; set; }
+        public ProfitSwitchingStrategy ProfitSwitchingStrategy { get; set; }
         public string PoolProfitProviders { get; set; }
         public int MinerStartDelay { get; set; }
         public int ProfitSwitchCooldown { get; set; }
