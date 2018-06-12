@@ -273,34 +273,28 @@ namespace CryptonightProfitSwitcher
                             var currentHashrate = _currentMiner.GetCurrentHashrate(settings, appRootFolder);
                             var roundedHashRate = Math.Round(currentHashrate, 2, MidpointRounding.AwayFromZero);
                             var estimatedProfit = _currentMineable is Coin ? Helpers.GetPoolProfitForCoin((Coin)_currentMineable, poolProfitsDictionary, settings) : nicehashProfitsDictionary[((NicehashAlgorithm)_currentMineable).ApiId];
-                            double currentReward = 0;
-                            if (settings.ProfitSwitchingStrategy == ProfitSwitchingStrategy.MaximizeCoins)
+                            double currentUsdReward = 0;
+                            double currentCoinReward = 0;
+
+                            if (estimatedProfit.UsdRewardLive > 0)
                             {
-                                currentReward = (estimatedProfit.CoinRewardLive / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
+                                currentUsdReward = (estimatedProfit.UsdRewardLive / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
                             }
-                            else
+                            else if (estimatedProfit.UsdRewardDay > 0)
                             {
-                                currentReward = (estimatedProfit.UsdRewardLive / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
+                                currentUsdReward = (estimatedProfit.UsdRewardDay / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
                             }
 
-                            if (_currentMineable is NicehashAlgorithm)
+                            if (estimatedProfit.CoinRewardLive > 0)
                             {
-                                Console.Write(" Hashing: '");
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.Write(_currentMineable.DisplayName);
-                                Console.ResetColor();
-                                Console.Write("' on NiceHash at ");
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.Write(roundedHashRate + "H/s");
-                                Console.ResetColor();
-                                Console.Write(" (");
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.Write(Helpers.ToCurrency(currentReward, "$"));
-                                Console.ResetColor();
-                                Console.WriteLine(" per day)");
-
+                                currentCoinReward = (estimatedProfit.CoinRewardLive / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
                             }
-                            else
+                            else if (estimatedProfit.CoinRewardDay > 0)
+                            {
+                                currentCoinReward = (estimatedProfit.CoinRewardDay / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
+                            }
+
+                            if (_currentMineable is Coin currentCoin)
                             {
                                 Console.Write(" Mining: '");
                                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -310,20 +304,48 @@ namespace CryptonightProfitSwitcher
                                 Console.ForegroundColor = ConsoleColor.Yellow;
                                 Console.Write(roundedHashRate + "H/s");
                                 Console.ResetColor();
-                                Console.Write(" (");
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                if (settings.ProfitSwitchingStrategy == ProfitSwitchingStrategy.MaximizeCoins && _currentMineable is Coin currentCoin)
+                                if (currentUsdReward > 0 || currentCoinReward > 0)
                                 {
-                                    Console.Write(currentReward);
-                                    Console.ResetColor();
-                                    Console.WriteLine($" {currentCoin.TickerSymbol} per day)");
+                                    Console.Write(" (");
+                                    if (currentUsdReward > 0)
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Yellow;
+                                        Console.Write(Helpers.ToCurrency(currentUsdReward, "$"));
+                                        Console.ResetColor();
+                                    }
+                                    if (currentCoinReward > 0)
+                                    {
+                                        if (currentUsdReward > 0)
+                                        {
+                                            Console.Write(" / ");
+                                        }
+                                        Console.ForegroundColor = ConsoleColor.Yellow;
+                                        Console.Write($"{Math.Round(currentCoinReward, 4)} {currentCoin.TickerSymbol}");
+                                        Console.ResetColor();
+                                    }
+
+                                    Console.WriteLine(" per day)");
                                 }
-                                else
+                            }
+                            else
+                            {
+                                Console.Write(" Hashing: '");
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.Write(_currentMineable.DisplayName);
+                                Console.ResetColor();
+                                Console.Write("' on NiceHash at ");
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.Write(roundedHashRate + "H/s");
+                                Console.ResetColor();
+                                if (currentUsdReward > 0)
                                 {
-                                    Console.Write(Helpers.ToCurrency(currentReward, "$"));
+                                    Console.Write(" (");
+                                    Console.ForegroundColor = ConsoleColor.Yellow;
+                                    Console.Write(Helpers.ToCurrency(currentUsdReward, "$"));
                                     Console.ResetColor();
                                     Console.WriteLine(" per day)");
                                 }
+                                
                             }
 
                             if (settings.EnableWatchdog)
