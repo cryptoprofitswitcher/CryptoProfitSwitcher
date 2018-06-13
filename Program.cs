@@ -347,6 +347,20 @@ namespace CryptonightProfitSwitcher
                                 }
                             }
 
+                            var differenceToLastProfitSwitch = DateTimeOffset.Now.Subtract(_lastProfitSwitch).TotalSeconds;
+                            if (differenceToLastProfitSwitch < settings.ProfitSwitchCooldown)
+                            {
+                                Console.Write(" Cooldown: Must wait ");
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.Write(Math.Round(settings.ProfitSwitchCooldown - differenceToLastProfitSwitch, 0, MidpointRounding.AwayFromZero));
+                                Console.ResetColor();
+                                Console.WriteLine(" seconds before switching.");
+                            }
+                            else
+                            {
+                                Console.WriteLine(" Cooldown: Ready to switch.");
+                            }
+
                             if (settings.EnableWatchdog)
                             {
                                 Console.Write(" Watchdog: ");
@@ -363,6 +377,7 @@ namespace CryptonightProfitSwitcher
                             {
                                 Console.WriteLine(" Watchdog: Not activated.");
                             }
+
                         }
                         else
                         {
@@ -372,10 +387,10 @@ namespace CryptonightProfitSwitcher
                         Console.WriteLine();
                         if (settings.ProfitCheckInterval > 0)
                         {
-                            int remainingSeconds = (int)estReset.Subtract(DateTimeOffset.Now).TotalSeconds;
+                            var remainingSeconds = estReset.Subtract(DateTimeOffset.Now).TotalSeconds;
                             Console.Write(" Will refresh automatically in ");
                             Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.Write(remainingSeconds);
+                            Console.Write(Math.Round(remainingSeconds, 0, MidpointRounding.AwayFromZero));
                             Console.ResetColor();
                             Console.WriteLine(" seconds.");
                         }
@@ -624,6 +639,7 @@ namespace CryptonightProfitSwitcher
             }
             _keyPressesCts?.Cancel();
             _mainResetCts?.Cancel();
+            _lastProfitSwitch = DateTimeOffset.MinValue;
         }
 
         static void StartMiner(Mineable mineable, Settings settings, string appRoot, DirectoryInfo appRootFolder)
