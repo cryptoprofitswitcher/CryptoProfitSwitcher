@@ -48,6 +48,8 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         double usdRewardLive = (double)usdRewardDecLive;
 
                         poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdRewardLive, usdRewardDay, (double)amountLive, (double)amountDay, ProfitProvider.MinerRocksApi, timeFrame);
+                        Console.WriteLine($"Got profit data for {coin.TickerSymbol} from MinerRocksAPI");
+
                     }
                 }
                 catch (Exception ex)

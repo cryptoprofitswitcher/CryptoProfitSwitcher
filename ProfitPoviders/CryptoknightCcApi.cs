@@ -88,16 +88,14 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                             }
                         }
 
-                     
-
-
-
                         poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdRewardLive, usdRewardDay, (double)amountLive, amountDay, ProfitProvider.CryptoknightCCApi, timeFrame);
+                        Console.WriteLine($"Got profit data for {coin.TickerSymbol} from CryptonightCCAPI");
+
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Couldn't get profits data for {coin.DisplayName} from MinerRocksApi: " + ex.Message);
+                    Console.WriteLine($"Couldn't get profits data for {coin.DisplayName} from CryptoknightCCApi: " + ex.Message);
                 }
             }
 

@@ -33,6 +33,8 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         double usdReward = (double)usdRewardDec;
 
                         poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdReward,0,0,0,ProfitProvider.MoneroOceanApi, ProfitTimeframe.Live);
+                        Console.WriteLine($"Got profit data for {coin.TickerSymbol} from MoneroOceanAPI");
+
                     }
                     catch (Exception ex)
                     {

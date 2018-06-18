@@ -56,7 +56,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                                 break;
                         }
                         poolProfitsDictionary[tickerSymbol] = new Profit(rewardUsd,0,rewardCoins,0, ProfitProvider.MineCryptonightApi, ProfitTimeframe.Live);
-                        Console.WriteLine("Got profit data for : " + tickerSymbol);
+                        Console.WriteLine($"Got profit data for {tickerSymbol} from MineCryptonightAPI");
                     }
                 }
             }
