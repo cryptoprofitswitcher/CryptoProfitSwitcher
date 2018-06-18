@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -127,10 +128,10 @@ namespace CryptonightProfitSwitcher
             string responseBody;
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new HttpClient(new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate }))
                 {
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
+                    
                     HttpResponseMessage response = client.GetAsync(url).Result;
 
                     response.EnsureSuccessStatusCode();
