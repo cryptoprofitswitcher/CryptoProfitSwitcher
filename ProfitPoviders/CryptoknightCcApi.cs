@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Mineables;
 using CryptonightProfitSwitcher.Models;
@@ -15,7 +16,18 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
         {
             var poolProfitsDictionary = new Dictionary<string, Profit>();
 
+            List<Task> tasks = new List<Task>();
             foreach(var coin in coins)
+            {
+                tasks.Add(SetProfitForCoinTask(coin, settings, appRootFolder, poolProfitsDictionary));
+            }
+            Task.WhenAll(tasks).Wait();
+            return poolProfitsDictionary;
+        }
+
+        Task SetProfitForCoinTask (Coin coin, Settings settings, DirectoryInfo appRootFolder, Dictionary<string, Profit> poolProfitsDictionary)
+        {
+            return Task.Run(() =>
             {
                 try
                 {
@@ -50,7 +62,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         double usdRewardDay = 0;
                         JArray difficulties = lastStats.charts.difficulty;
                         List<decimal> validDifficulties = new List<decimal>();
-                        foreach(var diffToken in difficulties)
+                        foreach (var diffToken in difficulties)
                         {
                             var diffData = diffToken.ToObject<JArray>();
                             long unixEpochTime = diffData[0].ToObject<long>();
@@ -97,9 +109,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                 {
                     Console.WriteLine($"Couldn't get profits data for {coin.DisplayName} from CryptoknightCCApi: " + ex.Message);
                 }
-            }
-
-            return poolProfitsDictionary;
+            });
         }
 
         private string GetApiUrl(Coin coin)
