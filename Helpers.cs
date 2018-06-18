@@ -175,7 +175,7 @@ namespace CryptonightProfitSwitcher
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine("Couldn't save to cache: " + ex.Message);
+                                Console.WriteLine("Couldn't save to cache: " + ex);
                             }
                         }
                         return responseBody;
