@@ -22,7 +22,7 @@ namespace CryptonightProfitSwitcher.Miners
             try
             {
                 int port = _mineable.SRBMinerApiPort;
-                var json = Helpers.GetJsonFromUrl($"http://127.0.0.1:{port}", settings, appRootFolder);
+                var json = Helpers.GetJsonFromUrl($"http://127.0.0.1:{port}", settings, appRootFolder, CancellationToken.None);
                 dynamic api = JObject.Parse(json);
                 gpuHashrate = api.hashrate_total_now;
             }

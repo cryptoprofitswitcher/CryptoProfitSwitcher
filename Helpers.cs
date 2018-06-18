@@ -122,7 +122,7 @@ namespace CryptonightProfitSwitcher
 
         static ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
-        internal static string GetJsonFromUrl(string url, Settings settings, DirectoryInfo appRootFolder)
+        internal static string GetJsonFromUrl(string url, Settings settings, DirectoryInfo appRootFolder, CancellationToken ct)
         {
             var cacheFolder = appRootFolder.CreateSubdirectory("Cache");
             string responseBody;
@@ -132,7 +132,7 @@ namespace CryptonightProfitSwitcher
                 {
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     
-                    HttpResponseMessage response = client.GetAsync(url).Result;
+                    HttpResponseMessage response = client.GetAsync(url,ct).Result;
 
                     response.EnsureSuccessStatusCode();
 

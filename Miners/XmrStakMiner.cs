@@ -33,7 +33,7 @@ namespace CryptonightProfitSwitcher.Miners
                 {
                     port = settings.XmrStakApiPort;
                 }
-                var xmrJson = Helpers.GetJsonFromUrl($"http://127.0.0.1:{port}/api.json", settings, appRootFolder);
+                var xmrJson = Helpers.GetJsonFromUrl($"http://127.0.0.1:{port}/api.json", settings, appRootFolder, CancellationToken.None);
                 dynamic xmr = JObject.Parse(xmrJson);
                 JArray totalHashRates = xmr.hashrate.total;
                 return totalHashRates[0].ToObject<double>();

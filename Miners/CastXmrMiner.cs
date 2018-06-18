@@ -24,7 +24,7 @@ namespace CryptonightProfitSwitcher.Miners
             {
                 const int port = 7777;
 
-                var json = Helpers.GetJsonFromUrl($"http://127.0.0.1:{port}", settings, appRootFolder);
+                var json = Helpers.GetJsonFromUrl($"http://127.0.0.1:{port}", settings, appRootFolder, CancellationToken.None);
                 dynamic api = JObject.Parse(json);
 
                 gpuHashrate = api.total_hash_rate;

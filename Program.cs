@@ -86,7 +86,7 @@ namespace CryptonightProfitSwitcher
                 //Check for updates
                 try
                 {
-                    var versionText = Helpers.GetJsonFromUrl("https://raw.githubusercontent.com/cryptoprofitswitcher/CryptonightProfitSwitcher/master/version.txt", settings, appFolder);
+                    var versionText = Helpers.GetJsonFromUrl("https://raw.githubusercontent.com/cryptoprofitswitcher/CryptonightProfitSwitcher/master/version.txt", settings, appFolder, CancellationToken.None);
                     int remoteVersion = Int32.Parse(versionText);
                     if (remoteVersion > VERSION)
                     {
@@ -140,15 +140,20 @@ namespace CryptonightProfitSwitcher
                             }
                         }
                         var poolProfitsDictionary = new Dictionary<ProfitProvider, Dictionary<string, Profit>>();
+                        var profitProviderTasks = new List<Task>();
                         foreach (var profitProvider in profitProviders)
                         {
                             if (!poolProfitsDictionary.ContainsKey(profitProvider))
                             {
-                                IPoolProfitProvider profitProviderClass = PoolProfitProviderFactory.GetPoolProfitProvider(profitProvider);
-                                var poolProfits = profitProviderClass.GetProfits(appRootFolder, settings, coins);
-                                poolProfitsDictionary[profitProvider] = poolProfits;
+                                profitProviderTasks.Add(Task.Run(()=>
+                                {
+                                    IPoolProfitProvider profitProviderClass = PoolProfitProviderFactory.GetPoolProfitProvider(profitProvider);
+                                    var poolProfits = profitProviderClass.GetProfits(appRootFolder, settings, coins, token);
+                                    poolProfitsDictionary[profitProvider] = poolProfits;
+                                }, token));
                             }
                         }
+                        Task.WhenAll(profitProviderTasks).Wait(token);
 
                         IProfitSwitchingStrategy profitSwitchingStrategy = ProfitSwitchingStrategyFactory.GetProfitSwitchingStrategy(settings.ProfitSwitchingStrategy);
 
@@ -164,7 +169,7 @@ namespace CryptonightProfitSwitcher
                         }
 
                         //Get Nicehash Profit
-                        var nicehashProfitsDictionary = NicehashApi.GetProfits(appRootFolder, settings, nicehashAlgorithms);
+                        var nicehashProfitsDictionary = NicehashApi.GetProfits(appRootFolder, settings, nicehashAlgorithms, token);
 
                         //Get best nicehash algorithm
                         MineableReward bestNicehashAlgorithm = profitSwitchingStrategy.GetBestNicehashAlgorithm(nicehashAlgorithms, nicehashProfitsDictionary, settings);

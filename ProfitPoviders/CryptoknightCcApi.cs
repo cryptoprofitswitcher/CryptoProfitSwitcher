@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Mineables;
@@ -12,20 +13,20 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
 {
     public class CryptoknightCcApi : IPoolProfitProvider
     {
-        public Dictionary<string, Profit> GetProfits(DirectoryInfo appRootFolder, Settings settings, IList<Coin> coins)
+        public Dictionary<string, Profit> GetProfits(DirectoryInfo appRootFolder, Settings settings, IList<Coin> coins, CancellationToken ct)
         {
             var poolProfitsDictionary = new Dictionary<string, Profit>();
 
             List<Task> tasks = new List<Task>();
             foreach(var coin in coins)
             {
-                tasks.Add(SetProfitForCoinTask(coin, settings, appRootFolder, poolProfitsDictionary));
+                tasks.Add(SetProfitForCoinTask(coin, settings, appRootFolder, poolProfitsDictionary,ct));
             }
-            Task.WhenAll(tasks).Wait();
+            Task.WhenAll(tasks).Wait(ct);
             return poolProfitsDictionary;
         }
 
-        Task SetProfitForCoinTask (Coin coin, Settings settings, DirectoryInfo appRootFolder, Dictionary<string, Profit> poolProfitsDictionary)
+        Task SetProfitForCoinTask (Coin coin, Settings settings, DirectoryInfo appRootFolder, Dictionary<string, Profit> poolProfitsDictionary, CancellationToken ct)
         {
             return Task.Run(() =>
             {
@@ -34,7 +35,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                     string apiUrl = GetApiUrl(coin);
                     if (!String.IsNullOrEmpty(apiUrl))
                     {
-                        var profitsJson = Helpers.GetJsonFromUrl(apiUrl, settings, appRootFolder);
+                        var profitsJson = Helpers.GetJsonFromUrl(apiUrl, settings, appRootFolder, ct);
                         dynamic lastStats = JObject.Parse(profitsJson);
 
                         ProfitTimeframe timeFrame = coin.OverrideProfitTimeframe.HasValue ? coin.OverrideProfitTimeframe.Value : settings.ProfitTimeframe;

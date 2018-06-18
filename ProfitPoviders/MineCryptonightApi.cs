@@ -8,17 +8,18 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace CryptonightProfitSwitcher.ProfitPoviders
 {
     public class MineCryptonightApi : IPoolProfitProvider
     {
-        public Dictionary<string,Profit> GetProfits(DirectoryInfo appRootFolder, Settings settings, IList<Coin> coins)
+        public Dictionary<string,Profit> GetProfits(DirectoryInfo appRootFolder, Settings settings, IList<Coin> coins, CancellationToken ct)
         {
             var poolProfitsDictionary = new Dictionary<string, Profit>();
             try
             {
-                var profitsJson = Helpers.GetJsonFromUrl("https://minecryptonight.net/api/rewards?hr=1000", settings, appRootFolder);
+                var profitsJson = Helpers.GetJsonFromUrl("https://minecryptonight.net/api/rewards?hr=1000", settings, appRootFolder, ct);
                 dynamic profits = JsonConvert.DeserializeObject<ExpandoObject>(profitsJson, new ExpandoObjectConverter());
                 long baseHashrate = profits.hash_rate;
                 double cnHeavyFactor = Helpers.GetProperty<double>(profits, "cryptonight-heavy_factor");
