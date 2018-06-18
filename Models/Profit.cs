@@ -28,21 +28,21 @@ namespace CryptonightProfitSwitcher
             string result = "";
             if (UsdRewardLive > 0)
             {
-                result += "Live: " + UsdRewardLive.ToCurrency("$");
+                result += "Live:  " + UsdRewardLive.ToCurrency("$");
             }
             if (UsdRewardDay > 0)
             {
                 if (!String.IsNullOrEmpty(result))
                 {
-                    result += " | ";
+                    result += "\n";
                 }
-                result += "24h: " + UsdRewardDay.ToCurrency("$");
+                result += "24h:   " + UsdRewardDay.ToCurrency("$");
             }
             if (CoinRewardDay > 0 && CoinRewardLive > 0)
             {
                 if (!String.IsNullOrEmpty(result))
                 {
-                    result += " | ";
+                    result += "\n";
                 }
                 double relativeCoinReward = CoinRewardLive / CoinRewardDay;
                 result += "Coins: " + (Math.Round(relativeCoinReward, 4) * 100) + "%"; ;
