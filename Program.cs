@@ -731,8 +731,8 @@ namespace CryptonightProfitSwitcher
                             {
                                 // Run sh script in Linux
                                 var resetProcess = new Process();
-                                resetProcess.StartInfo.FileName = "sh";
-                                resetProcess.StartInfo.Arguments = Helpers.ResolveToArgumentPath(scriptPath, appFolderPath);
+                                resetProcess.StartInfo.FileName = "x-terminal-emulator";
+                                resetProcess.StartInfo.Arguments = $"-e \"'{Helpers.ResolveToFullPath(scriptPath, appFolderPath)}'\"";
                                 resetProcess.StartInfo.UseShellExecute = true;
                                 resetProcess.StartInfo.CreateNoWindow = false;
                                 resetProcess.StartInfo.RedirectStandardOutput = false;

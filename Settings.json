@@ -1,4 +1,4 @@
-﻿{
+{
   // Set your expected hashrates for the algorithms
   "CryptonightV7Hashrate": 4350,
   "CryptonightHeavyHashrate": 2980,

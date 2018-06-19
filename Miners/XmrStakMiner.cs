@@ -53,6 +53,10 @@ namespace CryptonightProfitSwitcher.Miners
             string xmrFolderPath = Path.GetDirectoryName(xmrPath);
             var xmrDirectory = new DirectoryInfo(xmrFolderPath);
             _process.StartInfo.FileName = xmrPath;
+            if (Helpers.IsLinux())
+            {
+                _process.StartInfo.FileName = "x-terminal-emulator";
+            }
             string configPath = Helpers.ResolveToFullPath(mineable.ConfigPath, appRoot);
             File.Copy(configPath, Path.Combine(xmrFolderPath, "current_config.txt"), true);
             string args = "-c current_config.txt";
@@ -105,11 +109,16 @@ namespace CryptonightProfitSwitcher.Miners
             }
 
             _process.StartInfo.Arguments = args;
+            if (Helpers.IsLinux())
+            {
+                _process.StartInfo.Arguments = $"-e \"'{xmrPath}' {args}\"";
+            }
             _process.StartInfo.UseShellExecute = true;
             _process.StartInfo.CreateNoWindow = false;
             _process.StartInfo.RedirectStandardOutput = false;
             _process.StartInfo.WorkingDirectory = xmrFolderPath;
             _process.StartInfo.WindowStyle = settings.StartMinerMinimized ? ProcessWindowStyle.Minimized : ProcessWindowStyle.Normal;
+            _process.EnableRaisingEvents = true;
             Thread.Sleep(TimeSpan.FromSeconds(settings.MinerStartDelay));
             _process.Start();
         }
@@ -126,8 +135,32 @@ namespace CryptonightProfitSwitcher.Miners
                 {
                     Console.WriteLine("Couldn't kill miner process: " + ex.Message);
                 }
+
                 _process.Dispose();
                 _process = null;
+
+                if (Helpers.IsLinux())
+                {
+                    try
+                    {
+                        var killProcess = new Process();
+                        killProcess.StartInfo.FileName = "x-terminal-emulator";
+                        string xmrName = Path.GetFileName(_mineable.XmrStakPath);
+                        Console.WriteLine("Kill: " + xmrName);
+                        killProcess.StartInfo.Arguments = $"-e \"killall -9 {xmrName}\"";
+                        killProcess.StartInfo.UseShellExecute = true;
+                        killProcess.StartInfo.CreateNoWindow = false;
+                        killProcess.StartInfo.RedirectStandardOutput = false;
+                        killProcess.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Couldn't kill process: " + ex.Message);
+
+                    }
+                }
+
+
                 _mineable = null;
             }
         }

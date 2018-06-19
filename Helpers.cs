@@ -12,6 +12,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace CryptonightProfitSwitcher
@@ -119,6 +120,16 @@ namespace CryptonightProfitSwitcher
             }
             return result;
         }
+
+        public static bool IsWindows() =>
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
+        public static bool IsMacOS() =>
+            RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+        public static bool IsLinux() =>
+            RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+
 
         static ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
