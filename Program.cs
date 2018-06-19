@@ -139,21 +139,39 @@ namespace CryptonightProfitSwitcher
                                 }
                             }
                         }
-                        var poolProfitsDictionary = new Dictionary<ProfitProvider, Dictionary<string, Profit>>();
+                        var poolProfitsDictionaryUnordered = new Dictionary<ProfitProvider, Dictionary<string, Profit>>();
                         var profitProviderTasks = new List<Task>();
                         foreach (var profitProvider in profitProviders)
                         {
-                            if (!poolProfitsDictionary.ContainsKey(profitProvider))
+                            if (!poolProfitsDictionaryUnordered.ContainsKey(profitProvider))
                             {
                                 profitProviderTasks.Add(Task.Run(()=>
                                 {
                                     IPoolProfitProvider profitProviderClass = PoolProfitProviderFactory.GetPoolProfitProvider(profitProvider);
                                     var poolProfits = profitProviderClass.GetProfits(appRootFolder, settings, coins, token);
-                                    poolProfitsDictionary[profitProvider] = poolProfits;
+                                    poolProfitsDictionaryUnordered[profitProvider] = poolProfits;
                                 }, token));
                             }
                         }
+#if DEBUG
+                        Stopwatch sw = new Stopwatch();
+                        sw.Start();
+#endif
                         Task.WhenAll(profitProviderTasks).Wait(token);
+#if DEBUG
+                        sw.Stop();
+                        Console.WriteLine($"Fetching profit data took {(int)sw.Elapsed.TotalSeconds} seconds.");
+#endif
+                        
+                        //Reorder because of async
+                        var poolProfitsDictionary = new Dictionary<ProfitProvider, Dictionary<string, Profit>>();
+                        foreach (var profitProvider in profitProviders)
+                        {
+                            if (poolProfitsDictionaryUnordered.ContainsKey(profitProvider))
+                            {
+                                poolProfitsDictionary[profitProvider] = poolProfitsDictionaryUnordered[profitProvider];
+                            }
+                        }
 
                         IProfitSwitchingStrategy profitSwitchingStrategy = ProfitSwitchingStrategyFactory.GetProfitSwitchingStrategy(settings.ProfitSwitchingStrategy);
 
