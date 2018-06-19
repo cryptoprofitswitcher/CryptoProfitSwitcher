@@ -652,6 +652,7 @@ namespace CryptonightProfitSwitcher
 
         static void ResetApp(Settings settings, string appFolderPath, bool runResetScript)
         {
+            Console.WriteLine(runResetScript ? "Resetting app with reset script!" : "Resetting app without reset script!");
             _profitSwitcherTaskCts.Cancel();
             _profitSwitcherTask.Wait();
             StopMiner();
@@ -678,7 +679,16 @@ namespace CryptonightProfitSwitcher
 
                 _currentMiner = MinerFactory.GetMiner(mineable.Miner);
                 _lastProfitSwitch = DateTimeOffset.Now;
-                _currentMiner.StartMiner(mineable, settings, appRoot, appRootFolder);
+
+                try
+                {
+                    _currentMiner.StartMiner(mineable, settings, appRoot, appRootFolder);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Couldn't start miner: " + ex);
+                    ResetApp(settings, appRoot, false);
+                }
 
                 if (settings.EnableWatchdog)
                 {
