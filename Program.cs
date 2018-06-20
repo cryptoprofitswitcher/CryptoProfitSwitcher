@@ -176,58 +176,79 @@ namespace CryptonightProfitSwitcher
                         IProfitSwitchingStrategy profitSwitchingStrategy = ProfitSwitchingStrategyFactory.GetProfitSwitchingStrategy(settings.ProfitSwitchingStrategy);
 
                         // Get best pool mined coin
-                        MineableReward bestPoolminedCoin = profitSwitchingStrategy.GetBestPoolminedCoin(coins, poolProfitsDictionary, settings);
-                        if (bestPoolminedCoin?.Mineable != null)
+                        MineableReward bestPoolminedCoin = null;
+                        if (!token.IsCancellationRequested)
                         {
-                            Console.WriteLine("Got best pool mined coin: " + bestPoolminedCoin.Mineable.DisplayName);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Couldn't determine best pool mined coin.");
+                            bestPoolminedCoin = profitSwitchingStrategy.GetBestPoolminedCoin(coins, poolProfitsDictionary, settings);
+                            if (bestPoolminedCoin?.Mineable != null)
+                            {
+                                Console.WriteLine("Got best pool mined coin: " + bestPoolminedCoin.Mineable.DisplayName);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Couldn't determine best pool mined coin.");
+                            }
                         }
 
                         //Get Nicehash Profit
-                        var nicehashProfitsDictionary = NicehashApi.GetProfits(appRootFolder, settings, nicehashAlgorithms, token);
+                        Dictionary<int, Profit> nicehashProfitsDictionary = null;
+                        if (!token.IsCancellationRequested)
+                        {
+                            nicehashProfitsDictionary = NicehashApi.GetProfits(appRootFolder, settings, nicehashAlgorithms, token);
+                        }
 
                         //Get best nicehash algorithm
-                        MineableReward bestNicehashAlgorithm = profitSwitchingStrategy.GetBestNicehashAlgorithm(nicehashAlgorithms, nicehashProfitsDictionary, settings);
-                        if (bestNicehashAlgorithm?.Mineable != null)
+                        MineableReward bestNicehashAlgorithm = null;
+                        if (!token.IsCancellationRequested && nicehashProfitsDictionary != null)
                         {
-                            Console.WriteLine("Got best nicehash algorithm: " + bestNicehashAlgorithm.Mineable.DisplayName);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Couldn't determine best nicehash algorithm.");
+                            bestNicehashAlgorithm = profitSwitchingStrategy.GetBestNicehashAlgorithm(nicehashAlgorithms, nicehashProfitsDictionary, settings);
+                            if (bestNicehashAlgorithm?.Mineable != null)
+                            {
+                                Console.WriteLine("Got best nicehash algorithm: " + bestNicehashAlgorithm.Mineable.DisplayName);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Couldn't determine best nicehash algorithm.");
+                            }
                         }
 
                         //Print table
-                        PrintProfitTable(coins, poolProfitsDictionary, nicehashAlgorithms, nicehashProfitsDictionary, settings);
+                        if (!token.IsCancellationRequested && nicehashProfitsDictionary != null)
+                        {
+                            PrintProfitTable(coins, poolProfitsDictionary, nicehashAlgorithms, nicehashProfitsDictionary, settings);
+                        }
 
                         //Mine using best algorithm/coin
-                        Console.WriteLine();
-                        MineableReward bestOverallMineable = profitSwitchingStrategy.GetBestMineable(bestPoolminedCoin, bestNicehashAlgorithm);
-                        if (bestOverallMineable?.Mineable != null)
+                        if (!token.IsCancellationRequested)
                         {
-                            Console.WriteLine($"Determined best mining method: {bestOverallMineable.Mineable.DisplayName}");
-                            if (_currentMineable == null || _currentMineable.Id != bestOverallMineable.Mineable.Id)
+                            Console.WriteLine();
+                            MineableReward bestOverallMineable = profitSwitchingStrategy.GetBestMineable(bestPoolminedCoin, bestNicehashAlgorithm);
+                            if (bestOverallMineable?.Mineable != null)
                             {
-                                StartMiner(bestOverallMineable.Mineable, settings, appFolderPath, appRootFolder);
+                                Console.WriteLine($"Determined best mining method: {bestOverallMineable.Mineable.DisplayName}");
+                                if (_currentMineable == null || _currentMineable.Id != bestOverallMineable.Mineable.Id)
+                                {
+                                    StartMiner(bestOverallMineable.Mineable, settings, appFolderPath, appRootFolder);
+                                }
                             }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Couldn't determine best mining method.");
+                            else
+                            {
+                                Console.WriteLine("Couldn't determine best mining method.");
+                            }
                         }
 
                         var statusUpdaterTask = StatusUpdaterTask(DateTimeOffset.Now.AddSeconds(settings.ProfitCheckInterval), settings, appRootFolder, coins, poolProfitsDictionary, nicehashAlgorithms, nicehashProfitsDictionary, statusCts.Token);
 
-                        if (settings.ProfitCheckInterval > 0)
+                        if (!token.IsCancellationRequested)
                         {
-                            Task.Delay(TimeSpan.FromSeconds(settings.ProfitCheckInterval), token).Wait();
-                        }
-                        else
-                        {
-                            token.WaitHandle.WaitOne();
+                            if (settings.ProfitCheckInterval > 0)
+                            {
+                                Task.Delay(TimeSpan.FromSeconds(settings.ProfitCheckInterval), token).Wait();
+                            }
+                            else
+                            {
+                                token.WaitHandle.WaitOne();
+                            }
                         }
 
                         statusCts.Cancel();
@@ -515,7 +536,7 @@ namespace CryptonightProfitSwitcher
                             {
                                 //Restart profit task
                                 _profitSwitcherTaskCts.Cancel();
-                                _profitSwitcherTask.Wait();
+                                _profitSwitcherTask.Wait(10000);
                                 _profitSwitcherTaskCts = new CancellationTokenSource();
                                 _profitSwitcherTask = ProfitSwitcherTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms, _profitSwitcherTaskCts.Token);
                             }
@@ -654,9 +675,9 @@ namespace CryptonightProfitSwitcher
         {
             Console.WriteLine(runResetScript ? "Resetting app with reset script!" : "Resetting app without reset script!");
             _profitSwitcherTaskCts.Cancel();
-            _profitSwitcherTask.Wait();
+            _profitSwitcherTask.Wait(10000);
             StopMiner();
-            Thread.Sleep(settings.MinerStartDelay);
+            Thread.Sleep(TimeSpan.FromSeconds(settings.MinerStartDelay));
             if (runResetScript)
             {
                 ExecuteScript(settings.ResetScript, appFolderPath);

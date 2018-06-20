@@ -51,7 +51,7 @@ namespace CryptonightProfitSwitcher.Miners
             _process = new Process();
             string minerPath = Helpers.ResolveToFullPath(mineable.CastXmrPath, appRoot);
             string minerFolderPath = Path.GetDirectoryName(minerPath);
-            _process.StartInfo.FileName = minerPath;
+            _process.StartInfo.FileName = "cmd";
 
             List<string> userDefindedArgs = new List<string>();
             if (!String.IsNullOrEmpty(mineable.CastXmrExtraArguments))
@@ -63,12 +63,17 @@ namespace CryptonightProfitSwitcher.Miners
             string space = "";
             if (!userDefindedArgs.Contains("-S"))
             {
-                args = $"{space}-S \"{mineable.PoolAddress}\"";
+                args = $"{space}-S {mineable.PoolAddress}";
                 space = " ";
             }
             if (!userDefindedArgs.Contains("-u"))
             {
-                args += $"{space}-u \"{mineable.PoolWalletAddress}\"";
+                args += $"{space}-u {mineable.PoolWalletAddress}";
+                space = " ";
+            }
+            if (!userDefindedArgs.Contains("-p"))
+            {
+                args += $"{space}-p {mineable.PoolPassword}";
                 space = " ";
             }
             if (!userDefindedArgs.Any(a => a.Contains("--algo=")))
@@ -93,6 +98,9 @@ namespace CryptonightProfitSwitcher.Miners
                     case Algorithm.CryptonightHaven:
                         args += $"{space}--algo=7";
                         break;
+                    case Algorithm.CryptonightMasari:
+                        args += $"{space}--algo=8";
+                        break;
                     default:
                         throw new NotImplementedException("Couldn't start CastXmr, unknown algo: {mineable.Algorithm}\n" +
                                                           "You can set --algo yourself in the extra arguments.");
@@ -108,7 +116,7 @@ namespace CryptonightProfitSwitcher.Miners
             {
                 args += space + mineable.CastXmrExtraArguments;
             }
-            _process.StartInfo.Arguments = args;
+            _process.StartInfo.Arguments = $"/c \"{Path.GetFileName(minerPath)} {args}\"";
             _process.StartInfo.UseShellExecute = true;
             _process.StartInfo.CreateNoWindow = false;
             _process.StartInfo.RedirectStandardOutput = false;
@@ -131,7 +139,18 @@ namespace CryptonightProfitSwitcher.Miners
             {
                 try
                 {
-                    _process.Kill();
+                    _process.CloseMainWindow();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Couldn't close miner process: " + ex.Message);
+                }
+                try
+                {
+                    if (!_process.HasExited)
+                    {
+                        _process.Kill();
+                    }
                 }
                 catch (Exception ex)
                 {

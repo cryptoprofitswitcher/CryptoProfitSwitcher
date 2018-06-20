@@ -18,7 +18,7 @@
   /* OVERRIDE SETTINGS - NOT NEEDED */
 
   // Override the expected hashrate, can be a number or null.
-  "OverrideExpectedHashrate": null,
+  "OverrideExpectedHashrate": 8420,
   // Override the profit timeframe, can be Live, Day or null.
   "OverrideProfitTimeframe": null,
   // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, MinerRocksApi, CryptoknightCCApi) or null.

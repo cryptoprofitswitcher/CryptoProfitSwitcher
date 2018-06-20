@@ -129,7 +129,18 @@ namespace CryptonightProfitSwitcher.Miners
             {
                 try
                 {
-                    _process.Kill();
+                    _process.CloseMainWindow();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Couldn't close miner process: " + ex.Message);
+                }
+                try
+                {
+                    if (!_process.HasExited)
+                    {
+                        _process.Kill();
+                    }
                 }
                 catch (Exception ex)
                 {
