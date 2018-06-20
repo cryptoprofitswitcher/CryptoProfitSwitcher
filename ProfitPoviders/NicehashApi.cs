@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Mineables;
 using CryptonightProfitSwitcher.Models;
@@ -11,7 +12,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
 {
     public static class NicehashApi
     {
-        public static Dictionary<int, Profit> GetProfits(DirectoryInfo appRootFolder, Settings settings, IList<NicehashAlgorithm> nicehashAlgorithms)
+        public static Dictionary<int, Profit> GetProfits(DirectoryInfo appRootFolder, Settings settings, IList<NicehashAlgorithm> nicehashAlgorithms, CancellationToken ct)
         {
             var nicehashProfitsDictionary = new Dictionary<int, Profit>();
 
@@ -19,7 +20,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
             {
                 if (nicehashAlgorithms.Any())
                 {
-                    var btcJson = Helpers.GetJsonFromUrl("https://api.coinmarketcap.com/v2/ticker/1/?convert=USD", settings, appRootFolder);
+                    var btcJson = Helpers.GetJsonFromUrl("https://api.coinmarketcap.com/v2/ticker/1/?convert=USD", settings, appRootFolder, ct);
                     dynamic btc = JObject.Parse(btcJson);
                     double btcUsdPrice = btc.data.quotes.USD.price;
                     Console.WriteLine("Got BTC exchange rate: " + btcUsdPrice);
@@ -58,7 +59,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                     {
                         try
                         {
-                            var nicehashLiveProfitsJson = Helpers.GetJsonFromUrl("https://api.nicehash.com/api?method=stats.global.current", settings, appRootFolder);
+                            var nicehashLiveProfitsJson = Helpers.GetJsonFromUrl("https://api.nicehash.com/api?method=stats.global.current", settings, appRootFolder, ct);
                             SetProfitFromJson(nicehashLiveProfitsJson, btcUsdPrice, settings, ProfitTimeframe.Live, liveAlgorithms, nicehashProfitsDictionary);
                         }
                         catch (Exception ex)
@@ -71,7 +72,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                     {
                         try
                         {
-                            var nicehashDayProfitsJson = Helpers.GetJsonFromUrl("https://api.nicehash.com/api?method=stats.global.24h", settings, appRootFolder);
+                            var nicehashDayProfitsJson = Helpers.GetJsonFromUrl("https://api.nicehash.com/api?method=stats.global.24h", settings, appRootFolder, ct);
                             SetProfitFromJson(nicehashDayProfitsJson, btcUsdPrice, settings, ProfitTimeframe.Day, dayAlgorithms, nicehashProfitsDictionary);
                         }
                         catch (Exception ex)
@@ -112,7 +113,8 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                     {
                         nicehashProfitsDictionary[matchedAlgorithm.ApiId] = new Profit(usdReward,0,0,0,ProfitProvider.NiceHashApi, timeframe);
                     }
-                    Console.WriteLine("Got profit data for Nicehash: " + matchedAlgorithm.DisplayName);
+                    Console.WriteLine($"Got profit data for {matchedAlgorithm.DisplayName} from NiceHashAPI");
+
                 }
             }
         }

@@ -16,6 +16,8 @@ namespace CryptonightProfitSwitcher.Factories
                     return new MinerRocksApi();
                 case ProfitProvider.MoneroOceanApi:
                     return new MoneroOceanApi();
+                case ProfitProvider.CryptoknightCCApi:
+                    return new CryptoknightCcApi();
                 default:
                     throw new NotImplementedException("Doesn't support ProfitProvider: " + profitProvider);
             }

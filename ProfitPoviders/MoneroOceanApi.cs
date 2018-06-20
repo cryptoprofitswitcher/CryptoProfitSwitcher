@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using CryptonightProfitSwitcher.Enums;
 using CryptonightProfitSwitcher.Mineables;
 using CryptonightProfitSwitcher.Models;
@@ -10,7 +11,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
 {
     public class MoneroOceanApi : IPoolProfitProvider
     {
-        public Dictionary<string, Profit> GetProfits(DirectoryInfo appRootFolder, Settings settings, IList<Coin> coins)
+        public Dictionary<string, Profit> GetProfits(DirectoryInfo appRootFolder, Settings settings, IList<Coin> coins, CancellationToken ct)
         {
             var poolProfitsDictionary = new Dictionary<string, Profit>();
 
@@ -21,7 +22,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                     try
                     {
                         const string apiUrl = "https://api.moneroocean.stream/pool/stats";
-                        var statsJson = Helpers.GetJsonFromUrl(apiUrl, settings, appRootFolder);
+                        var statsJson = Helpers.GetJsonFromUrl(apiUrl, settings, appRootFolder,ct);
                         dynamic lastStats = JObject.Parse(statsJson);
 
                         decimal activePortProfit = lastStats.pool_statistics.activePortProfit;
@@ -33,6 +34,8 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         double usdReward = (double)usdRewardDec;
 
                         poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdReward,0,0,0,ProfitProvider.MoneroOceanApi, ProfitTimeframe.Live);
+                        Console.WriteLine($"Got profit data for {coin.TickerSymbol} from MoneroOceanAPI");
+
                     }
                     catch (Exception ex)
                     {

@@ -6,7 +6,8 @@
     <TrimUnusedDependencies>true</TrimUnusedDependencies>
     <LinkDuringPublish>true</LinkDuringPublish>
     <ShowLinkerSizeComparison>true</ShowLinkerSizeComparison>
-    <Version>3.5.0</Version>
+    <Version>4.0.0</Version>
+    <Configurations>Debug;Release;ReleaseLinux</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,12 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="CastXmr\cast_xmr-vega.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="CastXmr\switch-radeon-gpu.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Coins\Aeon.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -64,40 +59,15 @@
     <None Update="Settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SRBMiner\config_bittube.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\config_heavy.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\config_lite.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\config_v7.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\Devcon\devcon.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\libeay32.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\libwinpthread-1.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\ReadMe.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\reboot-windows.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\SRBMiner-CN.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\ssleay32.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="ThirdPartyLicenses.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' != 'ReleaseLinux'">
+    <None Update="CastXmr\cast_xmr-vega.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="CastXmr\switch-radeon-gpu.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="XmrStak\amd_heavy.txt">
@@ -133,6 +103,58 @@
     <None Update="XmrStak\xmrstak_opencl_backend.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+      <None Update="SRBMiner\config_bittube.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config_heavy.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config_lite.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config_v7.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\Devcon\devcon.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\libeay32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\libwinpthread-1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\ReadMe.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\reboot-windows.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\SRBMiner-CN.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\ssleay32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-
+  <ItemGroup Condition="'$(Configuration)' == 'ReleaseLinux'">
+    <None Update="XmrStak\libxmr-stak-backend.a">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\libxmr-stak-c.a">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\libxmrstak_opencl_backend.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+   <None Update="XmrStak\xmr-stak">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="powershell -command  &quot;$(ProjectDir)PostBuild.ps1 -TargetDir '$(TargetDir)' -ConfigurationName '$(ConfigurationName)'&quot;" />
+  </Target>
+  <Target Name="PostPublish" AfterTargets="Publish">
+    <Exec Command="powershell -command  &quot;$(ProjectDir)PostBuild.ps1 -TargetDir '$(PublishDir)' -ConfigurationName '$(ConfigurationName)'&quot;" />
+  </Target>
 </Project>

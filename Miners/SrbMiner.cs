@@ -22,7 +22,7 @@ namespace CryptonightProfitSwitcher.Miners
             try
             {
                 int port = _mineable.SRBMinerApiPort;
-                var json = Helpers.GetJsonFromUrl($"http://127.0.0.1:{port}", settings, appRootFolder);
+                var json = Helpers.GetJsonFromUrl($"http://127.0.0.1:{port}", settings, appRootFolder, CancellationToken.None);
                 dynamic api = JObject.Parse(json);
                 gpuHashrate = api.hashrate_total_now;
             }
@@ -90,7 +90,18 @@ namespace CryptonightProfitSwitcher.Miners
             {
                 try
                 {
-                    _process.Kill();
+                    _process.CloseMainWindow();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Couldn't close miner process: " + ex.Message);
+                }
+                try
+                {
+                    if (!_process.HasExited)
+                    {
+                        _process.Kill();
+                    }
                 }
                 catch (Exception ex)
                 {

@@ -3,6 +3,7 @@
 Cryptonight Profit Switcher is an extensible open-source .Net Core console application that helps you to **always mine the most profitable coin on a pool or an algorithm on NiceHash**.
 
 It is very useful for **AMD Vega GPUs** because it can detect hash drops and reset the GPU(s) but it can be used with any GPU that is compatible with the miner.
+It is optimized for **Windows** but also works for **Linux**.
 
 ### Screenshot
 
@@ -15,8 +16,9 @@ It is very useful for **AMD Vega GPUs** because it can detect hash drops and res
   - **Reset:** Restarts the miner and runs a user-defined Reset script
   - **Performance:** Resource friendly with 0%-CPU usage
   - **Miners:** Xmr-Stak (Recommended), Cast XMR, SRBMiner
-  - **Profit data:** [MineCryptoNight API](http://minecryptonight.net/api), [miner.rocks API](https://miner.rocks/), [MoneroOcean](https://moneroocean.stream)
+  - **Profit data:** [MineCryptoNight API](http://minecryptonight.net/api), [miner.rocks API](https://miner.rocks/), [cryptoknight.cc API](https://cryptoknight.cc/), [MoneroOcean](https://moneroocean.stream)
   - **Multiple profit switching strategies:** Maximize fiat profit, maximize coin reward or a combination
+  - **Manual mode:** You can switch between automatic mode and manual mode where you select the coin / NiceHash algorithm yourself
   - **Supports all algorithms:** CryptonightV7, CryptonightHeavy, CryptonightLiteV7 and the variants of Bittube, Stellite and Haven Protocol
   - **Supports all coins:** That are mineable using the miners
   - **Supports all pools:** That are supported by the miners
@@ -110,6 +112,7 @@ This strategy will work with all coins / NiceHash algorithms because it will use
 * [doktor83's SRBMiner](https://bitcointalk.org/index.php?topic=3167363.0)
 * [MineCryptoNight API](http://minecryptonight.net/api)
 * [miner.rocks API](https://miner.rocks/)
+* [cryptoknight.cc API](https://cryptoknight.cc/)
 * [MoneroOcean API](https://moneroocean.stream)
 * [NiceHash API](https://www.nicehash.com/doc-api)
 * [CoinMarketCap API](https://coinmarketcap.com/api/)

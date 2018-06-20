@@ -1,4 +1,4 @@
-﻿{
+{
   /* GENERAL CONFIGURATION - ALWAYS NEEDED */
 
   // Displayed name, can be anything.
@@ -18,10 +18,10 @@
   /* OVERRIDE SETTINGS - NOT NEEDED */
 
   // Override the expected hashrate, can be a number or null.
-  "OverrideExpectedHashrate": null,
+  "OverrideExpectedHashrate": 8420,
   // Override the profit timeframe, can be Live, Day or null.
   "OverrideProfitTimeframe": null,
-  // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, MinerRocksApi) or null.
+  // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, MinerRocksApi, CryptoknightCCApi) or null.
   "OverridePoolProfitProviders": null,
   // On the determination of the most profitable coin, the actual estimated profit will be multiplied by this, can be a decimal or null.
   "PreferFactor": 1.0,
@@ -39,7 +39,7 @@
   /* XMR-STAK CONFIGURATION - NEEDED IF MINER IS XMRSTAK OR FOR CPU MINING*/
 
   // Path to Xmr-Stak executable
-  "XmrStakPath": "XmrStak/xmr-stak.exe",
+  "XmrStakPath": "$PlatformSpecificXmrStakPath",
   // Path to Xmr-Stak config file
   "ConfigPath": "XmrStak/config.txt",
   // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak.
