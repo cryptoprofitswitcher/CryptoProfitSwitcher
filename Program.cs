@@ -25,6 +25,8 @@ namespace CryptonightProfitSwitcher
         static Mineable _currentMineable = null;
         static int _watchdogOvershots = 0;
         static bool _requestQuit = false;
+        static bool _manualSelection = false;
+        static Mineable _manualSelectedMineable = null;
         static bool _newVersionAvailable;
         static CancellationTokenSource _mainResetCts = null;
         static CancellationTokenSource _watchdogCts = null;
@@ -222,13 +224,21 @@ namespace CryptonightProfitSwitcher
                         if (!token.IsCancellationRequested)
                         {
                             Console.WriteLine();
-                            MineableReward bestOverallMineable = profitSwitchingStrategy.GetBestMineable(bestPoolminedCoin, bestNicehashAlgorithm);
-                            if (bestOverallMineable?.Mineable != null)
+                            Mineable bestOverallMineable = null;
+                            if (_manualSelection && _manualSelectedMineable != null)
                             {
-                                Console.WriteLine($"Determined best mining method: {bestOverallMineable.Mineable.DisplayName}");
-                                if (_currentMineable == null || _currentMineable.Id != bestOverallMineable.Mineable.Id)
+                                bestOverallMineable = _manualSelectedMineable;
+                            }
+                            else
+                            {
+                                bestOverallMineable = profitSwitchingStrategy.GetBestMineable(bestPoolminedCoin, bestNicehashAlgorithm)?.Mineable;
+                            }
+                            if (bestOverallMineable != null)
+                            {
+                                Console.WriteLine($"Determined best mining method: {bestOverallMineable.DisplayName}");
+                                if (_currentMineable == null || _currentMineable.Id != bestOverallMineable.Id)
                                 {
-                                    StartMiner(bestOverallMineable.Mineable, settings, appFolderPath, appRootFolder);
+                                    StartMiner(bestOverallMineable, settings, appFolderPath, appRootFolder);
                                 }
                             }
                             else
@@ -290,6 +300,23 @@ namespace CryptonightProfitSwitcher
                         Console.ResetColor();
                         Console.WriteLine("' to refresh profits immediately.");
 
+                        if(_manualSelection)
+                        {
+                            Console.Write(" Press '");
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.Write("m");
+                            Console.ResetColor();
+                            Console.WriteLine("' to disable manual selection.");
+                        }
+                        else
+                        {
+                            Console.Write(" Press '");
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.Write("m");
+                            Console.ResetColor();
+                            Console.WriteLine("' to select a coin / NiceHash algorithm to mine manually.");
+                        }
+
                         Console.Write(" Press '");
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("r");
@@ -340,11 +367,11 @@ namespace CryptonightProfitSwitcher
 
                             if (_currentMineable is Coin currentCoin)
                             {
-                                Console.Write(" Mining: '");
+                                Console.Write(" Mining:     ");
                                 Console.ForegroundColor = ConsoleColor.Yellow;
                                 Console.Write(_currentMineable.DisplayName);
                                 Console.ResetColor();
-                                Console.Write("' at ");
+                                Console.Write(" at ");
                                 Console.ForegroundColor = ConsoleColor.Yellow;
                                 Console.Write(roundedHashRate + "H/s");
                                 Console.ResetColor();
@@ -373,7 +400,7 @@ namespace CryptonightProfitSwitcher
                             }
                             else
                             {
-                                Console.Write(" Hashing: '");
+                                Console.Write(" Hashing:    '");
                                 Console.ForegroundColor = ConsoleColor.Yellow;
                                 Console.Write(_currentMineable.DisplayName);
                                 Console.ResetColor();
@@ -394,7 +421,7 @@ namespace CryptonightProfitSwitcher
                             var differenceToLastProfitSwitch = DateTimeOffset.Now.Subtract(_lastProfitSwitch).TotalSeconds;
                             if (differenceToLastProfitSwitch < settings.ProfitSwitchCooldown)
                             {
-                                Console.Write(" Cooldown: Must wait ");
+                                Console.Write(" Cooldown:   Must wait ");
                                 Console.ForegroundColor = ConsoleColor.Yellow;
                                 Console.Write(Math.Round(settings.ProfitSwitchCooldown - differenceToLastProfitSwitch, 0, MidpointRounding.AwayFromZero));
                                 Console.ResetColor();
@@ -402,12 +429,29 @@ namespace CryptonightProfitSwitcher
                             }
                             else
                             {
-                                Console.WriteLine(" Cooldown: Ready to switch.");
+                                Console.WriteLine(" Cooldown:   Ready to switch.");
+                            }
+
+                            if (_manualSelection)
+                            {
+                                if (_manualSelectedMineable != null)
+                                {
+                                    Console.WriteLine($" Switching:  Manual -> {_manualSelectedMineable.DisplayName}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine(" Switching:  Manual -> Press the corresponding key to select a specific coin / NiceHash algorithm");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine($" Switching:  {settings.ProfitSwitchingStrategy.ToString()}");
+
                             }
 
                             if (settings.EnableWatchdog)
                             {
-                                Console.Write(" Watchdog: ");
+                                Console.Write(" Watchdog:   ");
                                 Console.ForegroundColor = ConsoleColor.Yellow;
                                 Console.Write(_watchdogOvershots);
                                 Console.ResetColor();
@@ -419,7 +463,7 @@ namespace CryptonightProfitSwitcher
                             }
                             else
                             {
-                                Console.WriteLine(" Watchdog: Not activated.");
+                                Console.WriteLine(" Watchdog:   Not activated.");
                             }
 
                         }
@@ -535,10 +579,7 @@ namespace CryptonightProfitSwitcher
                             else if (readKey.Key == ConsoleKey.P)
                             {
                                 //Restart profit task
-                                _profitSwitcherTaskCts.Cancel();
-                                _profitSwitcherTask.Wait(10000);
-                                _profitSwitcherTaskCts = new CancellationTokenSource();
-                                _profitSwitcherTask = ProfitSwitcherTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms, _profitSwitcherTaskCts.Token);
+                                RestartProfitTask(appFolderPath,appFolder,settings,coins,nicehashAlgorithms);
                             }
                             else if (readKey.Key == ConsoleKey.S)
                             {
@@ -549,6 +590,40 @@ namespace CryptonightProfitSwitcher
                             {
                                 //Reset app
                                 ResetApp(settings, appFolderPath, true);
+                            }
+                            else if (readKey.Key == ConsoleKey.M)
+                            {
+                                //Toggle manual mode
+                                _manualSelection = !_manualSelection;
+                                RestartProfitTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms);
+                            }
+                            else
+                            {
+                                //Manual selection
+                                int keyIndex = Helpers.ManualSelectionDictionary.Keys.ToList().IndexOf(readKey.Key);
+                                if (keyIndex >= 0)
+                                {
+                                    if (keyIndex < coins.Count)
+                                    {
+                                        if (_manualSelectedMineable != coins[keyIndex])
+                                        {
+                                            _manualSelectedMineable = coins[keyIndex];
+                                            RestartProfitTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        int nicehashIndex = keyIndex - coins.Count;
+                                        if (nicehashIndex < nicehashAlgorithms.Count)
+                                        {
+                                            if (_manualSelectedMineable != nicehashAlgorithms[nicehashIndex])
+                                            {
+                                                _manualSelectedMineable = nicehashAlgorithms[nicehashIndex];
+                                                RestartProfitTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms);
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -570,6 +645,14 @@ namespace CryptonightProfitSwitcher
                     Console.WriteLine("Key presses task failed: " + ex.Message);
                 }
             }, token);
+        }
+
+        static void RestartProfitTask(string appFolderPath, DirectoryInfo appFolder, Settings settings, List<Coin> coins, List<NicehashAlgorithm> nicehashAlgorithms)
+        {
+            _profitSwitcherTaskCts.Cancel();
+            _profitSwitcherTask.Wait(10000);
+            _profitSwitcherTaskCts = new CancellationTokenSource();
+            _profitSwitcherTask = ProfitSwitcherTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms, _profitSwitcherTaskCts.Token);
         }
 
         static void ResetConsole()
@@ -615,9 +698,12 @@ namespace CryptonightProfitSwitcher
                 poolGrid.Children.Add(new Cell(profits.Key.ToString()) { Stroke = headerThickness, Color = ConsoleColor.Magenta, Padding = new Thickness(2, 0, 2, 0) });
             }
 
+            int mineableIndex = -1;
             foreach (var coin in coins)
             {
-                poolGrid.Children.Add(new Cell(coin.DisplayName) { Color = coin.IsEnabled() ? ConsoleColor.Yellow : ConsoleColor.DarkGray, Padding = new Thickness(2, 0, 10, 0) });
+                mineableIndex++;
+                string displayName = _manualSelection ? $"[{Helpers.ManualSelectionDictionary.ElementAt(mineableIndex).Value}] {coin.DisplayName}" : coin.DisplayName;
+                poolGrid.Children.Add(new Cell(displayName) { Color = coin.IsEnabled() ? ConsoleColor.Yellow : ConsoleColor.DarkGray, Padding = new Thickness(2, 0, 10, 0) });
                 foreach (var profits in poolProfitsDictionary)
                 {
                     var profit = profits.Value.GetValueOrDefault(coin.TickerSymbol, new Profit());
@@ -659,7 +745,9 @@ namespace CryptonightProfitSwitcher
 
             foreach (var nicehashAlgorithm in nicehashAlgorithms)
             {
-                nicehashGrid.Children.Add(new Cell(nicehashAlgorithm.DisplayName) { Color = nicehashAlgorithm.IsEnabled() ? ConsoleColor.Yellow : ConsoleColor.DarkGray, Padding = new Thickness(2, 0, 2, 0) });
+                mineableIndex++;
+                string displayName = _manualSelection ? $"[{Helpers.ManualSelectionDictionary.ElementAt(mineableIndex).Value}] {nicehashAlgorithm.DisplayName}" : nicehashAlgorithm.DisplayName;
+                nicehashGrid.Children.Add(new Cell(displayName) { Color = nicehashAlgorithm.IsEnabled() ? ConsoleColor.Yellow : ConsoleColor.DarkGray, Padding = new Thickness(2, 0, 2, 0) });
                 var profit = nicehashProfitsDictionary.GetValueOrDefault(nicehashAlgorithm.ApiId, new Profit());
                 nicehashGrid.Children.Add(profit.UsdRewardLive <= 0
                     ? new Cell("No data") { Color = ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) }
