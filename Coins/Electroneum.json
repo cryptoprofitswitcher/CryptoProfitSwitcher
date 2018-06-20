@@ -72,6 +72,8 @@
   "SRBMinerApiPort": 21555,
   // Set the path to SRBMiner pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
   "SRBMinerPoolsPath": null,
+  // Extra arguments that will be passed over to SRBMiner, can be a string or null
+  "SRBMinerExtraArguments": null,
   // Set if you want to also start Xmr-Stak for CPU Mining
   "SRBMinerUseXmrStakCPUMining": true
 

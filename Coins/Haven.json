@@ -67,11 +67,13 @@
   // Path to SRBMiner executable
   "SRBMinerPath": "SRBMiner/SRBMiner-CN.exe",
   // Path to SRBMiner config file
-  "SRBMinerConfigPath": "SRBMiner/config_heavy.txt",
+  "SRBMinerConfigPath": "SRBMiner/config_haven.txt",
   // Port of the SRBMiner REST API, should match the port in the config file of SRBMiner.
   "SRBMinerApiPort": 21555,
   // Set the path to SRBMiner pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
   "SRBMinerPoolsPath": null,
+  // Extra arguments that will be passed over to SRBMiner, can be a string or null
+  "SRBMinerExtraArguments": null,
   // Set if you want to also start Xmr-Stak for CPU Mining
   "SRBMinerUseXmrStakCPUMining": true
 
