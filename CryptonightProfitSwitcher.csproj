@@ -115,6 +115,15 @@
     <None Update="SRBMiner\config_v7.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+     <None Update="SRBMiner\config_haven.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+     <None Update="SRBMiner\config_fast.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+     <None Update="SRBMiner\config_stellite.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="SRBMiner\Devcon\devcon.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

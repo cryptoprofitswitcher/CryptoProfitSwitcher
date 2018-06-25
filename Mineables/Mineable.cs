@@ -34,6 +34,7 @@ namespace CryptonightProfitSwitcher.Mineables
         public string SRBMinerPath { get; set; }
         public string SRBMinerConfigPath { get; set; }
         public string SRBMinerPoolsPath { get; set; }
+        public string SRBMinerExtraArguments { get; set; }
         public int SRBMinerApiPort { get; set; }
         public bool SRBMinerUseXmrStakCPUMining { get; set; }
         public abstract string Id { get; }

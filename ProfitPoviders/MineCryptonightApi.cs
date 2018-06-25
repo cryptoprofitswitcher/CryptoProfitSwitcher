@@ -25,6 +25,8 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                 double cnHeavyFactor = Helpers.GetProperty<double>(profits, "cryptonight-heavy_factor");
                 double cnLiteFactor = Helpers.GetProperty<double>(profits, "cryptonight-lite_factor");
                 double cnBittubeFactor = Helpers.GetProperty<double>(profits, "cryptonight-lite-tube_factor");
+                double cnFastFactor = Helpers.GetProperty<double>(profits, "cryptonight-fast_factor");
+
                 foreach (dynamic reward in profits.rewards)
                 {
                     string tickerSymbol = reward.ticker_symbol;
@@ -54,6 +56,10 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                             case "cryptonight-lite-tube":
                                 rewardUsd = (rewardUsd / (1000 * cnBittubeFactor)) * matchedCoin.GetExpectedHashrate(settings);
                                 rewardCoins = (rewardCoins / (1000 * cnBittubeFactor)) * matchedCoin.GetExpectedHashrate(settings);
+                                break;
+                            case "cryptonight-fast":
+                                rewardUsd = (rewardUsd / (1000 * cnFastFactor)) * matchedCoin.GetExpectedHashrate(settings);
+                                rewardCoins = (rewardCoins / (1000 * cnFastFactor)) * matchedCoin.GetExpectedHashrate(settings);
                                 break;
                         }
                         poolProfitsDictionary[tickerSymbol] = new Profit(rewardUsd,0,rewardCoins,0, ProfitProvider.MineCryptonightApi, ProfitTimeframe.Live);

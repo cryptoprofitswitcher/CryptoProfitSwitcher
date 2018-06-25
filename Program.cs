@@ -400,11 +400,11 @@ namespace CryptonightProfitSwitcher
                             }
                             else
                             {
-                                Console.Write(" Hashing:    '");
+                                Console.Write(" Hashing:    ");
                                 Console.ForegroundColor = ConsoleColor.Yellow;
                                 Console.Write(_currentMineable.DisplayName);
                                 Console.ResetColor();
-                                Console.Write("' on NiceHash at ");
+                                Console.Write(" on NiceHash at ");
                                 Console.ForegroundColor = ConsoleColor.Yellow;
                                 Console.Write(roundedHashRate + "H/s");
                                 Console.ResetColor();
