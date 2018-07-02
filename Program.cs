@@ -595,6 +595,7 @@ namespace CryptonightProfitSwitcher
                             {
                                 //Toggle manual mode
                                 _manualSelection = !_manualSelection;
+                                _lastProfitSwitch = DateTimeOffset.MinValue;
                                 RestartProfitTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms);
                             }
                             else
