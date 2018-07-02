@@ -166,40 +166,49 @@ namespace CryptonightProfitSwitcher
                         //Save to cache
                         if (settings.EnableCaching && !url.Contains("127.0.0.1"))
                         {
-                            try
+                            int tries = 0;
+                            while(tries < 2)
                             {
-                                var urlMapFile = cacheFolder.GetFiles("urlmap.json").FirstOrDefault();
-                                if (urlMapFile == null)
+                                tries++;
+                                try
                                 {
-                                    var serialized2 = JsonConvert.SerializeObject(new Dictionary<string, string>());
+                                    var urlMapFile = cacheFolder.GetFiles("urlmap.json").FirstOrDefault();
+                                    if (urlMapFile == null)
+                                    {
+                                        var serialized2 = JsonConvert.SerializeObject(new Dictionary<string, string>());
+                                        _lock.EnterWriteLock();
+                                        File.WriteAllText(ResolveToFullPath("Cache/urlmap.json", appRootFolder.FullName), serialized2);
+                                        _lock.ExitWriteLock();
+                                        urlMapFile = cacheFolder.GetFiles("urlmap.json").FirstOrDefault();
+                                    }
+                                    _lock.EnterReadLock();
+                                    var urlMapJson = File.ReadAllText(urlMapFile.FullName);
+                                    _lock.ExitReadLock();
+                                    var urlMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(urlMapJson);
+                                    if (urlMap.ContainsKey(url))
+                                    {
+                                        var cachedFilename = urlMap[url];
+                                        var cachedFile = cacheFolder.GetFiles(cachedFilename).FirstOrDefault();
+                                        cachedFile?.Delete();
+                                    }
+                                    string saveFilename = Guid.NewGuid().ToString() + ".json";
+                                    string savePath = ResolveToFullPath($"Cache/{saveFilename}", appRootFolder.FullName);
+                                    File.WriteAllText(savePath, responseBody);
+                                    urlMap[url] = saveFilename;
+                                    string serialized = JsonConvert.SerializeObject(urlMap);
+                                    string urlMapPath = ResolveToFullPath("Cache/urlmap.json", appRootFolder.FullName);
                                     _lock.EnterWriteLock();
-                                    File.WriteAllText(ResolveToFullPath("Cache/urlmap.json", appRootFolder.FullName), serialized2);
+                                    File.WriteAllText(urlMapPath, serialized);
                                     _lock.ExitWriteLock();
-                                    urlMapFile = cacheFolder.GetFiles("urlmap.json").FirstOrDefault();
                                 }
-                                _lock.EnterReadLock();
-                                var urlMapJson = File.ReadAllText(urlMapFile.FullName);
-                                _lock.ExitReadLock();
-                                var urlMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(urlMapJson);
-                                if (urlMap.ContainsKey(url))
+                                catch (Exception ex)
                                 {
-                                    var cachedFilename = urlMap[url];
-                                    var cachedFile = cacheFolder.GetFiles(cachedFilename).FirstOrDefault();
-                                    cachedFile?.Delete();
+                                    Console.WriteLine("Couldn't save to cache: " + ex);
+                                    // Reset Cache
+                                    _lock.EnterWriteLock();
+                                    cacheFolder.Delete();
+                                    _lock.ExitWriteLock();
                                 }
-                                string saveFilename = Guid.NewGuid().ToString() + ".json";
-                                string savePath = ResolveToFullPath($"Cache/{saveFilename}", appRootFolder.FullName);
-                                File.WriteAllText(savePath, responseBody);
-                                urlMap[url] = saveFilename;
-                                string serialized = JsonConvert.SerializeObject(urlMap);
-                                string urlMapPath = ResolveToFullPath("Cache/urlmap.json", appRootFolder.FullName);
-                                _lock.EnterWriteLock();
-                                File.WriteAllText(urlMapPath, serialized);
-                                _lock.ExitWriteLock();
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine("Couldn't save to cache: " + ex);
                             }
                         }
                         return responseBody;
