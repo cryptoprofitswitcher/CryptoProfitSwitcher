@@ -65,7 +65,7 @@ namespace CryptonightProfitSwitcher.Mineables
                     {
                         return settings.CryptonightBittubeHashrate;
                     }
-                    return settings.CryptonightLiteHashrate;
+                    return settings.CryptonightHeavyHashrate;
                 case Algorithm.CryptonightLite:
                     return settings.CryptonightLiteHashrate;
                 default:
