@@ -1,6 +1,5 @@
 
-<p align="center"><img src="Coins/logo/logo1.png" alt="CryptonightProfitSwitcher" height="350px"></p>
-
+<p align="center"><img src="logo/logotype1.png" alt="CryptonightProfitSwitcher" height="350px"></p>
 
 # Cryptonight Profit Switcher
 
