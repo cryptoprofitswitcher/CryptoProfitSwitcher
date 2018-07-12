@@ -125,6 +125,10 @@ namespace CryptonightProfitSwitcher
                         ResetConsole();
 
                         // Get pool mined coins profitability
+
+                        var childCts = CancellationTokenSource.CreateLinkedTokenSource(token);
+                        childCts.CancelAfter(30000);
+
                         var profitProviders = Helpers.GetPoolProfitProviders(settings, null);
                         foreach (var coin in coins.Where(c => !String.IsNullOrEmpty(c.OverridePoolProfitProviders)))
                         {
@@ -150,16 +154,16 @@ namespace CryptonightProfitSwitcher
                                 profitProviderTasks.Add(Task.Run(()=>
                                 {
                                     IPoolProfitProvider profitProviderClass = PoolProfitProviderFactory.GetPoolProfitProvider(profitProvider);
-                                    var poolProfits = profitProviderClass.GetProfits(appRootFolder, settings, coins, token);
+                                    var poolProfits = profitProviderClass.GetProfits(appRootFolder, settings, coins, childCts.Token);
                                     poolProfitsDictionaryUnordered[profitProvider] = poolProfits;
-                                }, token));
+                                }, childCts.Token));
                             }
                         }
 #if DEBUG
                         Stopwatch sw = new Stopwatch();
                         sw.Start();
 #endif
-                        Task.WhenAll(profitProviderTasks).Wait(token);
+                        Task.WhenAll(profitProviderTasks).Wait(childCts.Token);
 #if DEBUG
                         sw.Stop();
                         Console.WriteLine($"Fetching profit data took {(int)sw.Elapsed.TotalSeconds} seconds.");
@@ -194,9 +198,9 @@ namespace CryptonightProfitSwitcher
 
                         //Get Nicehash Profit
                         Dictionary<int, Profit> nicehashProfitsDictionary = null;
-                        if (!token.IsCancellationRequested)
+                        if (!childCts.Token.IsCancellationRequested)
                         {
-                            nicehashProfitsDictionary = NicehashApi.GetProfits(appRootFolder, settings, nicehashAlgorithms, token);
+                            nicehashProfitsDictionary = NicehashApi.GetProfits(appRootFolder, settings, nicehashAlgorithms, childCts.Token);
                         }
 
                         //Get best nicehash algorithm
