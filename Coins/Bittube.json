@@ -45,9 +45,9 @@
   // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak.
   "XmrStakApiPort": 4000,
   // Path to Xmr-Stak cpu config file, can be null.
-  "CpuPath": "XmrStak/cpu_lite.txt",
+  "CpuPath": "XmrStak/cpu_heavy.txt",
   // Path to Xmr-Stak amd gpu config file, can be null.
-  "AmdPath": "XmrStak/amd_lite.txt",
+  "AmdPath": "XmrStak/amd_heavy.txt",
   // Path to Xmr-Stak nvidea gpu config file, can be null.
   "NvidiaPath": null,
   // Set the path to Xmr-Stak pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)

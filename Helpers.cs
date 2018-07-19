@@ -172,33 +172,10 @@ namespace CryptonightProfitSwitcher
                                 tries++;
                                 try
                                 {
-                                    var urlMapFile = cacheFolder.GetFiles("urlmap.json").FirstOrDefault();
-                                    if (urlMapFile == null)
-                                    {
-                                        var serialized2 = JsonConvert.SerializeObject(new Dictionary<string, string>());
-                                        _lock.EnterWriteLock();
-                                        File.WriteAllText(ResolveToFullPath("Cache/urlmap.json", appRootFolder.FullName), serialized2);
-                                        _lock.ExitWriteLock();
-                                        urlMapFile = cacheFolder.GetFiles("urlmap.json").FirstOrDefault();
-                                    }
-                                    _lock.EnterReadLock();
-                                    var urlMapJson = File.ReadAllText(urlMapFile.FullName);
-                                    _lock.ExitReadLock();
-                                    var urlMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(urlMapJson);
-                                    if (urlMap.ContainsKey(url))
-                                    {
-                                        var cachedFilename = urlMap[url];
-                                        var cachedFile = cacheFolder.GetFiles(cachedFilename).FirstOrDefault();
-                                        cachedFile?.Delete();
-                                    }
-                                    string saveFilename = Guid.NewGuid().ToString() + ".json";
-                                    string savePath = ResolveToFullPath($"Cache/{saveFilename}", appRootFolder.FullName);
-                                    File.WriteAllText(savePath, responseBody);
-                                    urlMap[url] = saveFilename;
-                                    string serialized = JsonConvert.SerializeObject(urlMap);
-                                    string urlMapPath = ResolveToFullPath("Cache/urlmap.json", appRootFolder.FullName);
+                                    string hashedFilename = url.GetHashCode() + ".json";
+                                    string savePath = Path.Combine(cacheFolder.FullName, hashedFilename);
                                     _lock.EnterWriteLock();
-                                    File.WriteAllText(urlMapPath, serialized);
+                                    File.WriteAllText(savePath, responseBody);
                                     _lock.ExitWriteLock();
                                 }
                                 catch (Exception ex)
@@ -221,20 +198,11 @@ namespace CryptonightProfitSwitcher
                 Console.WriteLine("Error message: " + ex.Message);
 
                 //Try to get from cache
-                var urlMapFile = cacheFolder.GetFiles("urlmap.json").FirstOrDefault();
-                if (urlMapFile != null)
-                {
-                    var urlMapJson = File.ReadAllText(urlMapFile.FullName);
-                    var urlMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(urlMapJson);
-                    if (urlMap.ContainsKey(url))
-                    {
-                        var cachedFilename = urlMap[url];
-                        var cachedFile = cacheFolder.GetFiles(cachedFilename).First();
-                        var cachedContent = File.ReadAllText(urlMapFile.FullName);
-                        Console.WriteLine("Got data from cache.");
-                        return cachedContent;
-                    }
-                }
+                string hashedFilename = url.GetHashCode() + ".json";
+                var cachedFile = cacheFolder.GetFiles(hashedFilename).First();
+                var cachedContent = File.ReadAllText(cachedFile.FullName);
+                Console.WriteLine("Got data from cache.");
+                return cachedContent;
                 throw;
             }
         }
