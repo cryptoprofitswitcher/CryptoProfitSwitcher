@@ -45,9 +45,6 @@
     <None Update="Coins\Bittube.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Coins\Electroneum.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Coins\Masari.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

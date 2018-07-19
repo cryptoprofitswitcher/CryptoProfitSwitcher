@@ -29,7 +29,7 @@
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
   "PoolAddress": "mining.bit.tube:15555",
-  "PoolWalletAddress": "bxdLhsWY56SNjVN2aQ5Yyb6hhCFfAQJVbYszWCUjeDTJMgHad8wZbNJBdrvujZzPvRY2X5AiWdTDCP626s4WbHcG1TYdEot9f.c39044bac5c8414ca5e3fdcd352a4f23fff7e13870bc471e80da84506fcb537d",
+  "PoolWalletAddress": "bxdBEj1k8m9LzLSou3uGEzd2vS6XD6BbkNPwvFnCA4S5h2EwSU1tT5oSxBczB5vyHfJJvCknPHx847tZNxYDwC1W1yrzkxLra",
   "PoolPassword": "x",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
