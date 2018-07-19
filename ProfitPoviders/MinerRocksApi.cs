@@ -19,7 +19,11 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
             List<Task> tasks = new List<Task>();
             foreach (var coin in coins)
             {
-                tasks.Add(SetProfitForCoinTask(coin, settings, appRootFolder, poolProfitsDictionary,ct));
+                var requestedProfitProviders = Helpers.GetPoolProfitProviders(settings, coin);
+                if (requestedProfitProviders.Contains(ProfitProvider.MinerRocksApi))
+                {
+                    tasks.Add(SetProfitForCoinTask(coin, settings, appRootFolder, poolProfitsDictionary, ct));
+                }
             }
             Task.WhenAll(tasks).Wait(ct);
             return poolProfitsDictionary;
@@ -68,7 +72,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                 {
                     Console.WriteLine($"Couldn't get profits data for {coin.DisplayName} from MinerRocksApi: " + ex.Message);
                 }
-            });
+            },ct);
         }
         private string GetApiUrl(Coin coin)
         {
@@ -98,6 +102,8 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                     return "https://ryo.miner.rocks/api/stats";
                 case "AEON":
                     return "https://aeon.miner.rocks/api/stats";
+                case "TUBE":
+                    return "https://bittube.miner.rocks/api/stats";
             }
             return null;
         }

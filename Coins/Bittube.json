@@ -29,7 +29,7 @@
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
   "PoolAddress": "mining.bit.tube:15555",
-  "PoolWalletAddress": "bxdLhsWY56SNjVN2aQ5Yyb6hhCFfAQJVbYszWCUjeDTJMgHad8wZbNJBdrvujZzPvRY2X5AiWdTDCP626s4WbHcG1TYdEot9f.c39044bac5c8414ca5e3fdcd352a4f23fff7e13870bc471e80da84506fcb537d",
+  "PoolWalletAddress": "bxdBEj1k8m9LzLSou3uGEzd2vS6XD6BbkNPwvFnCA4S5h2EwSU1tT5oSxBczB5vyHfJJvCknPHx847tZNxYDwC1W1yrzkxLra",
   "PoolPassword": "x",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
@@ -45,9 +45,9 @@
   // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak.
   "XmrStakApiPort": 4000,
   // Path to Xmr-Stak cpu config file, can be null.
-  "CpuPath": "XmrStak/cpu_lite.txt",
+  "CpuPath": "XmrStak/cpu_heavy.txt",
   // Path to Xmr-Stak amd gpu config file, can be null.
-  "AmdPath": "XmrStak/amd_lite.txt",
+  "AmdPath": "XmrStak/amd_heavy.txt",
   // Path to Xmr-Stak nvidea gpu config file, can be null.
   "NvidiaPath": null,
   // Set the path to Xmr-Stak pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
@@ -72,6 +72,8 @@
   "SRBMinerApiPort": 21555,
   // Set the path to SRBMiner pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
   "SRBMinerPoolsPath": null,
+  // Extra arguments that will be passed over to SRBMiner, can be a string or null
+  "SRBMinerExtraArguments": null,
   // Set if you want to also start Xmr-Stak for CPU Mining
   "SRBMinerUseXmrStakCPUMining": true
 

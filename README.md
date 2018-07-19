@@ -1,4 +1,5 @@
-﻿# Cryptonight Profit Switcher
+
+![Screenshot](Images/logo2.png?raw=true "Screenshot")
 
 Cryptonight Profit Switcher is an extensible open-source .Net Core console application that helps you to **always mine the most profitable coin on a pool or an algorithm on NiceHash**.
 

@@ -49,23 +49,46 @@ namespace CryptonightProfitSwitcher.Miners
             string minerFolderPath = Path.GetDirectoryName(minerPath);
             var minerDirectory = new DirectoryInfo(minerFolderPath);
             _process.StartInfo.FileName = minerPath;
-            string configPath = Helpers.ResolveToFullPath(mineable.SRBMinerConfigPath, appRoot);
-            File.Copy(configPath, Path.Combine(minerFolderPath, "current_config.txt"), true);
-            string args = "--config current_config.txt";
 
-            if (!String.IsNullOrEmpty(mineable.SRBMinerPoolsPath))
+            List<string> userDefindedArgs = new List<string>();
+            if (!String.IsNullOrEmpty(mineable.SRBMinerExtraArguments))
             {
-                // Use given pool config
-                string poolPath = Helpers.ResolveToFullPath(mineable.SRBMinerPoolsPath, appRoot);
-                File.Copy(poolPath, Path.Combine(minerFolderPath, "current_pool.txt"), true);
+                userDefindedArgs.AddRange(mineable.SRBMinerExtraArguments.Split(" "));
             }
-            else
+
+            string args = "";
+            string space = "";
+
+            if (!userDefindedArgs.Contains("--config"))
             {
-                // Auto-Generate pool config from Mineable
-                string poolConfigJson = GeneratePoolConfigJson(mineable);
-                File.WriteAllText(Path.Combine(minerFolderPath, "current_pool.txt"), poolConfigJson);
+                string configPath = Helpers.ResolveToFullPath(mineable.SRBMinerConfigPath, appRoot);
+                File.Copy(configPath, Path.Combine(minerFolderPath, "current_config.txt"), true);
+                args = $"{space}--config current_config.txt";
+                space = " ";
             }
-            args += " --pools current_pool.txt";
+
+            if (!userDefindedArgs.Contains("--pools"))
+            {
+                if (!String.IsNullOrEmpty(mineable.SRBMinerPoolsPath))
+                {
+                    // Use given pool config
+                    string poolPath = Helpers.ResolveToFullPath(mineable.SRBMinerPoolsPath, appRoot);
+                    File.Copy(poolPath, Path.Combine(minerFolderPath, "current_pool.txt"), true);
+                }
+                else
+                {
+                    // Auto-Generate pool config from Mineable
+                    string poolConfigJson = GeneratePoolConfigJson(mineable);
+                    File.WriteAllText(Path.Combine(minerFolderPath, "current_pool.txt"), poolConfigJson);
+                }
+                args += $"{space}--pools current_pool.txt";
+                space = " ";
+            }
+
+            if (!String.IsNullOrEmpty(mineable.SRBMinerExtraArguments))
+            {
+                args += space + mineable.SRBMinerExtraArguments;
+            }
 
             _process.StartInfo.Arguments = args;
             _process.StartInfo.UseShellExecute = true;

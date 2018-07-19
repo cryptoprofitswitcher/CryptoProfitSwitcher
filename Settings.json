@@ -1,7 +1,7 @@
 {
   // Set your expected hashrates for the algorithms
-  "CryptonightV7Hashrate": 4350,
-  "CryptonightHeavyHashrate": 2980,
+  "CryptonightV7Hashrate": 4500,
+  "CryptonightHeavyHashrate": 3000,
   "CryptonightLiteHashrate": 9980,
   // Timeframe for the profit calculation, can be Live or Day
   "ProfitTimeframe": "Live",
