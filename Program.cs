@@ -613,6 +613,7 @@ namespace CryptonightProfitSwitcher
                                         if (_manualSelectedMineable != coins[keyIndex])
                                         {
                                             _manualSelectedMineable = coins[keyIndex];
+                                            _lastProfitSwitch = DateTimeOffset.MinValue;
                                             RestartProfitTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms);
                                         }
                                     }
@@ -624,6 +625,7 @@ namespace CryptonightProfitSwitcher
                                             if (_manualSelectedMineable != nicehashAlgorithms[nicehashIndex])
                                             {
                                                 _manualSelectedMineable = nicehashAlgorithms[nicehashIndex];
+                                                _lastProfitSwitch = DateTimeOffset.MinValue;
                                                 RestartProfitTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms);
                                             }
                                         }
