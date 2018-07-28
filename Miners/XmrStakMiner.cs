@@ -52,7 +52,7 @@ namespace CryptonightProfitSwitcher.Miners
             string xmrPath = Helpers.ResolveToFullPath(mineable.XmrStakPath, appRoot);
             string xmrFolderPath = Path.GetDirectoryName(xmrPath);
             var xmrDirectory = new DirectoryInfo(xmrFolderPath);
-            _process.StartInfo.FileName = xmrPath;
+            _process.StartInfo.FileName = "cmd";
             if (Helpers.IsLinux())
             {
                 _process.StartInfo.FileName = "x-terminal-emulator";
@@ -108,11 +108,14 @@ namespace CryptonightProfitSwitcher.Miners
                 args += " --nvidia current_nvidia.txt";
             }
 
-            _process.StartInfo.Arguments = args;
+            _process.StartInfo.Arguments = $"/c \"{"set GPU_FORCE_64BIT_PTR=1 & set GPU_MAX_HEAP_SIZE=100 & set GPU_MAX_ALLOC_PERCENT=100 & set GPU_SINGLE_ALLOC_PERCENT=100 & " + Path.GetFileName(xmrPath)} {args}\"";
+
             if (Helpers.IsLinux())
             {
                 _process.StartInfo.Arguments = $"-e \"'{xmrPath}' {args}\"";
             }
+
+
             _process.StartInfo.UseShellExecute = true;
             _process.StartInfo.CreateNoWindow = false;
             _process.StartInfo.RedirectStandardOutput = false;

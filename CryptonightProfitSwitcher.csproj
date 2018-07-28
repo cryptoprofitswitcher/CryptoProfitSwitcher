@@ -83,6 +83,18 @@
     </None>
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' != 'ReleaseLinux'">
+    <None Update="JceMiner\config_heavy.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="JceMiner\config_lite.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="JceMiner\config_v7.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="JceMiner\jce_cn_gpu_miner64.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="CastXmr\cast_xmr-vega.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

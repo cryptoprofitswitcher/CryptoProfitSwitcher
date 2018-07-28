@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -19,6 +20,7 @@ namespace CryptonightProfitSwitcher
 {
     internal static class Helpers
     {
+       
         internal static Dictionary<ConsoleKey, string> ManualSelectionDictionary = new Dictionary<ConsoleKey, string>
         {
             {ConsoleKey.D1, "1"}, {ConsoleKey.D2, "2"}, {ConsoleKey.D3, "3"},
@@ -44,7 +46,15 @@ namespace CryptonightProfitSwitcher
             var propertyValue = expandoDict[propertyName];
             return (T)propertyValue;
         }
-
+        private static readonly IPEndPoint DefaultLoopbackEndpoint = new IPEndPoint(IPAddress.Loopback, port: 0);
+        public static int GetAvailablePort()
+        {
+            using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+            {
+                socket.Bind(DefaultLoopbackEndpoint);
+                return ((IPEndPoint)socket.LocalEndPoint).Port;
+            }
+        }
         internal static string GetApplicationRoot()
         {
             var exePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
