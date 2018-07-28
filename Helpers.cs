@@ -14,6 +14,7 @@ using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 
 namespace CryptonightProfitSwitcher
@@ -34,6 +35,24 @@ namespace CryptonightProfitSwitcher
             {ConsoleKey.F7,"F7"}, {ConsoleKey.F8,"F8"}, {ConsoleKey.F9 ,"F9"},
             {ConsoleKey.F10,"F10"}, {ConsoleKey.F11,"F11"}, {ConsoleKey.F12 ,"F12"}
         };
+
+        public static string CreateMD5(string input)
+        {
+            // Use input string to calculate MD5 hash
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                // Convert the byte array to hexadecimal string
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
+            }
+        }
         internal static string ToCurrency(this double val, string currencySymbol)
         {
             var rounded = Math.Round(val, 2, MidpointRounding.AwayFromZero);
@@ -182,7 +201,7 @@ namespace CryptonightProfitSwitcher
                                 tries++;
                                 try
                                 {
-                                    string hashedFilename = url.GetHashCode() + ".json";
+                                    string hashedFilename = CreateMD5(url) + ".json";
                                     string savePath = Path.Combine(cacheFolder.FullName, hashedFilename);
                                     _lock.EnterWriteLock();
                                     File.WriteAllText(savePath, responseBody);
@@ -208,7 +227,7 @@ namespace CryptonightProfitSwitcher
                 Console.WriteLine("Error message: " + ex.Message);
 
                 //Try to get from cache
-                string hashedFilename = url.GetHashCode() + ".json";
+                string hashedFilename = CreateMD5(url) + ".json";
                 var cachedFile = cacheFolder.GetFiles(hashedFilename).First();
                 var cachedContent = File.ReadAllText(cachedFile.FullName);
                 Console.WriteLine("Got data from cache.");
