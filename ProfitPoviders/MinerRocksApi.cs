@@ -88,8 +88,6 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                     return "https://masari.miner.rocks/api/stats";
                 case "XMR":
                     return "https://monero.miner.rocks/api/stats";
-                case "XMV":
-                    return "https://monerov.miner.rocks/api/stats";
                 case "XTL":
                     return "https://stellite.miner.rocks/api/stats";
                 case "LOKI":
