@@ -17,6 +17,7 @@ namespace CryptonightProfitSwitcher.Miners
         Mineable _mineable = null;
         IMiner _cpuMiner = null;
 
+        public string Name => "Cast XMR";
         public double GetCurrentHashrate(Settings settings, DirectoryInfo appRootFolder)
         {
             double gpuHashrate = 0;

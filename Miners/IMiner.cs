@@ -9,5 +9,6 @@ namespace CryptonightProfitSwitcher.Miners
         void StartMiner(Mineable mineable, Settings settings, string appRoot, DirectoryInfo appRootFolder);
         void StopMiner();
         double GetCurrentHashrate(Settings settings, DirectoryInfo appRootFolder);
+        string Name { get; }
     }
 }

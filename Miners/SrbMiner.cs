@@ -15,6 +15,7 @@ namespace CryptonightProfitSwitcher.Miners
         Process _process = null;
         Mineable _mineable = null;
         IMiner _cpuMiner = null;
+        public string Name => "SRB Miner";
 
         public double GetCurrentHashrate(Settings settings, DirectoryInfo appRootFolder)
         {

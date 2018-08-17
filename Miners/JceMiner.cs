@@ -16,7 +16,8 @@ namespace CryptonightProfitSwitcher.Miners
         Process _process = null;
         Mineable _mineable = null;
         private int _port;
-      
+        public string Name => "JCE Miner";
+
         public double GetCurrentHashrate(Settings settings, DirectoryInfo appRootFolder)
         {
             double gpuHashrate = 0;
