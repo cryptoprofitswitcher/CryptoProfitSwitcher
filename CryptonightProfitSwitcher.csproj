@@ -18,6 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+     <None Update="Coins\Quantum.json">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
      <None Update="XmrStak\amd_heavy.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
