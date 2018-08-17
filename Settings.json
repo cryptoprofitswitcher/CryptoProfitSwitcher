@@ -17,6 +17,8 @@
   "ProfitCheckInterval": 60,
   // Time in seconds until a profit switch can happen again
   "ProfitSwitchCooldown": 0,
+  // Threshold between current profit and most profitable coin before switching (e.g. 0 means switch immediately, 0.1 means switch when the most profitable coin is 10% percent more profitable than current)
+  "ProfitSwitchThreshold": 0,
   // Time in seconds between update of current status
   "DisplayUpdateInterval": 10,
   // Path to script that runs when reset is executed, can be null.

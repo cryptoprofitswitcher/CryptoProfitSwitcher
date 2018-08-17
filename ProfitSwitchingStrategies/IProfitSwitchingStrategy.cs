@@ -7,9 +7,9 @@ namespace CryptonightProfitSwitcher.ProfitSwitchingStrategies
 {
     public interface IProfitSwitchingStrategy
     {
-        MineableReward GetBestPoolminedCoin(IList<Coin> coins, Dictionary<ProfitProvider, Dictionary<string, Profit>> poolProfitsDictionary, Settings settings);
-        MineableReward GetBestNicehashAlgorithm(IList<NicehashAlgorithm> nicehashAlgorithms, Dictionary<int, Profit> nicehashProfitsDictionary, Settings settings);
-        MineableReward GetBestMineable(MineableReward bestPoolminedCoin, MineableReward bestNicehashAlgorithm);
+        MineableRewardResult GetBestPoolminedCoin(IList<Coin> coins, Mineable currentMineable, Dictionary<ProfitProvider, Dictionary<string, Profit>> poolProfitsDictionary, Settings settings);
+        MineableRewardResult GetBestNicehashAlgorithm(IList<NicehashAlgorithm> nicehashAlgorithms,Mineable currentMineable, Dictionary<int, Profit> nicehashProfitsDictionary, Settings settings);
+        MineableReward GetBestMineable(MineableReward bestPoolminedCoin, MineableReward bestNicehashAlgorithm, MineableReward currentReward, Settings settings);
         double GetReward(Profit profit, Mineable mineable, ProfitTimeframe timeframe);
     }
 }

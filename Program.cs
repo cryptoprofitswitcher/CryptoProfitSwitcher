@@ -181,11 +181,15 @@ namespace CryptonightProfitSwitcher
 
                         IProfitSwitchingStrategy profitSwitchingStrategy = ProfitSwitchingStrategyFactory.GetProfitSwitchingStrategy(settings.ProfitSwitchingStrategy);
 
+                        MineableReward currentReward = null;
+
                         // Get best pool mined coin
                         MineableReward bestPoolminedCoin = null;
                         if (!token.IsCancellationRequested)
                         {
-                            bestPoolminedCoin = profitSwitchingStrategy.GetBestPoolminedCoin(coins, poolProfitsDictionary, settings);
+                            var result = profitSwitchingStrategy.GetBestPoolminedCoin(coins,_currentMineable, poolProfitsDictionary, settings);
+                            bestPoolminedCoin = result?.Result;
+                            if (currentReward == null) currentReward = result?.Current;
                             if (bestPoolminedCoin?.Mineable != null)
                             {
                                 Console.WriteLine("Got best pool mined coin: " + bestPoolminedCoin.Mineable.DisplayName);
@@ -207,7 +211,9 @@ namespace CryptonightProfitSwitcher
                         MineableReward bestNicehashAlgorithm = null;
                         if (!token.IsCancellationRequested && nicehashProfitsDictionary != null)
                         {
-                            bestNicehashAlgorithm = profitSwitchingStrategy.GetBestNicehashAlgorithm(nicehashAlgorithms, nicehashProfitsDictionary, settings);
+                            var result = profitSwitchingStrategy.GetBestNicehashAlgorithm(nicehashAlgorithms,_currentMineable, nicehashProfitsDictionary, settings);
+                            bestNicehashAlgorithm = result?.Result;
+                            if (currentReward == null) currentReward = result?.Current;
                             if (bestNicehashAlgorithm?.Mineable != null)
                             {
                                 Console.WriteLine("Got best nicehash algorithm: " + bestNicehashAlgorithm.Mineable.DisplayName);
@@ -217,6 +223,7 @@ namespace CryptonightProfitSwitcher
                                 Console.WriteLine("Couldn't determine best nicehash algorithm.");
                             }
                         }
+
 
                         //Print table
                         if (!token.IsCancellationRequested && nicehashProfitsDictionary != null)
@@ -235,7 +242,7 @@ namespace CryptonightProfitSwitcher
                             }
                             else
                             {
-                                bestOverallMineable = profitSwitchingStrategy.GetBestMineable(bestPoolminedCoin, bestNicehashAlgorithm)?.Mineable;
+                                bestOverallMineable = profitSwitchingStrategy.GetBestMineable(bestPoolminedCoin, bestNicehashAlgorithm, currentReward, settings)?.Mineable;
                             }
                             if (bestOverallMineable != null)
                             {
@@ -257,7 +264,7 @@ namespace CryptonightProfitSwitcher
                         {
                             if (settings.ProfitCheckInterval > 0)
                             {
-                                Task.Delay(TimeSpan.FromSeconds(settings.ProfitCheckInterval), token).Wait();
+                                Task.Delay(TimeSpan.FromSeconds(settings.ProfitCheckInterval), token).Wait(token);
                             }
                             else
                             {
@@ -385,7 +392,7 @@ namespace CryptonightProfitSwitcher
                                     if (currentUsdReward > 0)
                                     {
                                         Console.ForegroundColor = ConsoleColor.Yellow;
-                                        Console.Write(Helpers.ToCurrency(currentUsdReward, "$"));
+                                        Console.Write(currentUsdReward.ToCurrency("$"));
                                         Console.ResetColor();
                                     }
                                     if (currentCoinReward > 0)
@@ -416,7 +423,7 @@ namespace CryptonightProfitSwitcher
                                 {
                                     Console.Write(" (");
                                     Console.ForegroundColor = ConsoleColor.Yellow;
-                                    Console.Write(Helpers.ToCurrency(currentUsdReward, "$"));
+                                    Console.Write(currentUsdReward.ToCurrency("$"));
                                     Console.ResetColor();
                                     Console.WriteLine(" per day)");
                                 }

@@ -13,6 +13,7 @@ namespace CryptonightProfitSwitcher.Models
         public string PoolProfitProviders { get; set; }
         public int MinerStartDelay { get; set; }
         public int ProfitSwitchCooldown { get; set; }
+        public double ProfitSwitchThreshold { get; set; }
         public bool StartMinerMinimized { get; set; }
         public int ProfitCheckInterval { get; set; }
         public int DisplayUpdateInterval { get; set; }
@@ -23,7 +24,6 @@ namespace CryptonightProfitSwitcher.Models
         public double WatchdogCriticalThreshold { get; set; }
         public int WatchdogInterval { get; set; }
         public int WatchdogAllowedOversteps { get; set; }
-
         [Obsolete("CryptonightBittubeHashrate is deprecated, use CryptonightLiteHashrate or the override in Mineable.")]
         public int CryptonightBittubeHashrate { get; set; }
 
