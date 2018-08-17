@@ -21,7 +21,7 @@
   "OverrideExpectedHashrate": 8420,
   // Override the profit timeframe, can be Live, Day or null.
   "OverrideProfitTimeframe": null,
-  // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, MinerRocksApi, CryptoknightCCApi) or null.
+  // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, CryptunitApi, MinerRocksApi, CryptoknightCCApi) or null.
   "OverridePoolProfitProviders": null,
   // On the determination of the most profitable coin, the actual estimated profit will be multiplied by this, can be a decimal or null.
   "PreferFactor": 1.0,
