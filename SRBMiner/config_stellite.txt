@@ -23,6 +23,6 @@
 "gpu_conf" : 
 [ 
 	{ "id" : 0, "intensity" : 120, "worksize" : 16, "threads" : 2},
-	{ "id" : 1, "intensity" : 112, "worksize" : 16, "threads" : 2},
+	{ "id" : 1, "intensity" : 96, "worksize" : 16, "threads" : 2},
 ]
 }

@@ -1,6 +1,6 @@
 {
 /* Type can be : normal, normalv7, lite, litev7, heavy, ipbc, artocash, alloy, marketcash, b2n, stellitev4  */
-"cryptonight_type" : "ipbc",
+"cryptonight_type" : "bittubev2",
 
 /* Intensity 0-> auto intensity, or value from 1-300  */
 "intensity" : 0,

@@ -37,6 +37,10 @@ namespace CryptonightProfitSwitcher.Mineables
         public string SRBMinerExtraArguments { get; set; }
         public int SRBMinerApiPort { get; set; }
         public bool SRBMinerUseXmrStakCPUMining { get; set; }
+        public string JceMinerPath { get; set; }
+        public string JceMinerExtraArguments { get; set; }
+        public string JceMinerConfig { get; set; }
+
         public abstract string Id { get; }
 
         public bool IsEnabled()

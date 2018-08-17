@@ -7,7 +7,7 @@
   "TickerSymbol": "XTL",
   // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
   "Algorithm": "CryptonightStellite",
-  // Used Miner, can be XmrStak, CastXmr or SRBMiner (Recommended: XmrStak)
+  // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
   // Path to script that runs before the miner starts, can be null.
   // For example:: Path to batch file that sets specific OverdriveN settings for this coin
@@ -21,7 +21,7 @@
   "OverrideExpectedHashrate": null,
   // Override the profit timeframe, can be Live, Day or null.
   "OverrideProfitTimeframe": null,
-  // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, MinerRocksApi, CryptoknightCCApi) or null.
+  // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, CryptunitApi, MinerRocksApi, CryptoknightCCApi) or null.
   "OverridePoolProfitProviders": null,
   // On the determination of the most profitable coin, the actual estimated profit will be multiplied by this, can be a decimal or null.
   "PreferFactor": 1.0,
@@ -75,7 +75,16 @@
   // Extra arguments that will be passed over to SRBMiner, can be a string or null
   "SRBMinerExtraArguments": null,
   // Set if you want to also start Xmr-Stak for CPU Mining
-  "SRBMinerUseXmrStakCPUMining": true
+  "SRBMinerUseXmrStakCPUMining": true,
+
+  /* JCEMINER CONFIGURATION - NEEDED IF MINER IS JCEMINER */
+
+  // Path to JceMiner executable
+  "JceMinerPath": "JceMiner/jce_cn_gpu_miner64.exe",
+  // Path to JceMiner config (can be null <- then auto configuration will be used)
+  "JceMinerConfig": "JceMiner/config_v7.txt",
+  // Extra arguments for JceMiner
+  "JceMinerExtraArguments": null
 
 
 }

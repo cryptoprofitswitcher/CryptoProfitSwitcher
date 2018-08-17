@@ -1,0 +1,19 @@
+
+"cpu_threads_conf" :  
+[  
+     { "cpu_architecture" : "auto", "affine_to_cpu" : 0, "use_cache" : true },
+     { "cpu_architecture" : "auto", "affine_to_cpu" : 2, "use_cache" : true },
+     { "cpu_architecture" : "auto", "affine_to_cpu" : 4, "use_cache" : true },
+     { "cpu_architecture" : "auto", "affine_to_cpu" : 6, "use_cache" : true },
+     { "cpu_architecture" : "auto", "affine_to_cpu" : 8, "use_cache" : true },
+     { "cpu_architecture" : "auto", "affine_to_cpu" : 7, "use_cache" : true },
+     { "cpu_architecture" : "auto", "affine_to_cpu" : 10, "use_cache" : true },
+],
+
+"gpu_threads_conf" : 
+[ 
+     { "mode" : "GPU", "worksize" : 16, "alpha" : 64, "beta" : 16, "gamma" : 4, "delta" : 4, "epsilon" : 4, "zeta" : 4, "index" : 0, "multi_hash":1920 },
+     { "mode" : "GPU", "worksize" : 16, "alpha" : 64, "beta" : 16, "gamma" : 4, "delta" : 4, "epsilon" : 4, "zeta" : 4, "index" : 0, "multi_hash":1920 },
+     { "mode" : "GPU", "worksize" : 16, "alpha" : 64, "beta" : 16, "gamma" : 4, "delta" : 4, "epsilon" : 4, "zeta" : 4, "index" : 1, "multi_hash":1888 },
+     { "mode" : "GPU", "worksize" : 16, "alpha" : 64, "beta" : 16, "gamma" : 4, "delta" : 4, "epsilon" : 4, "zeta" : 4, "index" : 1, "multi_hash":1888 },
+]
