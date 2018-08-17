@@ -102,8 +102,10 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                     return "https://aeon.miner.rocks/api/stats";
                 case "TUBE":
                     return "https://bittube.miner.rocks/api/stats";
+                case "QRL":
+                    return "https://qrl.miner.rocks/api/stats";
             }
-            return null;
+            return $"https://{coin.TickerSymbol.ToLowerInvariant()}.miner.rocks/api/stats";
         }
     }
 }
