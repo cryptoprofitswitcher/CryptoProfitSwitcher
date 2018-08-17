@@ -5,6 +5,7 @@
 * [doktor83's SRBMiner](https://bitcointalk.org/index.php?topic=3167363.0)
 * [JCE Miner](https://bitcointalk.org/index.php?topic=3281187.0)
 * [MineCryptoNight API](http://minecryptonight.net/api)
+* [CryptUnit API](https://www.cryptunit.com/api/)
 * [miner.rocks API](https://miner.rocks/)
 * [cryptoknight.cc API](https://cryptoknight.cc/)
 * [MoneroOcean API](https://moneroocean.stream)

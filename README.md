@@ -17,7 +17,7 @@ It is optimized for **Windows** but also works for **Linux**.
   - **Reset:** Restarts the miner and runs a user-defined Reset script
   - **Performance:** Resource friendly with 0%-CPU usage
   - **Miners:** Xmr-Stak (Recommended), Cast XMR, JCE Miner, SRBMiner
-  - **Profit data:** [MineCryptoNight API](http://minecryptonight.net/api), [miner.rocks API](https://miner.rocks/), [cryptoknight.cc API](https://cryptoknight.cc/), [MoneroOcean](https://moneroocean.stream)
+  - **Profit data:** [MineCryptoNight API](http://minecryptonight.net/api), [CryptUnit API](https://www.cryptunit.com/api/), [miner.rocks API](https://miner.rocks/), [cryptoknight.cc API](https://cryptoknight.cc/), [MoneroOcean](https://moneroocean.stream)
   - **Multiple profit switching strategies:** Maximize fiat profit, maximize coin reward or a combination
   - **Manual mode:** You can switch between automatic mode and manual mode where you select the coin / NiceHash algorithm yourself
   - **Supports all algorithms:** CryptonightV7, CryptonightHeavy, CryptonightLiteV7 and the variants of Bittube, Stellite and Haven Protocol
@@ -113,6 +113,7 @@ This strategy will work with all coins / NiceHash algorithms because it will use
 * [doktor83's SRBMiner](https://bitcointalk.org/index.php?topic=3167363.0)
 * [JCE Miner](https://bitcointalk.org/index.php?topic=3281187.0)
 * [MineCryptoNight API](http://minecryptonight.net/api)
+* [CryptUnit API](https://www.cryptunit.com/api/)
 * [miner.rocks API](https://miner.rocks/)
 * [cryptoknight.cc API](https://cryptoknight.cc/)
 * [MoneroOcean API](https://moneroocean.stream)

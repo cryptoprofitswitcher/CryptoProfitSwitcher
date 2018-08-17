@@ -19,7 +19,7 @@ namespace CryptonightProfitSwitcher.Models
         public int DisplayUpdateInterval { get; set; }
         public string ResetScript { get; set; }
         public bool EnableCaching { get; set; }
-        public bool EnableLogging { get; set; } = true;
+        public bool EnableLogging { get; set; }
         public bool EnableWatchdog { get; set; }
         public int WatchdogDelay { get; set; }
         public double WatchdogCriticalThreshold { get; set; }

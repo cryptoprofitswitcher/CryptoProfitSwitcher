@@ -20,7 +20,7 @@ namespace CryptonightProfitSwitcher
 {
     class Program
     {
-        const int VERSION = 7;
+        const int VERSION = 8;
 
         static IMiner _currentMiner = null;
         static Mineable _currentMineable = null;
