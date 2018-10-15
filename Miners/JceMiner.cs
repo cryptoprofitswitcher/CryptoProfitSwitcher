@@ -118,12 +118,19 @@ namespace CryptonightProfitSwitcher.Miners
                 }
                 space = " ";
             }
-            if (!userDefindedArgs.Contains("--mport"))
+
+            int mportIndex = userDefindedArgs.IndexOf("--mport");
+            if (mportIndex == -1)
             {
                 _port = Helpers.GetAvailablePort();
                 args += $"{space}--mport {_port}";
                 space = " ";
             }
+            else
+            {
+                _port = Int32.Parse(userDefindedArgs[mportIndex + 1]);
+            }
+
             if (!String.IsNullOrEmpty(mineable.JceMinerExtraArguments))
             {
                 args += space + mineable.JceMinerExtraArguments;
