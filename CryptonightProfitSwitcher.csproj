@@ -300,6 +300,9 @@
     <None Update="XmrStak\libxmrstak_opencl_backend.so">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="XmrStak\libxmr-stak-asm.a">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
    <None Update="XmrStak\xmr-stak">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
