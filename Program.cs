@@ -336,7 +336,7 @@ namespace CryptonightProfitSwitcher
                     }
                     catch (Exception ex)
                     {
-                        Log.Error("Profit switcher task failed: " + ex.Message);
+                        Log.Error("Profit switcher task failed: " + ex);
                         statusCts.Cancel();
                     }
                 }
@@ -560,7 +560,7 @@ namespace CryptonightProfitSwitcher
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(" Status task failed: " + ex.Message);
+                    Log.Error(" Status task failed: " + ex);
                 }
             }, token);
         }
@@ -610,7 +610,7 @@ namespace CryptonightProfitSwitcher
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("Watchdog task failed: " + ex.Message);
+                    Log.Error("Watchdog task failed: " + ex);
                 }
             }, token);
         }
@@ -704,7 +704,7 @@ namespace CryptonightProfitSwitcher
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("Key presses task failed: " + ex.Message);
+                    Log.Error("Key presses task failed: " + ex);
                 }
             }, token);
         }
@@ -932,7 +932,7 @@ namespace CryptonightProfitSwitcher
             catch (Exception ex)
             {
                 Log.Error("Couldn't execute script: " + scriptPath);
-                Log.Error(ex.Message);
+                Log.Error(ex);
             }
         }
     }
