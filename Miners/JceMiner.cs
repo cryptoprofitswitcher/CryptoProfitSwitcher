@@ -11,10 +11,10 @@ using System.Threading;
 
 namespace CryptonightProfitSwitcher.Miners
 {
-    class JceMiner : IMiner
+    internal class JceMiner : IMiner
     {
-        Process _process = null;
-        Mineable _mineable = null;
+        private Process _process;
+        private Mineable _mineable;
         private int _port;
         public string Name => "JCE Miner";
 
@@ -137,8 +137,6 @@ namespace CryptonightProfitSwitcher.Miners
 
             Thread.Sleep(TimeSpan.FromSeconds(settings.MinerStartDelay));
             _process.Start();
-
-          
         }
 
         public void StopMiner()
@@ -168,7 +166,6 @@ namespace CryptonightProfitSwitcher.Miners
                 _process = null;
                 _mineable = null;
             }
-           
         }
     }
 }

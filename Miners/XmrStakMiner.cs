@@ -14,9 +14,9 @@ namespace CryptonightProfitSwitcher.Miners
 {
     public class XmrStakMiner : IMiner
     {
-        Process _process = null;
-        Mineable _mineable = null;
-        bool _cpuOnly = false;
+        private Process _process;
+        private Mineable _mineable;
+        private bool _cpuOnly;
         public string Name => "XmrStak";
 
         public XmrStakMiner(bool cpuOnly)
@@ -30,10 +30,12 @@ namespace CryptonightProfitSwitcher.Miners
             {
                 int port = _mineable.XmrStakApiPort;
                 //Backwards compatibility
+#pragma warning disable CS0618
                 if (port == 0 && settings.XmrStakApiPort != 0)
                 {
                     port = settings.XmrStakApiPort;
                 }
+#pragma warning restore CS0618
                 var xmrJson = Helpers.GetJsonFromUrl($"http://127.0.0.1:{port}/api.json", settings, appRootFolder, CancellationToken.None);
                 dynamic xmr = JObject.Parse(xmrJson);
                 JArray totalHashRates = xmr.hashrate.total;
@@ -116,7 +118,6 @@ namespace CryptonightProfitSwitcher.Miners
                 _process.StartInfo.Arguments = $"-e \"'{xmrPath}' {args}\"";
             }
 
-
             _process.StartInfo.UseShellExecute = true;
             _process.StartInfo.CreateNoWindow = false;
             _process.StartInfo.RedirectStandardOutput = false;
@@ -171,16 +172,14 @@ namespace CryptonightProfitSwitcher.Miners
                     catch (Exception ex)
                     {
                         Console.WriteLine("Couldn't kill process: " + ex.Message);
-
                     }
                 }
-
 
                 _mineable = null;
             }
         }
 
-        static string GeneratePoolConfigJson(Mineable mineable)
+        private static string GeneratePoolConfigJson(Mineable mineable)
         {
             var dict = new Dictionary<string, object>();
             dict["pool_list"] = new Dictionary<string, object>[]
@@ -238,8 +237,7 @@ namespace CryptonightProfitSwitcher.Miners
                 lines.RemoveAt(lines.Count - 1);
                 lines.Add(String.Empty);
             }
-            string correctedJson = String.Join("\r\n", lines);
-            return correctedJson;
+            return String.Join("\r\n", lines);
         }
     }
 }

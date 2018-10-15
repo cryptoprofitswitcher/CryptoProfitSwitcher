@@ -13,9 +13,9 @@ namespace CryptonightProfitSwitcher.Miners
 {
     public class CastXmrMiner : IMiner
     {
-        Process _process = null;
-        Mineable _mineable = null;
-        IMiner _cpuMiner = null;
+        private Process _process;
+        private Mineable _mineable;
+        private IMiner _cpuMiner;
 
         public string Name => "Cast XMR";
         public double GetCurrentHashrate(Settings settings, DirectoryInfo appRootFolder)
@@ -42,8 +42,7 @@ namespace CryptonightProfitSwitcher.Miners
                 cpuHashrate = _cpuMiner.GetCurrentHashrate(settings, appRootFolder);
             }
 
-            double totalHashRate = gpuHashrate + cpuHashrate;
-            return totalHashRate;
+            return gpuHashrate + cpuHashrate;
         }
 
         public void StartMiner(Mineable mineable, Settings settings, string appRoot, DirectoryInfo appRootFolder)

@@ -65,10 +65,12 @@ namespace CryptonightProfitSwitcher.Mineables
                     return settings.CryptonightHeavyHashrate;
                 case Algorithm.CryptonightBittube:
                     // Backwards compatibilty
+#pragma warning disable CS0618 
                     if (settings.CryptonightBittubeHashrate > 0)
                     {
                         return settings.CryptonightBittubeHashrate;
                     }
+#pragma warning restore CS0618 
                     return settings.CryptonightHeavyHashrate;
                 case Algorithm.CryptonightLite:
                     return settings.CryptonightLiteHashrate;

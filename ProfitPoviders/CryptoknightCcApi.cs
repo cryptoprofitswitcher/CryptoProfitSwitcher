@@ -23,14 +23,14 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                 var requestedProfitProviders = Helpers.GetPoolProfitProviders(settings, coin);
                 if (requestedProfitProviders.Contains(ProfitProvider.CryptoknightCCApi))
                 {
-                    tasks.Add(SetProfitForCoinTask(coin, settings, appRootFolder, poolProfitsDictionary, ct));
+                    tasks.Add(SetProfitForCoinTaskAsync(coin, settings, appRootFolder, poolProfitsDictionary, ct));
                 }
             }
             Task.WhenAll(tasks).Wait(ct);
             return poolProfitsDictionary;
         }
 
-        Task SetProfitForCoinTask (Coin coin, Settings settings, DirectoryInfo appRootFolder, Dictionary<string, Profit> poolProfitsDictionary, CancellationToken ct)
+        private Task SetProfitForCoinTaskAsync (Coin coin, Settings settings, DirectoryInfo appRootFolder, Dictionary<string, Profit> poolProfitsDictionary, CancellationToken ct)
         {
             return Task.Run(() =>
             {
@@ -107,7 +107,6 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
 
                         poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdRewardLive, usdRewardDay, (double)amountLive, amountDay, ProfitProvider.CryptoknightCCApi, timeFrame);
                         Console.WriteLine($"Got profit data for {coin.TickerSymbol} from CryptoknightCCAPI");
-
                     }
                 }
                 catch (Exception ex)

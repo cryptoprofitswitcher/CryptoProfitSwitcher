@@ -13,7 +13,7 @@ using Newtonsoft.Json.Converters;
 
 namespace CryptonightProfitSwitcher.ProfitPoviders
 {
-    class CryptunitApi : IPoolProfitProvider
+    internal class CryptunitApi : IPoolProfitProvider
     {
         public Dictionary<string, Profit> GetProfits(DirectoryInfo appRootFolder, Settings settings, IList<Coin> coins, CancellationToken ct)
         {
@@ -25,7 +25,6 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
 
                 dynamic profitsLive = JsonConvert.DeserializeObject(profitsLiveJson);
                 dynamic profitsDay = JsonConvert.DeserializeObject(profitsDayJson);
-
 
                 foreach (dynamic rewardLive in profitsLive[0].coins)
                 {

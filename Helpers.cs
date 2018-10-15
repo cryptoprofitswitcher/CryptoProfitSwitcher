@@ -21,7 +21,6 @@ namespace CryptonightProfitSwitcher
 {
     internal static class Helpers
     {
-       
         internal static Dictionary<ConsoleKey, string> ManualSelectionDictionary = new Dictionary<ConsoleKey, string>
         {
             {ConsoleKey.D1, "1"}, {ConsoleKey.D2, "2"}, {ConsoleKey.D3, "3"},
@@ -76,21 +75,18 @@ namespace CryptonightProfitSwitcher
         }
         internal static string GetApplicationRoot()
         {
-            var exePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            return exePath;
+            return Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
         }
 
         internal static string GetApplicationVersion()
         {
-            var ver = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
-            return ver;
+            return Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
         }
 
         internal static string ResolveToFullPath(string path, string appRootPath)
         {
             string resolvedPath = Path.Combine(appRootPath, path);
-            string fullPath = Path.GetFullPath(resolvedPath);
-            return fullPath;
+            return Path.GetFullPath(resolvedPath);
         }
 
         internal static string ResolveToArgumentPath(string path, string appRootPath)
@@ -124,8 +120,7 @@ namespace CryptonightProfitSwitcher
 
             if (coin != null && !String.IsNullOrEmpty(coin.OverridePoolProfitProviders))
             {
-                var overrrideProfitProvidersSplitted = coin.OverridePoolProfitProviders.Split(",");
-                foreach (var profitProviderString in overrrideProfitProvidersSplitted)
+                foreach (var profitProviderString in coin.OverridePoolProfitProviders.Split(","))
                 {
                     ProfitProvider profitProvider;
                     if (Enum.TryParse(profitProviderString, out profitProvider))
@@ -140,8 +135,7 @@ namespace CryptonightProfitSwitcher
 
             if (!String.IsNullOrEmpty(settings.PoolProfitProviders))
             {
-                var profitProvidersSplitted = settings.PoolProfitProviders.Split(",");
-                foreach (var profitProviderString in profitProvidersSplitted)
+                foreach (var profitProviderString in settings.PoolProfitProviders.Split(","))
                 {
                     ProfitProvider profitProvider;
                     if (Enum.TryParse(profitProviderString, out profitProvider))
@@ -172,8 +166,7 @@ namespace CryptonightProfitSwitcher
         public static bool IsLinux() =>
             RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
-
-        static ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+        private static ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
         internal static string GetJsonFromUrl(string url, Settings settings, DirectoryInfo appRootFolder, CancellationToken ct)
         {
