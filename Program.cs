@@ -331,6 +331,12 @@ namespace CryptonightProfitSwitcher
                         statusCts.Cancel();
                         return;
                     }
+                    catch (OperationCanceledException)
+                    {
+                        Log.Information("Cancelled profit task 3.");
+                        statusCts.Cancel();
+                        return;
+                    }
                     catch (Exception ex)
                     {
                         Log.Error("Profit switcher task failed: " + ex);
@@ -553,6 +559,11 @@ namespace CryptonightProfitSwitcher
                     Log.Information(" Cancelled status task 2.");
                     return;
                 }
+                catch (OperationCanceledException)
+                {
+                    Log.Information("Cancelled status task 3.");
+                    return;
+                }
                 catch (Exception ex)
                 {
                     Log.Error(" Status task failed: " + ex);
@@ -601,6 +612,11 @@ namespace CryptonightProfitSwitcher
                 catch (AggregateException)
                 {
                     Log.Information("Cancelled watchdog task 2.");
+                    return;
+                }
+                catch (OperationCanceledException)
+                {
+                    Log.Information("Cancelled watchdog task 3.");
                     return;
                 }
                 catch (Exception ex)
@@ -695,6 +711,11 @@ namespace CryptonightProfitSwitcher
                 {
                     Log.Information("Cancelled key presses task 2.");
                     //ResetApp(settings, appFolderPath);
+                    return;
+                }
+                catch (OperationCanceledException)
+                {
+                    Log.Information("Cancelled key presses task 3.");
                     return;
                 }
                 catch (Exception ex)
