@@ -22,13 +22,13 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                 var requestedProfitProviders = Helpers.GetPoolProfitProviders(settings, coin);
                 if (requestedProfitProviders.Contains(ProfitProvider.MinerRocksApi))
                 {
-                    tasks.Add(SetProfitForCoinTask(coin, settings, appRootFolder, poolProfitsDictionary, ct));
+                    tasks.Add(SetProfitForCoinTaskAsync(coin, settings, appRootFolder, poolProfitsDictionary, ct));
                 }
             }
             Task.WhenAll(tasks).Wait(ct);
             return poolProfitsDictionary;
         }
-        Task SetProfitForCoinTask(Coin coin, Settings settings, DirectoryInfo appRootFolder, Dictionary<string, Profit> poolProfitsDictionary, CancellationToken ct)
+        private Task SetProfitForCoinTaskAsync(Coin coin, Settings settings, DirectoryInfo appRootFolder, Dictionary<string, Profit> poolProfitsDictionary, CancellationToken ct)
         {
             return Task.Run(() =>
             {
@@ -65,7 +65,6 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
 
                         poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdRewardLive, usdRewardDay, (double)amountLive, (double)amountDay, ProfitProvider.MinerRocksApi, timeFrame);
                         Console.WriteLine($"Got profit data for {coin.TickerSymbol} from MinerRocksAPI");
-
                     }
                 }
                 catch (Exception ex)

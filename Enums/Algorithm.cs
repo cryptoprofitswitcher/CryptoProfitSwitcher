@@ -8,6 +8,7 @@
         CryptonightBittube,
         CryptonightStellite,
         CryptonightHaven,
-        CryptonightMasari
+        CryptonightMasari,
+        CryptonightV8
     }
 }

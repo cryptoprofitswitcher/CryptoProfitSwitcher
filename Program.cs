@@ -18,29 +18,30 @@ using Serilog;
 
 namespace CryptonightProfitSwitcher
 {
-    class Program
+    internal static class Program
     {
-        const int VERSION = 8;
+        private const int VERSION = 9;
 
-        static IMiner _currentMiner = null;
-        static Mineable _currentMineable = null;
-        static int _watchdogOvershots = 0;
-        static bool _requestQuit = false;
-        static bool _manualSelection = false;
-        static Mineable _manualSelectedMineable = null;
-        static bool _newVersionAvailable;
-        static CancellationTokenSource _mainResetCts = null;
-        static CancellationTokenSource _watchdogCts = null;
-        static CancellationTokenSource _keyPressesCts = null;
-        static CancellationTokenSource _profitSwitcherTaskCts = null;
-        static Task _profitSwitcherTask;
-        static DateTimeOffset _lastProfitSwitch = DateTimeOffset.MinValue;
-        static void Main(string[] args)
+        private static IMiner _currentMiner;
+        private static Mineable _currentMineable;
+        private static int _watchdogOvershots;
+        private static bool _requestQuit;
+        private static bool _manualSelection;
+        private static Mineable _manualSelectedMineable;
+        private static bool _newVersionAvailable;
+        private static CancellationTokenSource _mainResetCts;
+        private static CancellationTokenSource _watchdogCts;
+        private static CancellationTokenSource _keyPressesCts;
+        private static CancellationTokenSource _profitSwitcherTaskCts;
+        private static Task _profitSwitcherTask;
+        private static DateTimeOffset _lastProfitSwitch = DateTimeOffset.MinValue;
+
+        private static void Main(string[] args)
         {
             //Get app root
             var appFolderPath = Helpers.GetApplicationRoot();
             var appFolder = new DirectoryInfo(appFolderPath);
-            
+
             //Initalize logging file
             string logPath = Path.Combine(appFolderPath, "current_log.txt");
             try
@@ -115,20 +116,20 @@ namespace CryptonightProfitSwitcher
                         .WriteTo.Console()
                         .CreateLogger();
                 }
-                
+
                 //Start profit switching algorithm
                 Log.Information("Start profit switching algorithm");
 
                 _profitSwitcherTaskCts?.Cancel();
                 _profitSwitcherTaskCts = new CancellationTokenSource();
-                _profitSwitcherTask = ProfitSwitcherTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms, _profitSwitcherTaskCts.Token);
+                _profitSwitcherTask = ProfitSwitcherTaskAsync(appFolderPath, appFolder, settings, coins, nicehashAlgorithms, _profitSwitcherTaskCts.Token);
 
                 //Start key presses task
                 Log.Information("Start key presses task");
 
                 _keyPressesCts?.Cancel();
                 _keyPressesCts = new CancellationTokenSource();
-                var keyPressesTask = KeypressesTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms, _keyPressesCts.Token);
+                var keyPressesTask = KeypressesTaskAsync(appFolderPath, appFolder, settings, coins, nicehashAlgorithms, _keyPressesCts.Token);
 
                 //Check for updates
                 try
@@ -141,7 +142,6 @@ namespace CryptonightProfitSwitcher
                     {
                         _newVersionAvailable = true;
                         Log.Information("New update available!");
-
                     }
                     else
                     {
@@ -158,7 +158,7 @@ namespace CryptonightProfitSwitcher
             }
         }
 
-        static Task ProfitSwitcherTask(string appFolderPath, DirectoryInfo appRootFolder, Settings settings, List<Coin> coins, List<NicehashAlgorithm> nicehashAlgorithms, CancellationToken token)
+        private static Task ProfitSwitcherTaskAsync(string appFolderPath, DirectoryInfo appRootFolder, Settings settings, List<Coin> coins, List<NicehashAlgorithm> nicehashAlgorithms, CancellationToken token)
         {
             return Task.Run(() =>
             {
@@ -180,8 +180,7 @@ namespace CryptonightProfitSwitcher
                         var profitProviders = Helpers.GetPoolProfitProviders(settings, null);
                         foreach (var coin in coins.Where(c => !String.IsNullOrEmpty(c.OverridePoolProfitProviders)))
                         {
-                            var overrrideProfitProvidersSplitted = coin.OverridePoolProfitProviders.Split(",");
-                            foreach (var profitProviderString in overrrideProfitProvidersSplitted)
+                            foreach (var profitProviderString in coin.OverridePoolProfitProviders.Split(","))
                             {
                                 ProfitProvider profitProvider;
                                 if (Enum.TryParse(profitProviderString, out profitProvider))
@@ -202,8 +201,7 @@ namespace CryptonightProfitSwitcher
                                 profitProviderTasks.Add(Task.Run(()=>
                                 {
                                     IPoolProfitProvider profitProviderClass = PoolProfitProviderFactory.GetPoolProfitProvider(profitProvider);
-                                    var poolProfits = profitProviderClass.GetProfits(appRootFolder, settings, coins, childCts.Token);
-                                    poolProfitsDictionaryUnordered[profitProvider] = poolProfits;
+                                    poolProfitsDictionaryUnordered[profitProvider] = profitProviderClass.GetProfits(appRootFolder, settings, coins, childCts.Token);
                                 }, childCts.Token));
                             }
                         }
@@ -216,7 +214,7 @@ namespace CryptonightProfitSwitcher
                         sw.Stop();
                         Console.WriteLine($"Fetching profit data took {(int)sw.Elapsed.TotalSeconds} seconds.");
 #endif
-                        
+
                         //Reorder because of async
                         var poolProfitsDictionary = new Dictionary<ProfitProvider, Dictionary<string, Profit>>();
                         foreach (var profitProvider in profitProviders)
@@ -272,7 +270,6 @@ namespace CryptonightProfitSwitcher
                             }
                         }
 
-
                         //Print table
                         if (!token.IsCancellationRequested && nicehashProfitsDictionary != null)
                         {
@@ -306,7 +303,7 @@ namespace CryptonightProfitSwitcher
                             }
                         }
 
-                        var statusUpdaterTask = StatusUpdaterTask(DateTimeOffset.Now.AddSeconds(settings.ProfitCheckInterval), settings, appRootFolder, coins, poolProfitsDictionary, nicehashAlgorithms, nicehashProfitsDictionary, statusCts.Token);
+                        var statusUpdaterTask = StatusUpdaterTaskAsync(DateTimeOffset.Now.AddSeconds(settings.ProfitCheckInterval), settings, appRootFolder, coins, poolProfitsDictionary, nicehashAlgorithms, nicehashProfitsDictionary, statusCts.Token);
 
                         if (!token.IsCancellationRequested)
                         {
@@ -334,16 +331,22 @@ namespace CryptonightProfitSwitcher
                         statusCts.Cancel();
                         return;
                     }
+                    catch (OperationCanceledException)
+                    {
+                        Log.Information("Cancelled profit task 3.");
+                        statusCts.Cancel();
+                        return;
+                    }
                     catch (Exception ex)
                     {
-                        Log.Error("Profit switcher task failed: " + ex.Message);
+                        Log.Error("Profit switcher task failed: " + ex);
                         statusCts.Cancel();
                     }
                 }
             }, token);
         }
 
-        static Task StatusUpdaterTask(DateTimeOffset estReset, Settings settings, DirectoryInfo appRootFolder, List<Coin> coins, Dictionary<ProfitProvider, Dictionary<string, Profit>> poolProfitsDictionary, List<NicehashAlgorithm> nicehashAlgorithms, Dictionary<int, Profit> nicehashProfitsDictionary, CancellationToken token)
+        private static Task StatusUpdaterTaskAsync(DateTimeOffset estReset, Settings settings, DirectoryInfo appRootFolder, List<Coin> coins, Dictionary<ProfitProvider, Dictionary<string, Profit>> poolProfitsDictionary, List<NicehashAlgorithm> nicehashAlgorithms, Dictionary<int, Profit> nicehashProfitsDictionary, CancellationToken token)
         {
             return Task.Run(() =>
             {
@@ -505,7 +508,6 @@ namespace CryptonightProfitSwitcher
                             else
                             {
                                 Console.WriteLine($" Switching:  {settings.ProfitSwitchingStrategy.ToString()}");
-
                             }
 
                             if (settings.EnableWatchdog)
@@ -524,7 +526,6 @@ namespace CryptonightProfitSwitcher
                             {
                                 Console.WriteLine(" Watchdog:   Not activated.");
                             }
-
                         }
                         else
                         {
@@ -558,14 +559,19 @@ namespace CryptonightProfitSwitcher
                     Log.Information(" Cancelled status task 2.");
                     return;
                 }
+                catch (OperationCanceledException)
+                {
+                    Log.Information("Cancelled status task 3.");
+                    return;
+                }
                 catch (Exception ex)
                 {
-                    Log.Error(" Status task failed: " + ex.Message);
+                    Log.Error(" Status task failed: " + ex);
                 }
             }, token);
         }
 
-        static Task WatchdogTask(Settings settings, string appFolderPath, DirectoryInfo appRootFolder, CancellationToken token)
+        private static Task WatchdogTaskAsync(Settings settings, string appFolderPath, DirectoryInfo appRootFolder, CancellationToken token)
         {
             return Task.Run(() =>
             {
@@ -608,14 +614,19 @@ namespace CryptonightProfitSwitcher
                     Log.Information("Cancelled watchdog task 2.");
                     return;
                 }
+                catch (OperationCanceledException)
+                {
+                    Log.Information("Cancelled watchdog task 3.");
+                    return;
+                }
                 catch (Exception ex)
                 {
-                    Log.Error("Watchdog task failed: " + ex.Message);
+                    Log.Error("Watchdog task failed: " + ex);
                 }
             }, token);
         }
 
-        static Task KeypressesTask(string appFolderPath, DirectoryInfo appFolder, Settings settings, List<Coin> coins, List<NicehashAlgorithm> nicehashAlgorithms, CancellationToken token)
+        private static Task KeypressesTaskAsync(string appFolderPath, DirectoryInfo appFolder, Settings settings, List<Coin> coins, List<NicehashAlgorithm> nicehashAlgorithms, CancellationToken token)
         {
             return Task.Run(() =>
             {
@@ -702,22 +713,27 @@ namespace CryptonightProfitSwitcher
                     //ResetApp(settings, appFolderPath);
                     return;
                 }
+                catch (OperationCanceledException)
+                {
+                    Log.Information("Cancelled key presses task 3.");
+                    return;
+                }
                 catch (Exception ex)
                 {
-                    Log.Error("Key presses task failed: " + ex.Message);
+                    Log.Error("Key presses task failed: " + ex);
                 }
             }, token);
         }
 
-        static void RestartProfitTask(string appFolderPath, DirectoryInfo appFolder, Settings settings, List<Coin> coins, List<NicehashAlgorithm> nicehashAlgorithms)
+        private static void RestartProfitTask(string appFolderPath, DirectoryInfo appFolder, Settings settings, List<Coin> coins, List<NicehashAlgorithm> nicehashAlgorithms)
         {
             _profitSwitcherTaskCts.Cancel();
             _profitSwitcherTask.Wait(10000);
             _profitSwitcherTaskCts = new CancellationTokenSource();
-            _profitSwitcherTask = ProfitSwitcherTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms, _profitSwitcherTaskCts.Token);
+            _profitSwitcherTask = ProfitSwitcherTaskAsync(appFolderPath, appFolder, settings, coins, nicehashAlgorithms, _profitSwitcherTaskCts.Token);
         }
 
-        static void ResetConsole()
+        private static void ResetConsole()
         {
             Console.CursorVisible = false;
             Console.Clear();
@@ -729,14 +745,14 @@ namespace CryptonightProfitSwitcher
             Console.WriteLine();
         }
 
-        static void WriteInCyan(string text)
+        private static void WriteInCyan(string text)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(text);
             Console.ResetColor();
         }
 
-        static void PrintProfitTable(List<Coin> coins, Dictionary<ProfitProvider, Dictionary<string, Profit>> poolProfitsDictionary, List<NicehashAlgorithm> nicehashAlgorithms, Dictionary<int, Profit> nicehashProfitsDictionary, Settings settings)
+        private static void PrintProfitTable(List<Coin> coins, Dictionary<ProfitProvider, Dictionary<string, Profit>> poolProfitsDictionary, List<NicehashAlgorithm> nicehashAlgorithms, Dictionary<int, Profit> nicehashProfitsDictionary, Settings settings)
         {
             Console.WriteLine();
 
@@ -821,7 +837,7 @@ namespace CryptonightProfitSwitcher
             Console.WriteLine();
         }
 
-        static void ResetApp(Settings settings, string appFolderPath, bool runResetScript)
+        private static void ResetApp(Settings settings, string appFolderPath, bool runResetScript)
         {
             Log.Information(runResetScript ? "Resetting app with reset script!" : "Resetting app without reset script!");
             _profitSwitcherTaskCts.Cancel();
@@ -837,7 +853,7 @@ namespace CryptonightProfitSwitcher
             _lastProfitSwitch = DateTimeOffset.MinValue;
         }
 
-        static void StartMiner(Mineable mineable, Settings settings, string appRoot, DirectoryInfo appRootFolder)
+        private static void StartMiner(Mineable mineable, Settings settings, string appRoot, DirectoryInfo appRootFolder)
         {
             var differenceToLastProfitSwitch = DateTimeOffset.Now.Subtract(_lastProfitSwitch).TotalSeconds;
             if (differenceToLastProfitSwitch > settings.ProfitSwitchCooldown)
@@ -865,7 +881,7 @@ namespace CryptonightProfitSwitcher
                 if (settings.EnableWatchdog)
                 {
                     _watchdogCts = new CancellationTokenSource();
-                    var watchdogTask = WatchdogTask(settings, appRoot, appRootFolder, _watchdogCts.Token);
+                    var watchdogTask = WatchdogTaskAsync(settings, appRoot, appRootFolder, _watchdogCts.Token);
                 }
             }
             else
@@ -874,7 +890,7 @@ namespace CryptonightProfitSwitcher
             }
         }
 
-        static void StopMiner()
+        private static void StopMiner()
         {
             if (_currentMiner != null)
             {
@@ -887,7 +903,7 @@ namespace CryptonightProfitSwitcher
             _watchdogOvershots = 0;
         }
 
-        static void ExecuteScript(string scriptPath, string appFolderPath)
+        private static void ExecuteScript(string scriptPath, string appFolderPath)
         {
             try
             {
@@ -932,7 +948,7 @@ namespace CryptonightProfitSwitcher
             catch (Exception ex)
             {
                 Log.Error("Couldn't execute script: " + scriptPath);
-                Log.Error(ex.Message);
+                Log.Error("Exception: " + ex);
             }
         }
     }

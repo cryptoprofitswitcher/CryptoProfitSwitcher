@@ -13,18 +13,18 @@ namespace CryptonightProfitSwitcher.Miners
 {
     public class CastXmrMiner : IMiner
     {
-        Process _process = null;
-        Mineable _mineable = null;
-        IMiner _cpuMiner = null;
-
+        private int _customPort;
+        private Process _process;
+        private Mineable _mineable;
+        private IMiner _cpuMiner;
+        private const int DEFAULT_PORT = 7777;
         public string Name => "Cast XMR";
         public double GetCurrentHashrate(Settings settings, DirectoryInfo appRootFolder)
         {
             double gpuHashrate = 0;
             try
             {
-                const int port = 7777;
-
+                int port = _customPort > 0 ? _customPort : DEFAULT_PORT;
                 var json = Helpers.GetJsonFromUrl($"http://127.0.0.1:{port}", settings, appRootFolder, CancellationToken.None);
                 dynamic api = JObject.Parse(json);
 
@@ -42,8 +42,7 @@ namespace CryptonightProfitSwitcher.Miners
                 cpuHashrate = _cpuMiner.GetCurrentHashrate(settings, appRootFolder);
             }
 
-            double totalHashRate = gpuHashrate + cpuHashrate;
-            return totalHashRate;
+            return gpuHashrate + cpuHashrate;
         }
 
         public void StartMiner(Mineable mineable, Settings settings, string appRoot, DirectoryInfo appRootFolder)
@@ -102,6 +101,9 @@ namespace CryptonightProfitSwitcher.Miners
                     case Algorithm.CryptonightMasari:
                         args += $"{space}--algo=8";
                         break;
+                    case Algorithm.CryptonightV8:
+                        args += $"{space}--algo=10";
+                        break;
                     default:
                         throw new NotImplementedException("Couldn't start CastXmr, unknown algo: {mineable.Algorithm}\n" +
                                                           "You can set --algo yourself in the extra arguments.");
@@ -110,9 +112,25 @@ namespace CryptonightProfitSwitcher.Miners
             }
             if (!userDefindedArgs.Contains("--remoteaccess"))
             {
-                args += $"{space}--remoteaccess";
+                args += $"{space}--R";
                 space = " ";
             }
+
+            int portIndex = userDefindedArgs.IndexOf("--remoteport");
+            if (portIndex == -1)
+            {
+                if (mineable.CastXmrApiPort > 0)
+                {
+                    _customPort = mineable.CastXmrApiPort;
+                    args += $"{space}--remoteport {_customPort}";
+                    space = " ";
+                }
+            }
+            else
+            {
+                _customPort = Int32.Parse(userDefindedArgs[portIndex + 1]);
+            }
+
             if (!String.IsNullOrEmpty(mineable.CastXmrExtraArguments))
             {
                 args += space + mineable.CastXmrExtraArguments;

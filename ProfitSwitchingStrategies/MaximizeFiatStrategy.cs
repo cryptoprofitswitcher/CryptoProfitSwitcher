@@ -48,10 +48,13 @@ namespace CryptonightProfitSwitcher.ProfitSwitchingStrategies
                 else
                 {
                     //Backwards compatibility
+#pragma warning disable CS0618
                     if (settings.NicehashPreferFactor >= 0)
                     {
                         preferFactor = settings.NicehashPreferFactor;
                     }
+#pragma warning restore CS0618
+
                 }
                 double calcProfit = GetReward(profit, nicehashAlgorithm, settings.ProfitTimeframe) * preferFactor;
                 if (currentMineable != null && nicehashAlgorithm.Id == currentMineable.Id)

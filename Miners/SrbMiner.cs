@@ -12,9 +12,9 @@ namespace CryptonightProfitSwitcher.Miners
 {
     public class SrbMiner : IMiner
     {
-        Process _process = null;
-        Mineable _mineable = null;
-        IMiner _cpuMiner = null;
+        private Process _process;
+        private Mineable _mineable;
+        private IMiner _cpuMiner;
         public string Name => "SRB Miner";
 
         public double GetCurrentHashrate(Settings settings, DirectoryInfo appRootFolder)
@@ -38,8 +38,7 @@ namespace CryptonightProfitSwitcher.Miners
                 cpuHashrate = _cpuMiner.GetCurrentHashrate(settings, appRootFolder);
             }
 
-            double totalHashRate = gpuHashrate + cpuHashrate;
-            return totalHashRate;
+            return gpuHashrate + cpuHashrate;
         }
 
         public void StartMiner(Mineable mineable, Settings settings, string appRoot, DirectoryInfo appRootFolder)
@@ -142,7 +141,7 @@ namespace CryptonightProfitSwitcher.Miners
             }
         }
 
-        static string GeneratePoolConfigJson(Mineable mineable)
+        private static string GeneratePoolConfigJson(Mineable mineable)
         {
             var dict = new Dictionary<string, object>();
             dict["pools"] = new Dictionary<string, object>[]
@@ -158,9 +157,7 @@ namespace CryptonightProfitSwitcher.Miners
                 }
             };
 
-            string generatedJson = JsonConvert.SerializeObject(dict, Formatting.Indented);
-
-            return generatedJson;
+            return JsonConvert.SerializeObject(dict, Formatting.Indented);
         }
     }
 }

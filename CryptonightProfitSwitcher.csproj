@@ -6,20 +6,35 @@
     <TrimUnusedDependencies>true</TrimUnusedDependencies>
     <LinkDuringPublish>true</LinkDuringPublish>
     <ShowLinkerSizeComparison>true</ShowLinkerSizeComparison>
-    <Version>5.0.0</Version>
+    <Version>5.5.0</Version>
     <Configurations>Debug;Release;ReleaseLinux</Configurations>
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Alba.CsConsoleFormat-NoXaml" Version="1.0.0" />
+    <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" />
     <PackageReference Include="Microsoft.Packaging.Tools.Trimming" Version="1.1.0-preview1-26619-01" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Roslynator.Analyzers" Version="1.9.0" />
+    <PackageReference Include="Roslynator.CodeFixes" Version="1.9.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+     <None Update="Coins\Test4.json">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
+     <None Update="Coins\Test3.json">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
+     <None Update="Coins\Test2.json">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
+     <None Update="Coins\Test1.json">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
      <None Update="Coins\Quantum.json">
        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
      </None>
@@ -130,6 +145,9 @@
     <None Update="SRBMiner\config_v7.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="SRBMiner\config_v8.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
      <None Update="SRBMiner\config_haven.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -142,12 +160,6 @@
     <None Update="SRBMiner\Devcon\devcon.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SRBMiner\libeay32.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\libwinpthread-1.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="SRBMiner\ReadMe.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -157,7 +169,142 @@
     <None Update="SRBMiner\SRBMiner-CN.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SRBMiner\ssleay32.dll">
+    <None Update="SRBMiner\BinaryKernels\bittubev2\g1_tube_w9_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\bittubev2\g2_tube_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\bittubev2\g4_tube_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\bittubev2\g5_tube_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\bittubev2\g7_tube_w12_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\bittubev2\g7_tube_w9_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\fast\g1_fast_w16_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\fast\g2_fast_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\fast\g4_fast_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\fast\g5_fast_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\fast\g7_fast_w12_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\haven\g1_xhv_w9_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\haven\g2_xhv_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\haven\g4_xhv_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\haven\g5_xhv_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\haven\g7_xhv_w12_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\haven\g7_xhv_w9_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\heavy\g1_cnh_w9_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\heavy\g2_cnh_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\heavy\g4_cnh_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\heavy\g5_cnh_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\heavy\g7_cnh_w12_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\heavy\g7_cnh_w9_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\litev7\g1_cnl7_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\litev7\g2_cnl7_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\litev7\g4_cnl7_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\litev7\g5_cnl7_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\litev7\g7_cnl7_w12_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\normalv7\g1_cnv7_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\normalv7\g2_cnv7_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\normalv7\g4_cnv7_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\normalv7\g5_cnv7_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\normalv7\g7_cnv7_w12_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\normalv7\g7_cnv7_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\normalv8\g1_cnv8_w16_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\normalv8\g2_cnv8_w16_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\normalv8\g4_cnv8_w16_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\normalv8\g5_cnv8_w16_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\normalv8\g7_cnv8_w16_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\normalv8\g7_cnv8_w32_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\stellitev4\g1_xtlv4_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\stellitev4\g2_xtlv4_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\stellitev4\g4_xtlv4_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\stellitev4\g5_xtlv4_w8_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\stellitev4\g7_xtlv4_w12_k1.srb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\BinaryKernels\stellitev4\g7_xtlv4_w8_k1.srb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -169,6 +316,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="XmrStak\libxmrstak_opencl_backend.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\libxmr-stak-asm.a">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
    <None Update="XmrStak\xmr-stak">

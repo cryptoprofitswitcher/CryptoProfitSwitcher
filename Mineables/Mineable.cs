@@ -31,6 +31,7 @@ namespace CryptonightProfitSwitcher.Mineables
         public string CastXmrPath { get; set; }
         public string CastXmrExtraArguments { get; set; }
         public bool CastXmrUseXmrStakCPUMining { get; set; }
+        public int CastXmrApiPort { get; set; }
         public string SRBMinerPath { get; set; }
         public string SRBMinerConfigPath { get; set; }
         public string SRBMinerPoolsPath { get; set; }
@@ -40,6 +41,7 @@ namespace CryptonightProfitSwitcher.Mineables
         public string JceMinerPath { get; set; }
         public string JceMinerExtraArguments { get; set; }
         public string JceMinerConfig { get; set; }
+        public int JceMinerApiPort { get; set; }
 
         public abstract string Id { get; }
 
@@ -57,6 +59,7 @@ namespace CryptonightProfitSwitcher.Mineables
             switch (Algorithm)
             {
                 case Algorithm.CryptonightV7:
+                case Algorithm.CryptonightV8:
                 case Algorithm.CryptonightStellite:
                 case Algorithm.CryptonightMasari:
                     return settings.CryptonightV7Hashrate;
@@ -65,10 +68,12 @@ namespace CryptonightProfitSwitcher.Mineables
                     return settings.CryptonightHeavyHashrate;
                 case Algorithm.CryptonightBittube:
                     // Backwards compatibilty
+#pragma warning disable CS0618 
                     if (settings.CryptonightBittubeHashrate > 0)
                     {
                         return settings.CryptonightBittubeHashrate;
                     }
+#pragma warning restore CS0618 
                     return settings.CryptonightHeavyHashrate;
                 case Algorithm.CryptonightLite:
                     return settings.CryptonightLiteHashrate;

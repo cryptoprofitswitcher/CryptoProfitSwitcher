@@ -5,7 +5,7 @@
   "DisplayName": "Graft",
   // Ticker symbol on minecryptonight.net, needed to get profit data
   "TickerSymbol": "GRFT",
-  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
+  // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
   "Algorithm": "CryptonightV7",
   // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
@@ -61,6 +61,8 @@
   "CastXmrExtraArguments": "-G 0,1",
   // Set if you want to also start Xmr-Stak for CPU Mining
   "CastXmrUseXmrStakCPUMining": true,
+  // Port of the CastXmr JSON Api (0 = default (7777))
+  "CastXmrApiPort": 0,
 
   /* SRBMINER CONFIGURATION - NEEDED IF MINER IS SRBMINER*/
 
@@ -83,6 +85,8 @@
   "JceMinerPath": "JceMiner/jce_cn_gpu_miner64.exe",
   // Path to JceMiner config (can be null <- then auto configuration will be used)
   "JceMinerConfig": "JceMiner/config_v7.txt",
+  // Port of the JceMiner JSON Api (0 = auto)
+  "JceMinerApiPort": 0,
   // Extra arguments for JceMiner
   "JceMinerExtraArguments": null
 

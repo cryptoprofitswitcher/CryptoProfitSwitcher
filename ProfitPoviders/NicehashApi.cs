@@ -114,7 +114,6 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         nicehashProfitsDictionary[matchedAlgorithm.ApiId] = new Profit(usdReward,0,0,0,ProfitProvider.NiceHashApi, timeframe);
                     }
                     Console.WriteLine($"Got profit data for {matchedAlgorithm.DisplayName} from NiceHashAPI");
-
                 }
             }
         }

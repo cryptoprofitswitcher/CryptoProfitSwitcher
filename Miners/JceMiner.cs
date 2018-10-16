@@ -11,10 +11,10 @@ using System.Threading;
 
 namespace CryptonightProfitSwitcher.Miners
 {
-    class JceMiner : IMiner
+    internal class JceMiner : IMiner
     {
-        Process _process = null;
-        Mineable _mineable = null;
+        private Process _process;
+        private Mineable _mineable;
         private int _port;
         public string Name => "JCE Miner";
 
@@ -112,18 +112,35 @@ namespace CryptonightProfitSwitcher.Miners
                     case Algorithm.CryptonightMasari:
                         args += $"{space}--variation 11";
                         break;
+                    case Algorithm.CryptonightV8:
+                        args += $"{space}--variation 15";
+                        break;
                     default:
                         throw new NotImplementedException($"Couldn't start JceMiner, unknown algo: {mineable.Algorithm}\n" +
                                                           "You can set --variation yourself in the extra arguments.");
                 }
                 space = " ";
             }
-            if (!userDefindedArgs.Contains("--mport"))
+
+            int mportIndex = userDefindedArgs.IndexOf("--mport");
+            if (mportIndex == -1)
             {
-                _port = Helpers.GetAvailablePort();
+                if (mineable.JceMinerApiPort < 1)
+                {
+                    _port = Helpers.GetAvailablePort();
+                }
+                else
+                {
+                    _port = mineable.JceMinerApiPort;
+                }
                 args += $"{space}--mport {_port}";
                 space = " ";
             }
+            else
+            {
+                _port = Int32.Parse(userDefindedArgs[mportIndex + 1]);
+            }
+
             if (!String.IsNullOrEmpty(mineable.JceMinerExtraArguments))
             {
                 args += space + mineable.JceMinerExtraArguments;
@@ -137,8 +154,6 @@ namespace CryptonightProfitSwitcher.Miners
 
             Thread.Sleep(TimeSpan.FromSeconds(settings.MinerStartDelay));
             _process.Start();
-
-          
         }
 
         public void StopMiner()
@@ -168,7 +183,6 @@ namespace CryptonightProfitSwitcher.Miners
                 _process = null;
                 _mineable = null;
             }
-           
         }
     }
 }
