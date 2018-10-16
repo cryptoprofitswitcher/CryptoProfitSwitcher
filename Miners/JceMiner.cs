@@ -112,6 +112,9 @@ namespace CryptonightProfitSwitcher.Miners
                     case Algorithm.CryptonightMasari:
                         args += $"{space}--variation 11";
                         break;
+                    case Algorithm.CryptonightV8:
+                        args += $"{space}--variation 15";
+                        break;
                     default:
                         throw new NotImplementedException($"Couldn't start JceMiner, unknown algo: {mineable.Algorithm}\n" +
                                                           "You can set --variation yourself in the extra arguments.");

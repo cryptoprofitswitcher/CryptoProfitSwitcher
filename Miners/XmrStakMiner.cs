@@ -201,6 +201,9 @@ namespace CryptonightProfitSwitcher.Miners
                 case Algorithm.CryptonightV7:
                     dict["currency"] = "cryptonight_v7";
                     break;
+                case Algorithm.CryptonightV8:
+                    dict["currency"] = "cryptonight_v8";
+                    break;
                 case Algorithm.CryptonightHeavy:
                     dict["currency"] = "cryptonight_heavy";
                     break;

@@ -101,6 +101,12 @@ namespace CryptonightProfitSwitcher.Miners
                     case Algorithm.CryptonightMasari:
                         args += $"{space}--algo=8";
                         break;
+                    case Algorithm.CryptonightFest:
+                        args += $"{space}--algo=9";
+                        break;
+                    case Algorithm.CryptonightV8:
+                        args += $"{space}--algo=10";
+                        break;
                     default:
                         throw new NotImplementedException("Couldn't start CastXmr, unknown algo: {mineable.Algorithm}\n" +
                                                           "You can set --algo yourself in the extra arguments.");
