@@ -1,0 +1,1 @@
+﻿dotnet publish -c release -r ubuntu.14.04-x64
