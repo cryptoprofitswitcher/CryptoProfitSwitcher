@@ -5,7 +5,7 @@
   "DisplayName": "Aeon",
   // Ticker symbol on minecryptonight.net, needed to get profit data
   "TickerSymbol": "AEON",
-  // Mining algorithm of coin, can be CryptonightV7, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
+  // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
   "Algorithm": "CryptonightLite",
   // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
