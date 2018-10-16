@@ -101,9 +101,6 @@ namespace CryptonightProfitSwitcher.Miners
                     case Algorithm.CryptonightMasari:
                         args += $"{space}--algo=8";
                         break;
-                    case Algorithm.CryptonightFest:
-                        args += $"{space}--algo=9";
-                        break;
                     case Algorithm.CryptonightV8:
                         args += $"{space}--algo=10";
                         break;

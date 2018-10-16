@@ -9,7 +9,6 @@
         CryptonightStellite,
         CryptonightHaven,
         CryptonightMasari,
-        CryptonightV8,
-        CryptonightFest
+        CryptonightV8
     }
 }
