@@ -13,7 +13,7 @@
   // For example:: Path to batch file that sets specific OverdriveN settings for this coin
   "PrepareScript": null,
   // Enables or disables this coin, can be true or false (default: true)
-  "Enabled": true,
+  "Enabled": false,
 
   /* OVERRIDE SETTINGS - NOT NEEDED */
 
@@ -29,7 +29,7 @@
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
   "PoolAddress": "qrl.miner.rocks:5555",
-  "PoolWalletAddress": "0x01d47cc4f56ec05e735b316742459eeef08d5867",
+  "PoolWalletAddress": "Q010500b73c3aed7fe3e5da001ad28c0c39720356fb3e7d3341050fd7c5d0684e035765e38e6ad2",
   "PoolPassword": "x",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
@@ -83,6 +83,8 @@
   "JceMinerPath": "JceMiner/jce_cn_gpu_miner64.exe",
   // Path to JceMiner config (can be null <- then auto configuration will be used)
   "JceMinerConfig": "JceMiner/config_v7.txt",
+  // Port of the JceMiner JSON Api (0 = auto)
+  "JceMinerApiPort": 0,
   // Extra arguments for JceMiner
   "JceMinerExtraArguments": null
 

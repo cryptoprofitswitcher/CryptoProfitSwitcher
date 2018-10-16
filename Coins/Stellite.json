@@ -83,6 +83,8 @@
   "JceMinerPath": "JceMiner/jce_cn_gpu_miner64.exe",
   // Path to JceMiner config (can be null <- then auto configuration will be used)
   "JceMinerConfig": "JceMiner/config_v7.txt",
+  // Port of the JceMiner JSON Api (0 = auto)
+  "JceMinerApiPort": 0,
   // Extra arguments for JceMiner
   "JceMinerExtraArguments": null
 

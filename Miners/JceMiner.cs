@@ -125,7 +125,14 @@ namespace CryptonightProfitSwitcher.Miners
             int mportIndex = userDefindedArgs.IndexOf("--mport");
             if (mportIndex == -1)
             {
-                _port = Helpers.GetAvailablePort();
+                if (mineable.JceMinerApiPort < 1)
+                {
+                    _port = Helpers.GetAvailablePort();
+                }
+                else
+                {
+                    _port = mineable.JceMinerApiPort;
+                }
                 args += $"{space}--mport {_port}";
                 space = " ";
             }

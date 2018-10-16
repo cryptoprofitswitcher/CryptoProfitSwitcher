@@ -40,6 +40,7 @@ namespace CryptonightProfitSwitcher.Mineables
         public string JceMinerPath { get; set; }
         public string JceMinerExtraArguments { get; set; }
         public string JceMinerConfig { get; set; }
+        public int JceMinerApiPort { get; set; }
 
         public abstract string Id { get; }
 
