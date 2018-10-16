@@ -23,6 +23,18 @@
   </ItemGroup>
 
   <ItemGroup>
+     <None Update="Coins\Test4.json">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
+     <None Update="Coins\Test3.json">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
+     <None Update="Coins\Test2.json">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
+     <None Update="Coins\Test1.json">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
      <None Update="Coins\Quantum.json">
        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
      </None>
@@ -131,6 +143,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="SRBMiner\config_v7.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config_v8.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
      <None Update="SRBMiner\config_haven.txt">

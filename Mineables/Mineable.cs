@@ -31,6 +31,7 @@ namespace CryptonightProfitSwitcher.Mineables
         public string CastXmrPath { get; set; }
         public string CastXmrExtraArguments { get; set; }
         public bool CastXmrUseXmrStakCPUMining { get; set; }
+        public int CastXmrApiPort { get; set; }
         public string SRBMinerPath { get; set; }
         public string SRBMinerConfigPath { get; set; }
         public string SRBMinerPoolsPath { get; set; }

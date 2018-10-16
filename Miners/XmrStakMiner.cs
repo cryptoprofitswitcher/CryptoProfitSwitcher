@@ -200,6 +200,10 @@ namespace CryptonightProfitSwitcher.Miners
             {
                 case Algorithm.CryptonightV7:
                     dict["currency"] = "cryptonight_v7";
+                    if (mineable is Coin coin && coin.TickerSymbol == "XMR")
+                    {
+                        dict["currency"] = "monero";
+                    }
                     break;
                 case Algorithm.CryptonightV8:
                     dict["currency"] = "cryptonight_v8";
