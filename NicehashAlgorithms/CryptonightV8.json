@@ -8,7 +8,7 @@
   // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
   "Algorithm": "CryptonightV8",
   // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
-  "Miner": "SRBMiner",
+  "Miner": "XmrStak",
   // Path to script that runs before the miner starts, can be null.
   // For example:: Path to batch file that sets specific OverdriveN settings for this algorithm
   "PrepareScript": null,
@@ -23,7 +23,7 @@
   "OverrideProfitTimeframe": "Live",
   // On the determination of the most profitable algorithm, the actual estimated profit will be multiplied by this.
   // Can be a decimal or null. It is recommended to prefer NiceHash algorithms.
-  "PreferFactor": 10.15,
+  "PreferFactor": 1.15,
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
