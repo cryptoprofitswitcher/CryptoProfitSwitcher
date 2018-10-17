@@ -46,7 +46,7 @@
   // Path to Xmr-Stak cpu config file, can be null.
   "CpuPath": "XmrStak/cpu_v7.txt",
   // Path to Xmr-Stak amd gpu config file, can be null.
-  "AmdPath": "XmrStak/amd_v7.txt",
+  "AmdPath": "XmrStak/amd_v8.txt",
   // Path to Xmr-Stak nvidea gpu config file, can be null.
   "NvidiaPath": null,
   // Set the path to Xmr-Stak pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
@@ -68,7 +68,7 @@
   // Path to SRBMiner executable
   "SRBMinerPath": "SRBMiner/SRBMiner-CN.exe",
   // Path to SRBMiner config file
-  "SRBMinerConfigPath": "SRBMiner/config_v7.txt",
+  "SRBMinerConfigPath": "SRBMiner/config_v8.txt",
   // Port of the SRBMiner REST API, should match the port in the config file of SRBMiner.
   "SRBMinerApiPort": 21555,
   // Set the path to SRBMiner pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
@@ -83,7 +83,7 @@
   // Path to JceMiner executable
   "JceMinerPath": "JceMiner/jce_cn_gpu_miner64.exe",
   // Path to JceMiner config (can be null <- then auto configuration will be used)
-  "JceMinerConfig": "JceMiner/config_v7.txt",
+  "JceMinerConfig": "JceMiner/config_v8.txt",
   // Port of the JceMiner JSON Api (0 = auto)
   "JceMinerApiPort": 0,
   // Extra arguments for JceMiner
