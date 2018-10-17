@@ -6,7 +6,7 @@
     <TrimUnusedDependencies>true</TrimUnusedDependencies>
     <LinkDuringPublish>true</LinkDuringPublish>
     <ShowLinkerSizeComparison>true</ShowLinkerSizeComparison>
-    <Version>5.5.0</Version>
+    <Version>5.5.1</Version>
     <Configurations>Debug;Release;ReleaseLinux</Configurations>
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
@@ -38,10 +38,16 @@
      <None Update="Coins\Quantum.json">
        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
      </None>
+     <None Update="NicehashAlgorithms\CryptonightV8.json">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
      <None Update="XmrStak\amd_heavy.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="XmrStak\amd_lite.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\amd_v8.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="XmrStak\amd_v7.txt">
@@ -110,6 +116,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="JceMiner\config_v7.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="JceMiner\config_v8.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="JceMiner\jce_cn_gpu_miner64.exe">

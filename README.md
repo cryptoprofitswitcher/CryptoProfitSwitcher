@@ -20,7 +20,7 @@ It is optimized for **Windows** but also works for **Linux**.
   - **Profit data:** [MineCryptoNight API](http://minecryptonight.net/api), [CryptUnit API](https://www.cryptunit.com/api/), [miner.rocks API](https://miner.rocks/), [cryptoknight.cc API](https://cryptoknight.cc/), [MoneroOcean](https://moneroocean.stream)
   - **Multiple profit switching strategies:** Maximize fiat profit, maximize coin reward or a combination
   - **Manual mode:** You can switch between automatic mode and manual mode where you select the coin / NiceHash algorithm yourself
-  - **Supports all algorithms:** CryptonightV7, CryptonightHeavy, CryptonightLiteV7 and the variants of Bittube, Stellite and Haven Protocol
+  - **Supports all algorithms:** CryptonightV7, CryptonightHeavy, CryptonightLiteV7 and the variants of Bittube, Stellite, Masari and Haven Protocol
   - **Supports all coins:** That are mineable using the miners
   - **Supports all pools:** That are supported by the miners
 
@@ -32,7 +32,7 @@ It is optimized for **Windows** but also works for **Linux**.
 3. Optimize the Xmr-Stak config
     1. Go to the folder *Xmr-Stak*
     2. Edit the *cpu_v7.txt*, *cpu_heavy.txt*, *cpu_lite.txt* according to your CPU.
-    3. Edit the *amd_v7.txt*, *amd_heavy.txt*, *amd_lite.txt* according to your GPU.
+    3. Edit the *amd_v7.txt*, *amd_v8.txt*, *amd_heavy.txt*, *amd_lite.txt* according to your GPU.
 4. Set your pool mined coins
     1. Go to the folder *Coins*
     2. Delete the existing coins you don't want to mine
@@ -47,7 +47,7 @@ It is optimized for **Windows** but also works for **Linux**.
 6. Start *CryptonightProfitSwitcher.exe* (Optional: As administrator)
 7. PROFIT!!!
 
-You can also use it with Cast XMR or SRBMiner. The steps are similar like above.
+You can also use it with Cast XMR, SRBMiner or JCE Miner. The steps are similar like above.
 Just look at the comments in the JSON files and you will understand how to use other miners.
 
 ### Default configuration
@@ -56,8 +56,8 @@ If you download the latest release, there will be a default configuration:
 
 - CPU: AMD Ryzen 1600X
 - GPU: AMD Vega 64 + AMD Vega 56
-- Coins: Bittube, Graft, Haven Protocol, Loki, Stellite, AEON, Electroneum, MoneroOcean
-- NiceHash: CryptonightV7, CryptonightHeavy
+- Coins: Bittube, Graft, Haven Protocol, Loki, Masari, Stellite, AEON, MoneroOcean
+- NiceHash: CryptonightV8, CryptonightV7, CryptonightHeavy
 - Miner: XmrStak
 
 You have to change the default configuration for your setup, see **How to use?**.
