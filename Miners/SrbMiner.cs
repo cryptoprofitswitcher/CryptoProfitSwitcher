@@ -12,6 +12,7 @@ namespace CryptonightProfitSwitcher.Miners
 {
     public class SrbMiner : IMiner
     {
+        private int _customPort;
         private Process _process;
         private Mineable _mineable;
         private IMiner _cpuMiner;
@@ -22,7 +23,7 @@ namespace CryptonightProfitSwitcher.Miners
             double gpuHashrate = 0;
             try
             {
-                int port = _mineable.SRBMinerApiPort;
+                int port = _customPort > 0 ? _customPort : _mineable.SRBMinerApiPort;
                 var json = Helpers.GetJsonFromUrl($"http://127.0.0.1:{port}", settings, appRootFolder, CancellationToken.None);
                 dynamic api = JObject.Parse(json);
                 gpuHashrate = api.hashrate_total_now;
@@ -83,6 +84,27 @@ namespace CryptonightProfitSwitcher.Miners
                 }
                 args += $"{space}--pools current_pool.txt";
                 space = " ";
+            }
+
+            if (!userDefindedArgs.Contains("--apienable"))
+            {
+                args += $"{space}--apienable";
+                space = " ";
+            }
+
+            int portIndex = userDefindedArgs.IndexOf("--remoteport");
+            if (portIndex == -1)
+            {
+                if (mineable.SRBMinerApiPort > 0)
+                {
+                    _customPort = mineable.SRBMinerApiPort;
+                    args += $"{space}--apiport {_customPort}";
+                    space = " ";
+                }
+            }
+            else
+            {
+                _customPort = Int32.Parse(userDefindedArgs[portIndex + 1]);
             }
 
             if (!String.IsNullOrEmpty(mineable.SRBMinerExtraArguments))
