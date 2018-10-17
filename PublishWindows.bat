@@ -1,0 +1,1 @@
+dotnet publish -c Release -r win-x64 -o ./bin/publish/CryptonightProfitSwitcher_win64
