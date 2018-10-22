@@ -27,6 +27,7 @@ namespace CryptonightProfitSwitcher
         private static int _watchdogOvershots;
         private static bool _requestQuit;
         private static bool _manualSelection;
+        private static bool? _manualWatchdogEnabled;
         private static Mineable _manualSelectedMineable;
         private static bool _newVersionAvailable;
         private static CancellationTokenSource _mainResetCts;
@@ -379,6 +380,23 @@ namespace CryptonightProfitSwitcher
                             Console.WriteLine("' to select a coin / NiceHash algorithm to mine manually.");
                         }
 
+                        if ((_manualWatchdogEnabled.HasValue && _manualWatchdogEnabled.Value) || (!_manualWatchdogEnabled.HasValue && settings.EnableWatchdog))
+                        {
+                            Console.Write(" Press '");
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.Write("w");
+                            Console.ResetColor();
+                            Console.WriteLine("' to disable watchdog.");
+                        }
+                        else
+                        {
+                            Console.Write(" Press '");
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.Write("w");
+                            Console.ResetColor();
+                            Console.WriteLine("' to enable watchdog.");
+                        }
+
                         Console.Write(" Press '");
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("r");
@@ -510,7 +528,7 @@ namespace CryptonightProfitSwitcher
                                 Console.WriteLine($" Switching:  {settings.ProfitSwitchingStrategy.ToString()}");
                             }
 
-                            if (settings.EnableWatchdog)
+                            if ((_manualWatchdogEnabled.HasValue && _manualWatchdogEnabled.Value) || (!_manualWatchdogEnabled.HasValue && settings.EnableWatchdog))
                             {
                                 Console.Write(" Watchdog:   ");
                                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -586,16 +604,19 @@ namespace CryptonightProfitSwitcher
                             double actualHashrate = _currentMiner.GetCurrentHashrate(settings, appRootFolder);
                             double differenceRatio = actualHashrate / estimatedHashrate;
 
-                            if (differenceRatio < settings.WatchdogCriticalThreshold)
+                            if (!token.IsCancellationRequested)
                             {
-                                _watchdogOvershots++;
-                            }
-                            else
-                            {
-                                _watchdogOvershots = 0;
+                                if (differenceRatio < settings.WatchdogCriticalThreshold)
+                                {
+                                    _watchdogOvershots++;
+                                }
+                                else
+                                {
+                                    _watchdogOvershots = 0;
+                                }
                             }
 
-                            if (_watchdogOvershots > settings.WatchdogAllowedOversteps)
+                            if (_watchdogOvershots > settings.WatchdogAllowedOversteps && !token.IsCancellationRequested)
                             {
                                 Log.Information("Watchdog: Too many overshots -> Requesting reset");
                                 ResetApp(settings, appFolderPath, true);
@@ -667,6 +688,30 @@ namespace CryptonightProfitSwitcher
                                 _manualSelection = !_manualSelection;
                                 _lastProfitSwitch = DateTimeOffset.MinValue;
                                 RestartProfitTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms);
+                            }
+                            else if (readKey.Key == ConsoleKey.W)
+                            {
+                                //Toggle watchdog mode
+                                if (!_manualWatchdogEnabled.HasValue)
+                                {
+                                    _manualWatchdogEnabled = !settings.EnableWatchdog;
+                                }
+                                else
+                                {
+                                    _manualWatchdogEnabled = !_manualWatchdogEnabled.Value;
+                                }
+
+                                if (_manualWatchdogEnabled.Value)
+                                {
+                                    _watchdogCts?.Cancel();
+                                    _watchdogCts = new CancellationTokenSource();
+                                    var watchdogTask = WatchdogTaskAsync(settings, appFolderPath, appFolder, _watchdogCts.Token);
+                                }
+                                else
+                                {
+                                    _watchdogCts?.Cancel();
+                                }
+                               
                             }
                             else
                             {
@@ -878,11 +923,25 @@ namespace CryptonightProfitSwitcher
                     ResetApp(settings, appRoot, false);
                 }
 
-                if (settings.EnableWatchdog)
+                if(_manualWatchdogEnabled.HasValue)
                 {
-                    _watchdogCts = new CancellationTokenSource();
-                    var watchdogTask = WatchdogTaskAsync(settings, appRoot, appRootFolder, _watchdogCts.Token);
+                    if (_manualWatchdogEnabled.Value)
+                    {
+                        _watchdogCts?.Cancel();
+                        _watchdogCts = new CancellationTokenSource();
+                        var watchdogTask = WatchdogTaskAsync(settings, appRoot, appRootFolder, _watchdogCts.Token);
+                    }
                 }
+                else
+                {
+                    if (settings.EnableWatchdog)
+                    {
+                        _watchdogCts?.Cancel();
+                        _watchdogCts = new CancellationTokenSource();
+                        var watchdogTask = WatchdogTaskAsync(settings, appRoot, appRootFolder, _watchdogCts.Token);
+                    }
+                }
+                
             }
             else
             {
