@@ -20,6 +20,8 @@ namespace CryptonightProfitSwitcher.Factories
                     return new CryptoknightCcApi();
                 case ProfitProvider.CryptunitApi:
                     return new CryptunitApi();
+                case ProfitProvider.HeroMinersApi:
+                    return new HeroMinersApi();
                 default:
                     throw new NotImplementedException("Doesn't support ProfitProvider: " + profitProvider);
             }

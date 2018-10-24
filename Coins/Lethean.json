@@ -2,23 +2,23 @@
   /* GENERAL CONFIGURATION - ALWAYS NEEDED */
 
   // Displayed name, can be anything.
-  "DisplayName": "Masari",
+  "DisplayName": "Lethean",
   // Ticker symbol on minecryptonight.net, needed to get profit data
-  "TickerSymbol": "MSR",
+  "TickerSymbol": "LTHN",
   // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
-  "Algorithm": "CryptonightMasari",
+  "Algorithm": "CryptonightV8",
   // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
   // Path to script that runs before the miner starts, can be null.
   // For example:: Path to batch file that sets specific OverdriveN settings for this coin
   "PrepareScript": null,
   // Enables or disables this coin, can be true or false (default: true)
-  "Enabled": true,
+  "Enabled": false,
 
   /* OVERRIDE SETTINGS - NOT NEEDED */
 
   // Override the expected hashrate, can be a number or null.
-  "OverrideExpectedHashrate": 8420,
+  "OverrideExpectedHashrate": null,
   // Override the profit timeframe, can be Live, Day or null.
   "OverrideProfitTimeframe": null,
   // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, CryptunitApi, MinerRocksApi, HeroMinersApi, CryptoknightCCApi) or null.
@@ -28,8 +28,8 @@
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "pool.masaricoin.com:7777",
-  "PoolWalletAddress": "5t5mEm254JNJ9HqRjY9vCiTE8aZALHX3v8TqhyQ3TTF9VHKZQXkRYjPDweT9kK4rJw7dDLtZXGjav2z9y24vXCdRc6BSJwUmapXC7NmVAM+90000",
+  "PoolAddress": "lethean.ingest.cryptoknight.cc:8882",
+  "PoolWalletAddress": "WILL_PROVIDE_LATER.90000",
   "PoolPassword": "x",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
@@ -69,7 +69,7 @@
   // Path to SRBMiner executable
   "SRBMinerPath": "SRBMiner/SRBMiner-CN.exe",
   // Path to SRBMiner config file
-  "SRBMinerConfigPath": "SRBMiner/config_fast.txt",
+  "SRBMinerConfigPath": "SRBMiner/config_v7.txt",
   // Port of the SRBMiner REST API, should match the port in the config file of SRBMiner.
   "SRBMinerApiPort": 21555,
   // Set the path to SRBMiner pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
@@ -89,6 +89,5 @@
   "JceMinerApiPort": 0,
   // Extra arguments for JceMiner
   "JceMinerExtraArguments": null
-
 
 }

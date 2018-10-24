@@ -120,26 +120,6 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
         {
             switch(coin.TickerSymbol)
             {
-                case "ETN":
-                    return "https://cryptoknight.cc/rpc/etn/live_stats";
-                case "GRFT":
-                case "GRF":
-                    return "https://cryptoknight.cc/rpc/graft/live_stats";
-                case "ITNS":
-                    return "https://cryptoknight.cc/rpc/itns/live_stats";
-                case "MSR":
-                    return "https://cryptoknight.cc/rpc/msr/live_stats";
-                case "XMV":
-                    return "https://cryptoknight.cc/rpc/monerov/live_stats";
-                case "XTL":
-                    return "https://cryptoknight.cc/rpc/stellite/live_stats";
-                case "LOKI":
-                case "LOK":
-                    return "https://cryptoknight.cc/rpc/loki/live_stats";
-                case "XHV":
-                    return "https://cryptoknight.cc/rpc/haven/live_stats";
-                case "XRN":
-                    return "https://cryptoknight.cc/rpc/saronite/live_stats";
                 case "AEON":
                     return "https://cryptoknight.cc/rpc/aeon/live_stats";
                 case "XAO":
@@ -157,40 +137,65 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                 case "IPBC":
                 case "TUBE":
                     return "https://cryptoknight.cc/rpc/ipbc/live_stats";
-                case "CREP":
-                    return "https://cryptoknight.cc/rpc/crep/live_stats";
+                case "CAL":
+                    return "https://cryptoknight.cc/rpc/caliber/live_stats";
+                case "CCH":
+                    return "https://cryptoknight.cc/rpc/citi/live_stats";
                 case "EDL":
                     return "https://cryptoknight.cc/rpc/edl/live_stats";
+                case "ETN":
+                    return "https://cryptoknight.cc/rpc/etn/live_stats";
                 case "ELYA":
                     return "https://cryptoknight.cc/rpc/elya/live_stats";
+                case "GRFT":
+                case "GRF":
+                    return "https://cryptoknight.cc/rpc/graft/live_stats";
+                case "XHV":
+                    return "https://cryptoknight.cc/rpc/haven/live_stats";
                 case "IRD":
                     return "https://cryptoknight.cc/rpc/iridium/live_stats";
                 case "ITA":
                     return "https://cryptoknight.cc/rpc/italo/live_stats";
                 case "KRB":
                     return "https://cryptoknight.cc/rpc/karbo/live_stats";
+                case "LTHN":
+                    return "https://cryptoknight.cc/rpc/lethean/live_stats";
                 case "LNS":
                     return "https://cryptoknight.cc/rpc/lines/live_stats";
+                case "LOKI":
+                case "LOK":
+                    return "https://cryptoknight.cc/rpc/loki/live_stats";
+                case "MSR":
+                    return "https://cryptoknight.cc/rpc/msr/live_stats";
+                case "XMR":
+                    return "https://cryptoknight.cc/rpc/monero/live_stats";
+                case "XMV":
+                    return "https://cryptoknight.cc/rpc/monerov/live_stats";
                 case "NBR":
                     return "https://cryptoknight.cc/rpc/niobio/live_stats";
                 case "OMB":
                     return "https://cryptoknight.cc/rpc/ombre/live_stats";
                 case "QWC":
                     return "https://cryptoknight.cc/rpc/qwerty/live_stats";
+                case "RYO":
+                    return "https://cryptoknight.cc/rpc/ryo/live_stats";
+                case "SFX":
+                case "SAFE":
+                    return "https://cryptoknight.cc/rpc/safex/live_stats";
+                case "XRN":
+                    return "https://cryptoknight.cc/rpc/saronite/live_stats";
                 case "SOL":
                     return "https://cryptoknight.cc/rpc/solace/live_stats";
+                case "XTL":
+                    return "https://cryptoknight.cc/rpc/stellite/live_stats";
                 case "SUMO":
                     return "https://cryptoknight.cc/rpc/sumo/live_stats";
                 case "TRIT":
                     return "https://cryptoknight.cc/rpc/triton/live_stats";
-                case "TRTL":
-                    return "https://cryptoknight.cc/rpc/turtle/live_stats";
-                case "XUN":
-                    return "https://cryptoknight.cc/rpc/xun/live_stats";
                 case "WOW":
                     return "https://cryptoknight.cc/rpc/wownero/live_stats";
             }
-            return null;
+            return $"https://cryptoknight.cc/rpc/{coin.TickerSymbol.ToLowerInvariant()}/live_stats";
         }
     }
 }

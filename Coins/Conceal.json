@@ -2,9 +2,9 @@
   /* GENERAL CONFIGURATION - ALWAYS NEEDED */
 
   // Displayed name, can be anything.
-  "DisplayName": "Masari",
+  "DisplayName": "Conceal",
   // Ticker symbol on minecryptonight.net, needed to get profit data
-  "TickerSymbol": "MSR",
+  "TickerSymbol": "CCX",
   // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
   "Algorithm": "CryptonightMasari",
   // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
@@ -28,8 +28,8 @@
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "pool.masaricoin.com:7777",
-  "PoolWalletAddress": "5t5mEm254JNJ9HqRjY9vCiTE8aZALHX3v8TqhyQ3TTF9VHKZQXkRYjPDweT9kK4rJw7dDLtZXGjav2z9y24vXCdRc6BSJwUmapXC7NmVAM+90000",
+  "PoolAddress": "conceal.herominers.com:10361",
+  "PoolWalletAddress": "ccx7XZtFCLqJ2abT8pjChGQQ7RHHcMgnCWFxDQpLSMpMBw97voWyw6DLr2eTRmj4h5Xf7mskfAua5K9A1ixCxp3Q39ZwwZ3pCe.90000",
   "PoolPassword": "x",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",

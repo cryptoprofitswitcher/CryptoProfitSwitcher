@@ -6,8 +6,8 @@
   // Timeframe for the profit calculation, can be Live or Day
   "ProfitTimeframe": "Live",
   // Comma seperated string with the pool profit providers. Order is important, the first ones are preferred.
-  // Available: MineCryptonightApi, CryptunitApi, MinerRocksApi, CryptoknightCCApi (disabled by default because it's a bit slow)
-  "PoolProfitProviders": "MinerRocksApi,CryptunitApi,MineCryptonightApi",
+  // Available: MineCryptonightApi, CryptunitApi, MinerRocksApi, HeroMinersApi, CryptoknightCCApi (disabled by default because it's a bit slow)
+  "PoolProfitProviders": "MinerRocksApi,HeroMinersApi,CryptunitApi,MineCryptonightApi",
   // Set the strategy of profit switching, can be:
   // MaximizeFiat: Will maximize the profit in US dollar (default)
   // MaximizeCoins: Will try to maximize coin reward by comparing the current reward with the reward of the last 24 hours, this setting will ignore the price of the coins and is only compatible with miner.rocks profit provider
@@ -19,6 +19,8 @@
   "ProfitSwitchCooldown": 0,
   // Threshold between current profit and most profitable coin before switching (e.g. 0 means switch immediately, 0.1 means switch when the most profitable coin is 10% percent more profitable than current)
   "ProfitSwitchThreshold": 0,
+  // Sorting mode of the displayed coins and NiceHash algorithms, can be: None, ProfitLive, ProfitDay, Coins
+  "ProfitSorting": "ProfitLive",
   // Time in seconds between update of current status
   "DisplayUpdateInterval": 10,
   // Path to script that runs when reset is executed, can be null.
