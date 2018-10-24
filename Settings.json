@@ -19,6 +19,8 @@
   "ProfitSwitchCooldown": 0,
   // Threshold between current profit and most profitable coin before switching (e.g. 0 means switch immediately, 0.1 means switch when the most profitable coin is 10% percent more profitable than current)
   "ProfitSwitchThreshold": 0,
+  // Sorting mode of the displayed coins and NiceHash algorithms, can be: None, ProfitLive, ProfitDay, Coins
+  "ProfitSorting": "ProfitLive",
   // Time in seconds between update of current status
   "DisplayUpdateInterval": 10,
   // Path to script that runs when reset is executed, can be null.

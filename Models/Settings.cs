@@ -10,6 +10,7 @@ namespace CryptonightProfitSwitcher.Models
         public int CryptonightLiteHashrate { get; set; }
         public ProfitTimeframe ProfitTimeframe { get; set; }
         public ProfitSwitchingStrategy ProfitSwitchingStrategy { get; set; }
+        public SortingMode ProfitSorting { get; set; }
         public string PoolProfitProviders { get; set; }
         public int MinerStartDelay { get; set; }
         public int ProfitSwitchCooldown { get; set; }

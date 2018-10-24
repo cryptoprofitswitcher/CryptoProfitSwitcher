@@ -271,6 +271,15 @@ namespace CryptonightProfitSwitcher
                             }
                         }
 
+                        //Sort profit table
+                        if (settings.ProfitSorting != SortingMode.None)
+                        {
+                            var coinProfitComparer = new CoinProfitComparer(settings.ProfitSorting, poolProfitsDictionary);
+                            coins.Sort(coinProfitComparer);
+                            var nicehashProfitComparer = new NicehashProfitComparer(settings.ProfitSorting, nicehashProfitsDictionary);
+                            nicehashAlgorithms.Sort(nicehashProfitComparer);
+                        }
+
                         //Print table
                         if (!token.IsCancellationRequested && nicehashProfitsDictionary != null)
                         {
