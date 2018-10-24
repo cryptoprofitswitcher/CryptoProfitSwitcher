@@ -77,32 +77,34 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
         {
             switch(coin.TickerSymbol)
             {
+                case "DERO":
+                    return "https://dero.miner.rocks/api/stats";
                 case "ETN":
                     return "https://etn.miner.rocks/api/stats";
+                case "KRB":
+                    return "https://krb.miner.rocks/api/stats";
+                case "SUMO":
+                    return "https://sumokoin.miner.rocks/api/stats";
                 case "GRFT":
                     return "https://graft.miner.rocks/api/stats";
-                case "ITNS":
-                    return "https://itns.miner.rocks/api/stats";
-                case "MSR":
-                    return "https://masari.miner.rocks/api/stats";
-                case "XMR":
-                    return "https://monero.miner.rocks/api/stats";
-                case "XTL":
-                    return "https://stellite.miner.rocks/api/stats";
-                case "LOKI":
-                    return "https://loki.miner.rocks/api/stats";
-                case "XHV":
-                    return "https://haven.miner.rocks/api/stats";
-                case "XRN":
-                    return "https://saronite.miner.rocks/api/stats";
-                case "RYO":
-                    return "https://ryo.miner.rocks/api/stats";
-                case "AEON":
-                    return "https://aeon.miner.rocks/api/stats";
-                case "TUBE":
-                    return "https://bittube.miner.rocks/api/stats";
                 case "QRL":
                     return "https://qrl.miner.rocks/api/stats";
+                case "XTL":
+                    return "https://stellite.miner.rocks/api/stats";
+                case "XMR":
+                    return "https://monero.miner.rocks/api/stats";
+                case "LOKI":
+                    return "https://loki.miner.rocks/api/stats";
+                case "RYO":
+                    return "https://ryo.miner.rocks/api/stats";
+                case "XHV":
+                    return "https://haven.miner.rocks/api/stats";
+                case "TUBE":
+                    return "https://bittube.miner.rocks/api/stats";
+                case "AEON":
+                    return "https://aeon.miner.rocks/api/stats";
+                case "MSR":
+                    return "https://masari.miner.rocks/api/stats";
             }
             return $"https://{coin.TickerSymbol.ToLowerInvariant()}.miner.rocks/api/stats";
         }

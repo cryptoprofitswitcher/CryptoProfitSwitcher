@@ -22,10 +22,11 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                 var profitsJson = Helpers.GetJsonFromUrl("https://minecryptonight.net/api/rewards?hr=1000", settings, appRootFolder, ct);
                 dynamic profits = JsonConvert.DeserializeObject<ExpandoObject>(profitsJson, new ExpandoObjectConverter());
                 long baseHashrate = profits.hash_rate;
+                double cnV2Factor = Helpers.GetProperty<double>(profits, "cryptonight-v2_factor");
+                double cnFastFactor = Helpers.GetProperty<double>(profits, "cryptonight-fast_factor");
                 double cnHeavyFactor = Helpers.GetProperty<double>(profits, "cryptonight-heavy_factor");
                 double cnLiteFactor = Helpers.GetProperty<double>(profits, "cryptonight-lite_factor");
-                double cnBittubeFactor = Helpers.GetProperty<double>(profits, "cryptonight-lite-tube_factor");
-                double cnFastFactor = Helpers.GetProperty<double>(profits, "cryptonight-fast_factor");
+
 
                 foreach (dynamic reward in profits.rewards)
                 {
@@ -41,10 +42,11 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                     {
                         switch (algorithm)
                         {
-                            case "cryptonight-v1":
-                                rewardUsd = (rewardUsd / 1000) * matchedCoin.GetExpectedHashrate(settings);
-                                rewardCoins = (rewardCoins / 1000) * matchedCoin.GetExpectedHashrate(settings);
+                            case "cryptonight-v2":
+                                rewardUsd = (rewardUsd / (1000 * cnV2Factor)) * matchedCoin.GetExpectedHashrate(settings);
+                                rewardCoins = (rewardCoins / (1000 * cnV2Factor)) * matchedCoin.GetExpectedHashrate(settings);
                                 break;
+                            case "cryptonight-saber":
                             case "cryptonight-heavy":
                                 rewardUsd = (rewardUsd / (1000 * cnHeavyFactor)) * matchedCoin.GetExpectedHashrate(settings);
                                 rewardCoins = (rewardCoins / (1000 * cnHeavyFactor)) * matchedCoin.GetExpectedHashrate(settings);
@@ -53,13 +55,13 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                                 rewardUsd = (rewardUsd / (1000 * cnLiteFactor)) * matchedCoin.GetExpectedHashrate(settings);
                                 rewardCoins = (rewardCoins / (1000 * cnLiteFactor)) * matchedCoin.GetExpectedHashrate(settings);
                                 break;
-                            case "cryptonight-lite-tube":
-                                rewardUsd = (rewardUsd / (1000 * cnBittubeFactor)) * matchedCoin.GetExpectedHashrate(settings);
-                                rewardCoins = (rewardCoins / (1000 * cnBittubeFactor)) * matchedCoin.GetExpectedHashrate(settings);
-                                break;
                             case "cryptonight-fast":
                                 rewardUsd = (rewardUsd / (1000 * cnFastFactor)) * matchedCoin.GetExpectedHashrate(settings);
                                 rewardCoins = (rewardCoins / (1000 * cnFastFactor)) * matchedCoin.GetExpectedHashrate(settings);
+                                break;
+                            default:
+                                rewardUsd = (rewardUsd / 1000) * matchedCoin.GetExpectedHashrate(settings);
+                                rewardCoins = (rewardCoins / 1000) * matchedCoin.GetExpectedHashrate(settings);
                                 break;
                         }
                         poolProfitsDictionary[tickerSymbol] = new Profit(rewardUsd,0,rewardCoins,0, ProfitProvider.MineCryptonightApi, ProfitTimeframe.Live);

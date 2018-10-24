@@ -20,7 +20,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
             var poolProfitsDictionary = new Dictionary<string, Profit>();
             try
             {
-                var profitsLiveJson = Helpers.GetJsonFromUrl("https://www.cryptunit.com/api/earnings/?hashrate=10000&device=GPU&dataavg=1h&volumefilter=&algofilter=", settings, appRootFolder, ct);
+                var profitsLiveJson = Helpers.GetJsonFromUrl("https://www.cryptunit.com/api/earnings/?hashrate=10000&device=GPU&dataavg=live&volumefilter=&algofilter=", settings, appRootFolder, ct);
                 var profitsDayJson = Helpers.GetJsonFromUrl("https://www.cryptunit.com/api/earnings/?hashrate=10000&device=GPU&dataavg=24h&volumefilter=&algofilter=", settings, appRootFolder, ct);
 
                 dynamic profitsLive = JsonConvert.DeserializeObject(profitsLiveJson);
