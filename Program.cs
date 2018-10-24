@@ -175,8 +175,8 @@ namespace CryptonightProfitSwitcher
 
                         // Get pool mined coins profitability
 
-                        var childCts = CancellationTokenSource.CreateLinkedTokenSource(token);
-                        childCts.CancelAfter(30000);
+                        var timeoutCts = new CancellationTokenSource(60000);
+                        var childCts = CancellationTokenSource.CreateLinkedTokenSource(token, timeoutCts.Token);
 
                         var profitProviders = Helpers.GetPoolProfitProviders(settings, null);
                         foreach (var coin in coins.Where(c => !String.IsNullOrEmpty(c.OverridePoolProfitProviders)))
@@ -249,7 +249,7 @@ namespace CryptonightProfitSwitcher
 
                         //Get Nicehash Profit
                         Dictionary<int, Profit> nicehashProfitsDictionary = null;
-                        if (!childCts.Token.IsCancellationRequested)
+                        if (!token.IsCancellationRequested)
                         {
                             nicehashProfitsDictionary = NicehashApi.GetProfits(appRootFolder, settings, nicehashAlgorithms, childCts.Token);
                         }
@@ -324,19 +324,19 @@ namespace CryptonightProfitSwitcher
                     {
                         Log.Information("Cancelled profit task.");
                         statusCts.Cancel();
-                        return;
+                        
                     }
                     catch (AggregateException)
                     {
                         Log.Information("Cancelled profit task 2.");
                         statusCts.Cancel();
-                        return;
+                        
                     }
                     catch (OperationCanceledException)
                     {
                         Log.Information("Cancelled profit task 3.");
                         statusCts.Cancel();
-                        return;
+                        
                     }
                     catch (Exception ex)
                     {
