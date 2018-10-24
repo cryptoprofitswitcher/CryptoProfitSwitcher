@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 
 namespace CryptonightProfitSwitcher.ProfitPoviders
 {
-    public class MinerRocksApi : IPoolProfitProvider
+    public class HeroMinersApi : IPoolProfitProvider
     {
         public Dictionary<string, Profit> GetProfits(DirectoryInfo appRootFolder, Settings settings, IList<Coin> coins, CancellationToken ct)
         {
@@ -20,7 +20,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
             foreach (var coin in coins)
             {
                 var requestedProfitProviders = Helpers.GetPoolProfitProviders(settings, coin);
-                if (requestedProfitProviders.Contains(ProfitProvider.MinerRocksApi))
+                if (requestedProfitProviders.Contains(ProfitProvider.HeroMinersApi))
                 {
                     tasks.Add(SetProfitForCoinTaskAsync(coin, settings, appRootFolder, poolProfitsDictionary, ct));
                 }
@@ -40,10 +40,11 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         var profitsJson = Helpers.GetJsonFromUrl(apiUrl, settings, appRootFolder, ct);
                         dynamic lastStats = JObject.Parse(profitsJson);
                         ProfitTimeframe timeFrame = coin.OverrideProfitTimeframe.HasValue ? coin.OverrideProfitTimeframe.Value : settings.ProfitTimeframe;
-                        decimal diffDay = lastStats.pool.stats.diffs["wavg24h"];
+
+                        decimal diffDay = lastStats.charts.difficulty_1d;
                         decimal diffLive = lastStats.network.difficulty;
 
-                        decimal reward = lastStats.network.reward;
+                        decimal reward = lastStats.lastblock.reward;
 
                         decimal profitDay = (coin.GetExpectedHashrate(settings) * (86400 / diffDay)) * reward;
                         decimal profitLive = (coin.GetExpectedHashrate(settings) * (86400 / diffLive)) * reward;
@@ -54,7 +55,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         decimal amountLive = profitLive / coinUnits;
 
                         //Get usd price
-                        decimal usdPrice = lastStats.coinPrice["coin-usd"];
+                        decimal usdPrice = lastStats.charts.price_1h;
 
                         //Multiplicate
                         decimal usdRewardDecDay = amountDay * usdPrice;
@@ -63,13 +64,13 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         decimal usdRewardDecLive = amountLive * usdPrice;
                         double usdRewardLive = (double)usdRewardDecLive;
 
-                        poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdRewardLive, usdRewardDay, (double)amountLive, (double)amountDay, ProfitProvider.MinerRocksApi, timeFrame);
+                        poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdRewardLive, usdRewardDay, (double)amountLive, (double)amountDay, ProfitProvider.HeroMinersApi, timeFrame);
                         Console.WriteLine($"Got profit data for {coin.TickerSymbol} from MinerRocksAPI");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Couldn't get profits data for {coin.DisplayName} from MinerRocksApi: " + ex.Message);
+                    Console.WriteLine($"Couldn't get profits data for {coin.DisplayName} from HeroMinersApi: " + ex.Message);
                 }
             },ct);
         }
@@ -78,37 +79,60 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
             switch(coin.TickerSymbol)
             {
                 case "DERO":
-                    return "https://dero.miner.rocks/api/stats";
+                    return "https://dero.herominers.com/api/stats";
                 case "ETN":
-                    return "https://etn.miner.rocks/api/stats";
+                    return "https://electroneum.herominers.com/api/stats";
                 case "KRB":
-                    return "https://krb.miner.rocks/api/stats";
+                    return "https://karbo.herominers.com/api/stats";
                 case "SUMO":
-                    return "https://sumokoin.miner.rocks/api/stats";
+                    return "https://sumo.herominers.com/api/stats";
+                case "CTL":
+                    return "https://citadel.herominers.com/api/stats";
                 case "GRFT":
-                    return "https://graft.miner.rocks/api/stats";
-                case "QRL":
-                    return "https://qrl.miner.rocks/api/stats";
-                case "XTL":
-                    return "https://stellite.miner.rocks/api/stats";
+                    return "https://graft.herominers.com/api/stats";
+                case "LTHN":
+                    return "https://lethean.herominers.com/api/stats";
                 case "XMR":
-                    return "https://monero.miner.rocks/api/stats";
+                    return "https://monero.herominers.com/api/stats";
+                case "XMV":
+                    return "https://monerov.herominers.com/api/stats";
+                case "QRL":
+                    return "https://qrl.herominers.com/api/stats";
+                case "SAFE":
+                case "SFX":
+                    return "https://safex.herominers.com/api/stats";
+                case "XCA":
+                    return "https://xcash.herominers.com/api/stats";
+                case "BXB":
+                    return "https://bixbite.herominers.com/api/stats";
+                case "CCH":
+                    return "https://citadel.herominers.com/api/stats";
                 case "LOK":
                 case "LOKI":
-                    return "https://loki.miner.rocks/api/stats";
+                    return "https://loki.herominers.com/api/stats";
                 case "RYO":
-                    return "https://ryo.miner.rocks/api/stats";
+                    return "https://ryo.herominers.com/api/stats";
+                case "XRN":
+                    return "https://saronite.herominers.com/api/stats";
+                case "BLOC":
+                    return "https://bloc.herominers.com/api/stats";
                 case "XHV":
-                    return "https://haven.miner.rocks/api/stats";
+                    return "https://haven.herominers.com/api/stats";
                 case "IPBC":
                 case "TUBE":
-                    return "https://bittube.miner.rocks/api/stats";
-                case "AEON":
-                    return "https://aeon.miner.rocks/api/stats";
+                    return "https://tube.herominers.com/api/stats";
+                case "XTL":
+                    return "https://stellite.herominers.com/api/stats";
+                case "CCX":
+                    return "https://conceal.herominers.com/api/stats";
                 case "MSR":
-                    return "https://masari.miner.rocks/api/stats";
+                    return "https://masari.herominers.com/api/stats";
+                case "AEON":
+                    return "https://aeon.herominers.com/api/stats";
+                case "ARQ":
+                    return "https://arqma.herominers.com/api/stats";
             }
-            return $"https://{coin.TickerSymbol.ToLowerInvariant()}.miner.rocks/api/stats";
+            return $"https://{coin.TickerSymbol.ToLowerInvariant()}.herominers.com/api/stats";
         }
     }
 }

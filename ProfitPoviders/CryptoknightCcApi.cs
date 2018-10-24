@@ -179,6 +179,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                     return "https://cryptoknight.cc/rpc/qwerty/live_stats";
                 case "RYO":
                     return "https://cryptoknight.cc/rpc/ryo/live_stats";
+                case "SFX":
                 case "SAFE":
                     return "https://cryptoknight.cc/rpc/safex/live_stats";
                 case "XRN":
@@ -194,7 +195,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                 case "WOW":
                     return "https://cryptoknight.cc/rpc/wownero/live_stats";
             }
-            return null;
+            return $"https://cryptoknight.cc/rpc/{coin.TickerSymbol.ToLowerInvariant()}/live_stats";
         }
     }
 }

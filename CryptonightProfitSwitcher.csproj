@@ -26,6 +26,12 @@
      <None Update="Coins\BLOC.money.json">
        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
      </None>
+     <None Update="Coins\Lethean.json">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
+     <None Update="Coins\Conceal.json">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
      <None Update="Coins\Test4.json">
        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
      </None>
