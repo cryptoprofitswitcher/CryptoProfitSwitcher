@@ -17,7 +17,7 @@ It is optimized for **Windows** but also works for **Linux**.
   - **Reset:** Restarts the miner and runs a user-defined Reset script
   - **Performance:** Resource friendly with 0%-CPU usage
   - **Miners:** Xmr-Stak (Recommended), Cast XMR, JCE Miner, SRBMiner
-  - **Profit data:** [MineCryptoNight API](http://minecryptonight.net/api), [CryptUnit API](https://www.cryptunit.com/api/), [miner.rocks API](https://miner.rocks/), [cryptoknight.cc API](https://cryptoknight.cc/), [MoneroOcean](https://moneroocean.stream)
+  - **Profit data:** [MineCryptoNight API](http://minecryptonight.net/api), [CryptUnit API](https://www.cryptunit.com/api/), [miner.rocks API](https://miner.rocks/), [cryptoknight.cc API](https://cryptoknight.cc/), [HeroMiners API](https://herominers.com/), [MoneroOcean](https://moneroocean.stream)
   - **Multiple profit switching strategies:** Maximize fiat profit, maximize coin reward or a combination
   - **Manual mode:** You can switch between automatic mode and manual mode where you select the coin / NiceHash algorithm yourself
   - **Supports all algorithms:** CryptonightV7, CryptonightHeavy, CryptonightLiteV7 and the variants of Bittube, Stellite, Masari and Haven Protocol
@@ -56,7 +56,7 @@ If you download the latest release, there will be a default configuration:
 
 - CPU: AMD Ryzen 1600X
 - GPU: AMD Vega 64 + AMD Vega 56
-- Coins: Bittube, Graft, Haven Protocol, Loki, Masari, Stellite, AEON, MoneroOcean
+- Coins: Bittube, Graft, Haven Protocol, Loki, Masari, Stellite, AEON, MoneroOcean, Monero, BLOC.money, Conceal, Lethean
 - NiceHash: CryptonightV8, CryptonightV7, CryptonightHeavy
 - Miner: XmrStak
 
@@ -88,7 +88,7 @@ You have to change the default configuration for your setup, see **How to use?**
 Will select the coin / NiceHash algorithm that has the most profit in USD per day.
 #### Strategy 2: MaximizeCoins
 Will select the coin that has the least difficulty to mine compared to the 24h average difficulty.
-This strategy will ignore the price of the coin and does only work with coins that get their profit data from [miner.rocks API](https://miner.rocks/).
+This strategy will ignore the price of the coin and does only work with coins that have profit data for 24h average.
 #### Strategy 3: WeightedCoinsPrice
 This strategy is a combination of the above two strategies.
 It will multiplicate the profit in USD per day with the relative coin difficulty and maximize this new value.
@@ -116,6 +116,7 @@ This strategy will work with all coins / NiceHash algorithms because it will use
 * [CryptUnit API](https://www.cryptunit.com/api/)
 * [miner.rocks API](https://miner.rocks/)
 * [cryptoknight.cc API](https://cryptoknight.cc/)
+* [HeroMiners API](https://herominers.com/)
 * [MoneroOcean API](https://moneroocean.stream)
 * [NiceHash API](https://www.nicehash.com/doc-api)
 * [CoinMarketCap API](https://coinmarketcap.com/api/)

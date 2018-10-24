@@ -8,6 +8,7 @@
 * [CryptUnit API](https://www.cryptunit.com/api/)
 * [miner.rocks API](https://miner.rocks/)
 * [cryptoknight.cc API](https://cryptoknight.cc/)
+* [HeroMiners API](https://herominers.com/)
 * [MoneroOcean API](https://moneroocean.stream)
 * [NiceHash API](https://www.nicehash.com/doc-api)
 * [CoinMarketCap API](https://coinmarketcap.com/api/)
