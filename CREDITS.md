@@ -14,3 +14,4 @@
 * [CoinMarketCap API](https://coinmarketcap.com/api/)
 * [CsConsoleFormat](https://github.com/Athari/CsConsoleFormat)
 * [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
+* [Cryptonote Profit Switcher](https://github.com/cryptoprofitswitcher)
