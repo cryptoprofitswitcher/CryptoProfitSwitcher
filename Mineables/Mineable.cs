@@ -58,7 +58,9 @@ namespace CryptonightProfitSwitcher.Mineables
             }
             switch (Algorithm)
             {
-                case Algorithm.CryptonightV7:
+                case Algorithm.CryptonightConseal:
+				case Algorithm.CryptonightR:
+				case Algorithm.CryptonightV7:
                 case Algorithm.CryptonightV8:
                 case Algorithm.CryptonightStellite:
                 case Algorithm.CryptonightMasari:

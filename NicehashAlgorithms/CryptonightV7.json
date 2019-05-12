@@ -13,7 +13,7 @@
   // For example:: Path to batch file that sets specific OverdriveN settings for this algorithm
   "PrepareScript": null,
   // Enables or disables this algorithm, can be true or false (default: true)
-  "Enabled": true,
+  "Enabled": false,
 
   /* OVERRIDE SETTINGS - NOT NEEDED */
 
