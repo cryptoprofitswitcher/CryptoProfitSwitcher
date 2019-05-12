@@ -1,5 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
@@ -11,8 +10,10 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
     <FileVersion>6.0.0.0</FileVersion>
+    <FileUpgradeFlags>40</FileUpgradeFlags>
+    <UpgradeBackupLocation>C:\Users\user\Videos\CryptonightProfitSwitcher\Backup\</UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Alba.CsConsoleFormat-NoXaml" Version="1.0.0" />
     <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" />
@@ -23,36 +24,35 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
   </ItemGroup>
-
   <ItemGroup>
-     <None Update="Coins\BLOC.money.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="Coins\Lethean.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="Coins\Conceal.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="Coins\Test4.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="Coins\Test3.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="Coins\Test2.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="Coins\Test1.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="Coins\Quantum.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="NicehashAlgorithms\CryptonightV8.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="XmrStak\amd_heavy.txt">
+    <None Update="Coins\BLOC.money.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Coins\Lethean.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Coins\Conceal.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Coins\Test4.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Coins\Test3.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Coins\Test2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Coins\Test1.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Coins\Quantum.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="NicehashAlgorithms\CryptonightV8.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\amd_heavy.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="XmrStak\amd_lite.txt">
@@ -153,7 +153,7 @@
     <None Update="XmrStak\xmrstak_opencl_backend.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-      <None Update="SRBMiner\config_bittube.txt">
+    <None Update="SRBMiner\config_bittube.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="SRBMiner\config_heavy.txt">
@@ -168,13 +168,13 @@
     <None Update="SRBMiner\config_v8.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-     <None Update="SRBMiner\config_haven.txt">
+    <None Update="SRBMiner\config_haven.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-     <None Update="SRBMiner\config_fast.txt">
+    <None Update="SRBMiner\config_fast.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-     <None Update="SRBMiner\config_stellite.txt">
+    <None Update="SRBMiner\config_stellite.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="SRBMiner\Devcon\devcon.exe">
@@ -341,7 +341,7 @@
     <None Update="XmrStak\libxmr-stak-asm.a">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-   <None Update="XmrStak\xmr-stak">
+    <None Update="XmrStak\xmr-stak">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
