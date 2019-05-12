@@ -6,14 +6,14 @@
   // Ticker symbol on minecryptonight.net, needed to get profit data
   "TickerSymbol": "XMR",
   // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
-  "Algorithm": "CryptonightV7",
+  "Algorithm": "CryptonightR",
   // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
   // Path to script that runs before the miner starts, can be null.
   // For example:: Path to batch file that sets specific OverdriveN settings for this coin
   "PrepareScript": null,
   // Enables or disables this coin, can be true or false (default: true)
-  "Enabled": false,
+  "Enabled": true,
 
   /* OVERRIDE SETTINGS - NOT NEEDED */
 
@@ -28,9 +28,9 @@
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "xmr-eu1.nanopool.org:14444",
-  "PoolWalletAddress": "4GdoN7NCTi8a5gZug7PrwZNKjvHFmKeV11L6pNJPgj5QNEHsN6eeX3DaAQFwZ1ufD4LYCZKArktt113W7QjWvQ7CWBPzu9XXtDTKJEKu2r",
-  "PoolPassword": "x",
+  "PoolAddress": "xmrproxy.mineiota.com:8100",
+  "PoolWalletAddress": "FUGWLGQHJCSFNNABQMZMQQLVUQDYKWVKHGLPIOCJVZXUSFDGFPO9YPGLTGRQMGPOHOKJUTBRISZKXMIRWGUMNAWHGB",
+  "PoolPassword": "RIG1",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
   "PoolWeight": 1,

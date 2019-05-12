@@ -28,13 +28,13 @@
   // Delay in seconds before the mining process starts
   "MinerStartDelay": 3,
   // Set if the miner should start minimized, can be true or false
-  "StartMinerMinimized": false,
+  "StartMinerMinimized": true,
   // Enable or disable caching of JSON Api calls, can be true or false
-  "EnableCaching": true,
+  "EnableCaching": false,
   // Enable or disable logging, can be true or false
-  "EnableLogging": true,
+  "EnableLogging": false,
   // Enable or disable watchdog (compares actual hashrate with expected hashrate and resets if certain conditions are met), can be true or false
-  "EnableWatchdog": true,
+  "EnableWatchdog": false,
   // Delay in seconds before watchdog starts
   "WatchdogDelay": 60,
   // Time in seconds between watchdog checks

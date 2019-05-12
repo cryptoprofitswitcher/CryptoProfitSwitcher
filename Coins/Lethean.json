@@ -6,7 +6,7 @@
   // Ticker symbol on minecryptonight.net, needed to get profit data
   "TickerSymbol": "LTHN",
   // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
-  "Algorithm": "CryptonightV8",
+  "Algorithm": "CryptonightR",
   // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
   // Path to script that runs before the miner starts, can be null.
@@ -28,8 +28,8 @@
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "lethean.ingest.cryptoknight.cc:8882",
-  "PoolWalletAddress": "WILL_PROVIDE_LATER.90000",
+  "PoolAddress": "pool.lethean.hashvault.pro:5555",
+  "PoolWalletAddress": "NaWe5B5NqvZ3TV2Mj1pxYtTgrnTBwQDMDNtqVzMR6Xa5ejxu6hbi6KULHTqd732ebc5qTHvKXonokghUBd3pjLa8czp1jBstGDj2VJ6Y73hb",
   "PoolPassword": "x",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
