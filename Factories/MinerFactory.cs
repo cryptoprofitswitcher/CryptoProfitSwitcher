@@ -18,8 +18,6 @@ namespace CryptonightProfitSwitcher.Factories
                     return new SrbMiner();
                 case Miner.JceMiner:
                     return new JceMiner();
-                case Miner.XmrigAMD:
-                    return new XmrigAMD();
                 default:
                     throw new NotImplementedException("Couldn't start miner, unknown miner: " + miner);
             }

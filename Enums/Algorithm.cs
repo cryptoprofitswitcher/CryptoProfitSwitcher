@@ -9,8 +9,6 @@
         CryptonightStellite,
         CryptonightHaven,
         CryptonightMasari,
-        CryptonightV8,
-        CryptonightConceal,
-        cryptonightv8double
+        CryptonightV8
     }
 }

@@ -2,6 +2,6 @@
 {
     public enum Miner
     {
-        XmrStak, CastXmr, SRBMiner, JceMiner, XmrigAMD
+        XmrStak, CastXmr, SRBMiner, JceMiner
     }
 }
