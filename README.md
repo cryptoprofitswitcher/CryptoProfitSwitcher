@@ -1,7 +1,7 @@
 
 ![Screenshot](Images/logo2.png?raw=true "Screenshot")
 
-Cryptonight Profit Switcher is an extensible open-source .Net Core console application that helps you to **always mine the most profitable coin on a pool or an algorithm on NiceHash**.
+Cryptonight Mining Manager is an extensible open-source .Net Core console application that helps you to **always mine the most profitable coin on a pool or an algorithm on NiceHash**.
 
 It is very useful for **AMD Vega GPUs** because it can detect hash drops and reset the GPU(s) but it can be used with any GPU that is compatible with the miner.
 It is optimized for **Windows** but also works for **Linux**.
@@ -27,7 +27,7 @@ It is optimized for **Windows** but also works for **Linux**.
 
 # How to use?
 
-1. Download the latest release of the app ([Latest release](https://github.com/cryptoprofitswitcher/CryptonightProfitSwitcher/releases/latest))
+1. Download the latest release of the app
 2. Extract it
 3. Optimize the Xmr-Stak config
     1. Go to the folder *Xmr-Stak*
@@ -122,4 +122,4 @@ This strategy will work with all coins / NiceHash algorithms because it will use
 * [CoinMarketCap API](https://coinmarketcap.com/api/)
 * [CsConsoleFormat](https://github.com/Athari/CsConsoleFormat)
 * [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
-
+* [Cryptonote Profit Switcher](https://github.com/cryptoprofitswitcher)
