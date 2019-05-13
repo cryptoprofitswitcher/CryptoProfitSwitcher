@@ -205,32 +205,110 @@ namespace CryptonightProfitSwitcher.Miners
                         dict["currency"] = "monero";
                     }
                     break;
+                case Algorithm.aeon7:
+                    dict["currency"] = "aeon7";
+                    break;
+                case Algorithm.CryptonightBitTube2:
+                    dict["currency"] = "Cryptonight_bitTube2";
+                    break;
                 case Algorithm.CryptonightConseal:
-					dict["currency"] = "cryptonight_conceal";
+                    dict["currency"] = "cryptonight_conceal";
                     break;
-				case Algorithm.CryptonightR:
-                    dict["currency"] = "cryptonight_r";
+                case Algorithm.Cryptonight:
+                    dict["currency"] = "cryptonight";
                     break;
-				case Algorithm.CryptonightV8:
-                    dict["currency"] = "cryptonight_v8";
+                case Algorithm.CryptonightGpu:
+                    dict["currency"] = "cryptonight_gpu";
+                    break;
+                case Algorithm.CryptonightHaven:
+                    dict["currency"] = "cryptonight_haven";
                     break;
                 case Algorithm.CryptonightHeavy:
                     dict["currency"] = "cryptonight_heavy";
                     break;
                 case Algorithm.CryptonightLite:
+                    dict["currency"] = "cryptonight_lite";
+                    break;
+                case Algorithm.CryptonightLiteV7:
                     dict["currency"] = "cryptonight_lite_v7";
                     break;
-                case Algorithm.CryptonightBittube:
-                    dict["currency"] = "bittube";
-                    break;
-                case Algorithm.CryptonightStellite:
-                    dict["currency"] = "stellite";
-                    break;
-                case Algorithm.CryptonightHaven:
-                    dict["currency"] = "haven";
+                case Algorithm.CryptonightLiteV7Xor:
+                    dict["currency"] = "cryptonight_lite_v7_xor";
                     break;
                 case Algorithm.CryptonightMasari:
+                    dict["currency"] = "cryptonight_masari";
+                    break;
+                case Algorithm.CryptonightR:
+                    dict["currency"] = "cryptonight_r";
+                    break;
+                case Algorithm.CryptonightSuperfast:
+                    dict["currency"] = "cryptonight_superfast";
+                    break;
+                case Algorithm.CryptonightTurtle:
+                    dict["currency"] = "cryptonight_turtle";
+                    break;
+                case Algorithm.CryptonightV8Double:
+					dict["currency"] = "cryptonight_v8_double";
+                    break;
+				case Algorithm.CryptonightV8:
+                    dict["currency"] = "cryptonight_v8";
+                    break;
+                case Algorithm.CryptonightV8Half:
+                    dict["currency"] = "cryptonight_v8_half";
+                    break;
+                case Algorithm.CryptonightV8Reversewaltz:
+                    dict["currency"] = "cryptonight_v8_reversewaltz";
+                    break;
+                case Algorithm.CryptonightV7Stellite:
+                    dict["currency"] = "cryptonight_v7_stellite";
+                    break;
+                case Algorithm.CryptonightV8Zelerius:
+                    dict["currency"] = "cryptonight_v8_zelerius";
+                    break;
+                case Algorithm.bbscoin:
+                    dict["currency"] = "bbscoin";
+                    break;
+                case Algorithm.bittube:
+                    dict["currency"] = "bittube";
+                    break;
+                case Algorithm.freehaven:
+                    dict["currency"] = "freehaven";
+                    break;
+                case Algorithm.graft:
+                    dict["currency"] = "graft";
+                    break;
+                case Algorithm.haven:
+                    dict["currency"] = "haven";
+                    break;
+                case Algorithm.lethean:
+                    dict["currency"] = "lethean";
+                    break;
+                case Algorithm.masari:
                     dict["currency"] = "masari";
+                    break;
+                case Algorithm.monero:
+                    dict["currency"] = "monero";
+                    break;
+                case Algorithm.qrl:
+                    dict["currency"] = "qrl";
+                    break;
+                case Algorithm.ryo:
+                    dict["currency"] = "ryo";
+                    break;
+                case Algorithm.stellite:
+                    dict["currency"] = "stellite";
+                    break;
+                case Algorithm.turtlecoin:
+                    dict["currency"] = "turtlecoin";
+                    break;
+                case Algorithm.plenteum:
+                    dict["currency"] = "plenteum";
+                    break;
+                case Algorithm.zelerius:
+                    dict["currency"] = "zelerius";
+                    break;
+                case Algorithm.xcash:
+                    dict["currency"] = "xcashe";
                     break;
                 default:
                     throw new NotImplementedException("Can't get pool algorithm: " + mineable.Algorithm);
