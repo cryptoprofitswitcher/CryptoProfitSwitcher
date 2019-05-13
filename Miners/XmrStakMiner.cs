@@ -308,7 +308,7 @@ namespace CryptonightProfitSwitcher.Miners
                     dict["currency"] = "zelerius";
                     break;
                 case Algorithm.xcash:
-                    dict["currency"] = "xcashe";
+                    dict["currency"] = "xcash";
                     break;
                 default:
                     throw new NotImplementedException("Can't get pool algorithm: " + mineable.Algorithm);

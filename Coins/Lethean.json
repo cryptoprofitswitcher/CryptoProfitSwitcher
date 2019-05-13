@@ -13,7 +13,7 @@
   // For example:: Path to batch file that sets specific OverdriveN settings for this coin
   "PrepareScript": null,
   // Enables or disables this coin, can be true or false (default: true)
-  "Enabled": false,
+  "Enabled": true,
 
   /* OVERRIDE SETTINGS - NOT NEEDED */
 

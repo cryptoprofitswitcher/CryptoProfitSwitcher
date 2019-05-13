@@ -6,14 +6,14 @@
   // Ticker symbol on minecryptonight.net, needed to get profit data
   "TickerSymbol": "MSR",
   // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
-  "Algorithm": "CryptonightMasari",
+  "Algorithm": "Masari",
   // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
   // Path to script that runs before the miner starts, can be null.
   // For example:: Path to batch file that sets specific OverdriveN settings for this coin
   "PrepareScript": null,
   // Enables or disables this coin, can be true or false (default: true)
-  "Enabled": false,
+  "Enabled": true,
 
   /* OVERRIDE SETTINGS - NOT NEEDED */
 
@@ -28,7 +28,7 @@
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "pool.masaricoin.com:7777",
+  "PoolAddress": "sg.masari.miner.rocks:5005",
   "PoolWalletAddress": "5t5mEm254JNJ9HqRjY9vCiTE8aZALHX3v8TqhyQ3TTF9VHKZQXkRYjPDweT9kK4rJw7dDLtZXGjav2z9y24vXCdRc6BSJwUmapXC7NmVAM+90000",
   "PoolPassword": "x",
   "PoolUseTls": false,
