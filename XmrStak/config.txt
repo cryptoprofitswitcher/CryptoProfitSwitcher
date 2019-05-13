@@ -4,7 +4,7 @@
   "giveup_limit": 0,
   "verbose_level": 4,
   "print_motd": true,
-  "h_print_time": 60,
+  "h_print_time": 300,
   "aes_override": null,
   "use_slow_memory": "warn",
   "tls_secure_algo": true,

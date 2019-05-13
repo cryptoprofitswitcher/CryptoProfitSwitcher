@@ -1,11 +1,3 @@
 ﻿
 "cpu_threads_conf" :
-[
-    { "low_power_mode" : false, "no_prefetch" : true, "asm" : "auto", "affine_to_cpu" : 0 },
-    { "low_power_mode" : false, "no_prefetch" : true, "asm" : "auto", "affine_to_cpu" : 2 },
-    { "low_power_mode" : false, "no_prefetch" : true, "asm" : "auto", "affine_to_cpu" : 4 },
-    { "low_power_mode" : false, "no_prefetch" : true, "asm" : "auto", "affine_to_cpu" : 6 },
-    { "low_power_mode" : false, "no_prefetch" : true, "asm" : "auto", "affine_to_cpu" : 8 },
-    { "low_power_mode" : false, "no_prefetch" : true, "asm" : "auto", "affine_to_cpu" : 10 },
-
-],
+null,
