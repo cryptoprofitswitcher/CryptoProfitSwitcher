@@ -1,7 +1,7 @@
 
-![Screenshot](Images/logo2.png?raw=true "Screenshot")
+![Screenshot](Images/logo1.png?raw=true "Screenshot")
 
-Cryptonight Mining Manager is an extensible open-source .Net Core console application that helps you to **always mine the most profitable coin on a pool or an algorithm on NiceHash**.
+Cryptonight Profit Switcher is an extensible open-source .Net Core console application that helps you to **always mine the most profitable coin on a pool or an algorithm on NiceHash**.
 
 It is very useful for **AMD Vega GPUs** because it can detect hash drops and reset the GPU(s) but it can be used with any GPU that is compatible with the miner.
 It is optimized for **Windows** but also works for **Linux**.
@@ -16,11 +16,10 @@ It is optimized for **Windows** but also works for **Linux**.
   - **Watchdog:** Compares your actual hashrate with the expected hashrate and runs a reset if certain conditions are met.
   - **Reset:** Restarts the miner and runs a user-defined Reset script
   - **Performance:** Resource friendly with 0%-CPU usage
-  - **Miners:** Xmr-Stak (Recommended), Cast XMR, JCE Miner, SRBMiner
+  - **Miners:** Xmr-Stak 
   - **Profit data:** [MineCryptoNight API](http://minecryptonight.net/api), [CryptUnit API](https://www.cryptunit.com/api/), [miner.rocks API](https://miner.rocks/), [cryptoknight.cc API](https://cryptoknight.cc/), [HeroMiners API](https://herominers.com/), [MoneroOcean](https://moneroocean.stream)
   - **Multiple profit switching strategies:** Maximize fiat profit, maximize coin reward or a combination
   - **Manual mode:** You can switch between automatic mode and manual mode where you select the coin / NiceHash algorithm yourself
-  - **Supports all algorithms:** CryptonightV7, CryptonightHeavy, CryptonightLiteV7 and the variants of Bittube, Stellite, Masari and Haven Protocol
   - **Supports all coins:** That are mineable using the miners
   - **Supports all pools:** That are supported by the miners
 
@@ -56,7 +55,7 @@ If you download the latest release, there will be a default configuration:
 
 - CPU: AMD Ryzen 1600X
 - GPU: AMD Vega 64 + AMD Vega 56
-- Coins: Bittube, Graft, Haven Protocol, Loki, Masari, Stellite, AEON, MoneroOcean, Monero, BLOC.money, Conceal, Lethean
+- Coins: Monero, Conceal, Lethean, Sumo, Masari
 - NiceHash: CryptonightV8, CryptonightV7, CryptonightHeavy
 - Miner: XmrStak
 
