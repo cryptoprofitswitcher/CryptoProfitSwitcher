@@ -2,18 +2,18 @@
   /* GENERAL CONFIGURATION - ALWAYS NEEDED */
 
   // Displayed name, can be anything.
-  "DisplayName": "Stellite",
+  "DisplayName": "Sumo",
   // Ticker symbol on minecryptonight.net, needed to get profit data
-  "TickerSymbol": "XTL",
+  "TickerSymbol": "SUMO",
   // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
-  "Algorithm": "CryptonightStellite",
+  "Algorithm": "CryptonightR",
   // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
   // Path to script that runs before the miner starts, can be null.
   // For example:: Path to batch file that sets specific OverdriveN settings for this coin
   "PrepareScript": null,
   // Enables or disables this coin, can be true or false (default: true)
-  "Enabled": false,
+  "Enabled": true,
 
   /* OVERRIDE SETTINGS - NOT NEEDED */
 
@@ -28,9 +28,9 @@
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "stellite.ingest.cryptoknight.cc:16221",
-  "PoolWalletAddress": "SEiStP7SMy1bvjkWc9dd1t2v1Et5q2DrmaqLqFTQQ9H7JKdZuATcPHUbUL3bRjxzxTDYitHsAPqF8EeCLw3bW8ARe8rYLKNGkev2JRQtW3sMk.90000",
-  "PoolPassword": "x",
+  "PoolAddress": "sumokoin.miner.rocks:4005",
+  "PoolWalletAddress": "SumipDETyjLYi8rqkmyE9c4SftzYzWPCGA3XvcXbGuBYcqDQJWe8wp8NEwNicFyzZgKTSjCjnpuXTitwn6VdBcFZEFXLcUphBvUWu3qSd12JNb",
+  "PoolPassword": "w=RIG1",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
   "PoolWeight": 1,
@@ -45,9 +45,9 @@
   // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak.
   "XmrStakApiPort": 4000,
   // Path to Xmr-Stak cpu config file, can be null.
-  "CpuPath": "XmrStak/cpu_v7.txt",
+  "CpuPath": "XmrStak/cpu_heavy.txt",
   // Path to Xmr-Stak amd gpu config file, can be null.
-  "AmdPath": "XmrStak/amd_v7.txt",
+  "AmdPath": "XmrStak/amd_heavy.txt",
   // Path to Xmr-Stak nvidea gpu config file, can be null.
   "NvidiaPath": null,
   // Set the path to Xmr-Stak pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
@@ -69,7 +69,7 @@
   // Path to SRBMiner executable
   "SRBMinerPath": "SRBMiner/SRBMiner-CN.exe",
   // Path to SRBMiner config file
-  "SRBMinerConfigPath": "SRBMiner/config_stellite.txt",
+  "SRBMinerConfigPath": "SRBMiner/config_haven.txt",
   // Port of the SRBMiner REST API, should match the port in the config file of SRBMiner.
   "SRBMinerApiPort": 21555,
   // Set the path to SRBMiner pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
@@ -84,7 +84,7 @@
   // Path to JceMiner executable
   "JceMinerPath": "JceMiner/jce_cn_gpu_miner64.exe",
   // Path to JceMiner config (can be null <- then auto configuration will be used)
-  "JceMinerConfig": "JceMiner/config_v7.txt",
+  "JceMinerConfig": "JceMiner/config_heavy.txt",
   // Port of the JceMiner JSON Api (0 = auto)
   "JceMinerApiPort": 0,
   // Extra arguments for JceMiner
@@ -92,3 +92,4 @@
 
 
 }
+

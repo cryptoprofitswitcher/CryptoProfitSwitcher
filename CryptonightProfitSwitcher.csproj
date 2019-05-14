@@ -30,55 +30,28 @@
   </ItemGroup>
 
   <ItemGroup>
-     <None Update="Coins\Lethean.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="Coins\Conceal.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="Coins\Test4.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="Coins\Test3.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="Coins\Test2.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="Coins\Test1.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="Coins\Quantum.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="NicehashAlgorithms\CryptonightV8.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-     <None Update="XmrStak\amd_heavy.txt">
+    <None Update="Coins\Lethean.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="XmrStak\amd_lite.txt">
+    <None Update="Coins\Conceal.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="XmrStak\amd_v8.txt">
+    <None Update="Coins\Sumo.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="XmrStak\amd_v7.txt">
+    <None Update="Coins\z.Algorithm Guide.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="XmrStak\config.txt">
+    <None Update="Coins\Test2.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="XmrStak\cpu_heavy.txt">
+    <None Update="Coins\Test1.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="XmrStak\cpu_lite.txt">
+    <None Update="Coins\Quantum.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="XmrStak\cpu_v7.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Coins\Aeon.json">
+     <None Update="Coins\Aeon.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Coins\Bittube.json">
@@ -111,6 +84,9 @@
     <None Update="NicehashAlgorithms\CryptonightV7.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+        <None Update="NicehashAlgorithms\CryptonightV8.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="ResetScript.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -118,6 +94,30 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ThirdPartyLicenses.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\amd_heavy.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\amd_lite.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\amd_v8.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\amd_v7.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\config.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\cpu_heavy.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\cpu_lite.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\cpu_v7.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -143,7 +143,25 @@
     <None Update="CastXmr\switch-radeon-gpu.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="XmrStak\libcrypto-1_1-x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="XmrStak\libeay32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\libssl-1_1-x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\nvrtc64_100_0.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\nvrtc-builtins64_90.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\nvrtc-builtins64_100.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="XmrStak\nvvp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="XmrStak\ssleay32.dll">
@@ -152,10 +170,13 @@
     <None Update="XmrStak\xmr-stak.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="XmrStak\xmrstak_cuda_backend.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="XmrStak\xmrstak_opencl_backend.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-      <None Update="SRBMiner\config_bittube.txt">
+    <None Update="SRBMiner\config_bittube.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="SRBMiner\config_heavy.txt">
@@ -170,13 +191,13 @@
     <None Update="SRBMiner\config_v8.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-     <None Update="SRBMiner\config_haven.txt">
+    <None Update="SRBMiner\config_haven.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-     <None Update="SRBMiner\config_fast.txt">
+    <None Update="SRBMiner\config_fast.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-     <None Update="SRBMiner\config_stellite.txt">
+    <None Update="SRBMiner\config_stellite.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="SRBMiner\Devcon\devcon.exe">
@@ -343,7 +364,7 @@
     <None Update="XmrStak\libxmr-stak-asm.a">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-   <None Update="XmrStak\xmr-stak">
+    <None Update="XmrStak\xmr-stak">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
