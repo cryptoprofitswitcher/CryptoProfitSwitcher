@@ -1,7 +1,7 @@
 
 ![Screenshot](Images/logo1.png?raw=true "Screenshot")
 
-Cryptonight Profit Switcher is an extensible open-source .Net Core console application that helps you to **always mine the most profitable coin on a pool or an algorithm on NiceHash**.
+Whalien Mining Switcher is an extensible open-source .Net Core console application that helps you to **always mine the most profitable coin on a pool or an algorithm on NiceHash**.
 
 It is very useful for **AMD Vega GPUs** because it can detect hash drops and reset the GPU(s) but it can be used with any GPU that is compatible with the miner.
 It is optimized for **Windows** but also works for **Linux**.
@@ -46,14 +46,11 @@ It is optimized for **Windows** but also works for **Linux**.
 6. Start *CryptonightProfitSwitcher.exe* (Optional: As administrator)
 7. PROFIT!!!
 
-You can also use it with Cast XMR, SRBMiner or JCE Miner. The steps are similar like above.
-Just look at the comments in the JSON files and you will understand how to use other miners.
-
 ### Default configuration
 
 If you download the latest release, there will be a default configuration:
 
-- CPU: AMD Ryzen 1600X
+- CPU: null
 - GPU: AMD Vega 64 + AMD Vega 56
 - Coins: Monero, Conceal, Lethean, Sumo, Masari
 - NiceHash: CryptonightV8, CryptonightV7, CryptonightHeavy
@@ -108,9 +105,6 @@ This strategy will work with all coins / NiceHash algorithms because it will use
 # Credits
 
 * [fireice-uk's and psychocrypt's Xmr-Stak](https://github.com/fireice-uk/xmr-stak)
-* [Gandalph3000's Cast XMR](http://www.gandalph3000.com/)
-* [doktor83's SRBMiner](https://bitcointalk.org/index.php?topic=3167363.0)
-* [JCE Miner](https://bitcointalk.org/index.php?topic=3281187.0)
 * [MineCryptoNight API](http://minecryptonight.net/api)
 * [CryptUnit API](https://www.cryptunit.com/api/)
 * [miner.rocks API](https://miner.rocks/)

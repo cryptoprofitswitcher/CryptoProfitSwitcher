@@ -28,7 +28,7 @@
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
   "PoolAddress": "cryptonightv7.eu.nicehash.com:3363",
-  "PoolWalletAddress": "31zXAFVEeksCYSnxfGz9VE9Dk6WXfijpuy.Worker",
+  "PoolWalletAddress": "1JmWKF5Ayfk61RLmYpXwFo4anHSmsepS5h.Worker",
   "PoolPassword": "x",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",

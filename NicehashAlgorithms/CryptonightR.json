@@ -2,11 +2,11 @@
   /* GENERAL CONFIGURATION - ALWAYS NEEDED */
 
   // Displayed name, can be anything.
-  "DisplayName": "CryptonightV8",
+  "DisplayName": "CryptonightR",
   // Api ID listed on nicehash.com/doc-api, needed to get profit data
-  "ApiId": 34,
+  "ApiId": 42,
   // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
-  "Algorithm": "CryptonightV8",
+  "Algorithm": "CryptonightR",
   // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
   // Path to script that runs before the miner starts, can be null.
@@ -27,7 +27,7 @@
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "cryptonightv8.eu.nicehash.com:3367",
+  "PoolAddress": "cryptonightr.eu.nicehash.com:3367",
   "PoolWalletAddress": "1JmWKF5Ayfk61RLmYpXwFo4anHSmsepS5h.Worker",
   "PoolPassword": "x",
   "PoolUseTls": false,

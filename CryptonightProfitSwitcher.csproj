@@ -6,11 +6,16 @@
     <TrimUnusedDependencies>true</TrimUnusedDependencies>
     <LinkDuringPublish>true</LinkDuringPublish>
     <ShowLinkerSizeComparison>true</ShowLinkerSizeComparison>
-    <Version>6.1.0-rizkyaulya.info</Version>
+    <Version>6.1.2</Version>
     <Configurations>Debug;Release;ReleaseLinux</Configurations>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <AssemblyVersion>6.1.0.0-rizkyaulya.info</AssemblyVersion>
-    <FileVersion>6.1.0.0-rizkyaulya.info</FileVersion>
+    <AssemblyVersion>6.1.2.0</AssemblyVersion>
+    <FileVersion>6.1.2.0</FileVersion>
+    <AssemblyName>WHALIEN</AssemblyName>
+    <RootNamespace>WHALIEN</RootNamespace>
+    <Copyright>rizkyaulya.info</Copyright>
+    <PackageProjectUrl>https://github.com/rizkyaulya/WHALIEN</PackageProjectUrl>
+    <PackageIconUrl>https://cdn0.iconfinder.com/data/icons/ui-glyph-1/100/ui-g-external_link-512.png</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>

@@ -20,7 +20,7 @@ namespace CryptonightProfitSwitcher
 {
     internal static class Program
     {
-        private const int VERSION = 11;
+        private const int VERSION = 12;
 
         private static IMiner _currentMiner;
         private static Mineable _currentMineable;
@@ -137,7 +137,7 @@ namespace CryptonightProfitSwitcher
                 {
                     Log.Information("Check for updates");
 
-                    var versionText = Helpers.GetJsonFromUrl("https://raw.githubusercontent.com/cryptoprofitswitcher/CryptonightProfitSwitcher/master/version.txt", settings, appFolder, CancellationToken.None);
+                    var versionText = Helpers.GetJsonFromUrl("https://raw.githubusercontent.com/rizkyaulya/whalien/master/version.txt", settings, appFolder, CancellationToken.None);
                     int remoteVersion = Int32.Parse(versionText);
                     if (remoteVersion > VERSION)
                     {
@@ -792,9 +792,9 @@ namespace CryptonightProfitSwitcher
             Console.CursorVisible = false;
             Console.Clear();
             string updateText = _newVersionAvailable ? " (NEW UPDATE AVAILABLE!)" : String.Empty;
-            WriteInCyan($" CRYPTONIGHT PROFIT SWITCHER | VERSION: {Helpers.GetApplicationVersion()}{updateText}");
+            WriteInCyan($" WHALIEN PROFIT SWICTHER | VERSION: {Helpers.GetApplicationVersion()}{updateText}");
             Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine(" https://github.com/cryptoprofitswitcher/CryptonightProfitSwitcher");
+            Console.WriteLine(" https://github.com/rizkyaulya/whalien");
             Console.ResetColor();
             Console.WriteLine();
         }
