@@ -59,7 +59,7 @@ namespace CryptonightProfitSwitcher.Mineables
             switch (Algorithm)
             {
                 case Algorithm.CryptonightConseal:
-				case Algorithm.CryptonightR:
+                case Algorithm.CryptonightR:
 				case Algorithm.CryptonightV7:
                 case Algorithm.CryptonightV8:
                 case Algorithm.CryptonightStellite:
@@ -67,6 +67,8 @@ namespace CryptonightProfitSwitcher.Mineables
                     return settings.CryptonightV7Hashrate;
                 case Algorithm.CryptonightHeavy:
                 case Algorithm.CryptonightHaven:
+                    return settings.CryptonightHeavyHashrate;
+                case Algorithm.CryptonightGpu:
                     return settings.CryptonightHeavyHashrate;
                 case Algorithm.CryptonightBittube:
                     // Backwards compatibilty

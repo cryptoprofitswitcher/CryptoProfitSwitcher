@@ -116,3 +116,23 @@ This strategy will work with all coins / NiceHash algorithms because it will use
 * [CsConsoleFormat](https://github.com/Athari/CsConsoleFormat)
 * [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
 * [Cryptonote Profit Switcher](https://github.com/cryptoprofitswitcher)
+
+---------------------------------------------------------------------------------
+
+### Donation Jar
+
+**Bittube 
+bxcUmZa4UHhc9JtM3FJCLqVoT82GrPmdY16nVozGU69YJCUGUPaBTjmCQ7oUh1m41BUMVaDR3cKvsRdEuNXsjZvL173kFRjZ5
+Sign up for bittubeapp to get free 5 Tube : https://bittubeapp.com/?ref?2JOO1K9YQ
+
+**Dero
+dERirD3WyQi4udWH7478H66Ryqn3syEU8bywCQEu3k5ULohQRcz4uoXP12NjmN4STmEDbpHZWqa7bPRiHNFPFgTBPmcBp7YLSG96RfuR8joRx
+
+**Ethereum
+0xbcbd5c225ef2c6b0e67c886b98c37648f32aafc7
+
+**Litecoin
+LZcaVuFZNQkAXXfsbQXV78QJM6Ny7NRUDi
+
+**Monero
+4Cf2TfMKhCgJ2vsM3HeBUnYe52tXrvv8X1ajjuQEMUQ8iU8kvUzCSsCEacxFhEmeb2JgPpQ5chdyw3UiTfUgapJBhHQYsP1pQmg5fanhzK

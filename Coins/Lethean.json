@@ -5,9 +5,9 @@
   "DisplayName": "Lethean",
   // Ticker symbol on minecryptonight.net, needed to get profit data
   "TickerSymbol": "LTHN",
-  // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
+  // Mining algorithm of coin, look at the Algorithm Guide in the coin folder
   "Algorithm": "CryptonightR",
-  // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
+  // Used Miner, can be XmrStak, (CastXmr, SRBMiner or JceMiner are deprecated)
   "Miner": "XmrStak",
   // Path to script that runs before the miner starts, can be null.
   // For example:: Path to batch file that sets specific OverdriveN settings for this coin

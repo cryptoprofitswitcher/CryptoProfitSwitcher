@@ -2,12 +2,12 @@
   /* GENERAL CONFIGURATION - ALWAYS NEEDED */
 
   // Displayed name, can be anything.
-  "DisplayName": "Conceal",
-  // Ticker symbol on minecryptonight.net, needed to get profit data
-  "TickerSymbol": "CCX",
-  // Mining algorithm of coin, look at the Algorithm Guide in the coin folder
-  "Algorithm": "CryptonightConseal",
-  // Used Miner, can be XmrStak, (CastXmr, SRBMiner or JceMiner are deprecated)
+  "DisplayName": "MoneroOcean",
+  // Ticker symbol, needed to get profit data (SPECIAL: MoneroOcean)
+  "TickerSymbol": "MoneroOcean",
+  // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
+  "Algorithm": "CryptonightR",
+  // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
   "Miner": "XmrStak",
   // Path to script that runs before the miner starts, can be null.
   // For example:: Path to batch file that sets specific OverdriveN settings for this coin
@@ -15,22 +15,22 @@
   // Enables or disables this coin, can be true or false (default: true)
   "Enabled": true,
 
-  /* OVERRIDE SETTINGS - ENTER THE EXPEXTED HASHRATE FOR API DETECTION */
+  /* OVERRIDE SETTINGS - NOT NEEDED */
 
   // Override the expected hashrate, can be a number or null.
-  "OverrideExpectedHashrate": 8420,
+  "OverrideExpectedHashrate": null,
   // Override the profit timeframe, can be Live, Day or null.
   "OverrideProfitTimeframe": null,
   // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, CryptunitApi, MinerRocksApi, HeroMinersApi, CryptoknightCCApi) or null.
-  "OverridePoolProfitProviders": null,
+  "OverridePoolProfitProviders": "MoneroOceanApi",
   // On the determination of the most profitable coin, the actual estimated profit will be multiplied by this, can be a decimal or null.
-  "PreferFactor": 1.0,
+  "PreferFactor": 1.05,
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "sg.conceal.herominers.com:10361",
-  "PoolWalletAddress": "ccx7aoNYpGb7sndJtEDWvCBQhPAy9mC8QW5KWuCx8J1FJrDcDrER1XYA9LGtggrR7ZC4KfQmQ2uRN47L9WypBbNLAeq2Q4Q9WN+ab934fe6f70df31e6dedda0e7867c63c0715cda6508544cd145baa29e86083ec",
-  "PoolPassword": "RIG1",
+   "PoolAddress": "gulf.moneroocean.stream:80",
+  "PoolWalletAddress": "4Cf2TfMKhCgJ2vsM3HeBUnYe52tXrvv8X1ajjuQEMUQ8iU8kvUzCSsCEacxFhEmeb2JgPpQ5chdyw3UiTfUgapJBhHQYsP1pQmg5fanhzK",
+  "PoolPassword": "RIG1:rizkyaulya@gmail.com",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
   "PoolWeight": 1,
@@ -58,9 +58,9 @@
   // Path to CastXmr executable
   "CastXmrPath": "CastXmr/cast_xmr-vega.exe",
   // Extra arguments for setting the GPUs or tuning
-  "CastXmrExtraArguments": "-G 0,1",
+  "CastXmrExtraArguments": "-G 0,1 --algo=-1",
   // Set if you want to also start Xmr-Stak for CPU Mining
-  "CastXmrUseXmrStakCPUMining": false,
+  "CastXmrUseXmrStakCPUMining": true,
   // Port of the CastXmr JSON Api (0 = default (7777))
   "CastXmrApiPort": 0,
 
@@ -69,7 +69,7 @@
   // Path to SRBMiner executable
   "SRBMinerPath": "SRBMiner/SRBMiner-CN.exe",
   // Path to SRBMiner config file
-  "SRBMinerConfigPath": "SRBMiner/config_fast.txt",
+  "SRBMinerConfigPath": "SRBMiner/config_v7.txt",
   // Port of the SRBMiner REST API, should match the port in the config file of SRBMiner.
   "SRBMinerApiPort": 21555,
   // Set the path to SRBMiner pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
@@ -77,7 +77,7 @@
   // Extra arguments that will be passed over to SRBMiner, can be a string or null
   "SRBMinerExtraArguments": null,
   // Set if you want to also start Xmr-Stak for CPU Mining
-  "SRBMinerUseXmrStakCPUMining": false,
+  "SRBMinerUseXmrStakCPUMining": true,
 
   /* JCEMINER CONFIGURATION - NEEDED IF MINER IS JCEMINER */
 
@@ -89,6 +89,5 @@
   "JceMinerApiPort": 0,
   // Extra arguments for JceMiner
   "JceMinerExtraArguments": null
-
 
 }

@@ -30,31 +30,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Coins\Lethean.json">
+    <None Update="Coins\Arqma.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+	<None Update="Coins\Bittube.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Coins\Conceal.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Coins\Sumo.json">
+    <None Update="Coins\Graft.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Coins\z.Algorithm Guide.txt">
+    <None Update="Coins\Haven.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Coins\Test2.json">
+    <None Update="Coins\HavenBloc.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Coins\Test1.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Coins\Quantum.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-     <None Update="Coins\Aeon.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Coins\Bittube.json">
+    <None Update="Coins\Lethean.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Coins\Masari.json">
@@ -66,16 +60,22 @@
     <None Update="Coins\Monero.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Coins\Graft.json">
+    <None Update="Coins\Ryo.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Coins\Loki.json">
+    <None Update="Coins\Sumo.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Coins\Stellite.json">
+	<None Update="Coins\Triton.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Coins\Haven.json">
+	<None Update="Coins\Ultranote.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+	<None Update="Coins\Xcash.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Coins\z.Algorithm Guide.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="NicehashAlgorithms\CryptonightHeavy.json">
@@ -87,7 +87,13 @@
         <None Update="NicehashAlgorithms\CryptonightV8.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+	<None Update="NicehashAlgorithms\CryptonightR.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="ResetScript.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+	<None Update="ResetScript_devcon.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Settings.json">
@@ -96,7 +102,13 @@
     <None Update="ThirdPartyLicenses.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="XmrStak\amd_heavy.txt">
+    <None Update="XmrStak\haven.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+	<None Update="XmrStak\bittube.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+	<None Update="XmrStak\amd_heavy.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="XmrStak\amd_lite.txt">

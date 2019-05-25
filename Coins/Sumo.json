@@ -5,9 +5,9 @@
   "DisplayName": "Sumo",
   // Ticker symbol on minecryptonight.net, needed to get profit data
   "TickerSymbol": "SUMO",
-  // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
+  // Mining algorithm of coin, look at the Algorithm Guide in the coin folder
   "Algorithm": "CryptonightR",
-  // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
+  // Used Miner, can be XmrStak, (CastXmr, SRBMiner or JceMiner are deprecated)
   "Miner": "XmrStak",
   // Path to script that runs before the miner starts, can be null.
   // For example:: Path to batch file that sets specific OverdriveN settings for this coin
@@ -29,7 +29,7 @@
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
   "PoolAddress": "sumokoin.miner.rocks:4005",
-  "PoolWalletAddress": "SumipDETyjLYi8rqkmyE9c4SftzYzWPCGA3XvcXbGuBYcqDQJWe8wp8NEwNicFyzZgKTSjCjnpuXTitwn6VdBcFZEFXLcUphBvUWu3qSd12JNb",
+  "PoolWalletAddress": "SumipBJ7rroF2VmkLaT2KwCL738782k8yMYFwYuU34br65KDBAj6Eg91SXuNxqfB4P3m2pY5Y1ay9YjWpoqszR37PhpeajAhNXMQ7vzxQXeymt",
   "PoolPassword": "w=RIG1",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",

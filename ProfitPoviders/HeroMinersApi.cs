@@ -102,6 +102,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                 case "SFX":
                     return "https://safex.herominers.com/api/stats";
                 case "XCA":
+                case "XCASH":
                     return "https://xcash.herominers.com/api/stats";
                 case "BXB":
                     return "https://bixbite.herominers.com/api/stats";
@@ -113,7 +114,8 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                 case "RYO":
                     return "https://ryo.herominers.com/api/stats";
                 case "XRN":
-                    return "https://saronite.herominers.com/api/stats";
+				case "XTNC":
+                    return "https://xtendcash.herominers.com/api/stats";
                 case "BLOC":
                     return "https://bloc.herominers.com/api/stats";
                 case "XHV":
@@ -122,7 +124,8 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                 case "TUBE":
                     return "https://tube.herominers.com/api/stats";
                 case "XTL":
-                    return "https://stellite.herominers.com/api/stats";
+				case "XTC":
+                    return "https://torque.herominers.com//api/stats";
                 case "CCX":
                     return "https://conceal.herominers.com/api/stats";
                 case "MSR":

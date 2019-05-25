@@ -5,9 +5,9 @@
   "DisplayName": "Masari",
   // Ticker symbol on minecryptonight.net, needed to get profit data
   "TickerSymbol": "MSR",
-  // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
+  // Mining algorithm of coin, look at the Algorithm Guide in the coin folder
   "Algorithm": "Masari",
-  // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
+  // Used Miner, can be XmrStak, (CastXmr, SRBMiner or JceMiner are deprecated)
   "Miner": "XmrStak",
   // Path to script that runs before the miner starts, can be null.
   // For example:: Path to batch file that sets specific OverdriveN settings for this coin
@@ -18,7 +18,7 @@
   /* OVERRIDE SETTINGS - NOT NEEDED */
 
   // Override the expected hashrate, can be a number or null.
-  "OverrideExpectedHashrate": 8420,
+  "OverrideExpectedHashrate": 7500,
   // Override the profit timeframe, can be Live, Day or null.
   "OverrideProfitTimeframe": null,
   // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, CryptunitApi, MinerRocksApi, HeroMinersApi, CryptoknightCCApi) or null.
@@ -29,7 +29,7 @@
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
   "PoolAddress": "sg.masari.miner.rocks:5005",
-  "PoolWalletAddress": "5t5mEm254JNJ9HqRjY9vCiTE8aZALHX3v8TqhyQ3TTF9VHKZQXkRYjPDweT9kK4rJw7dDLtZXGjav2z9y24vXCdRc6BSJwUmapXC7NmVAM+90000",
+  "PoolWalletAddress": "5t5mEm254JNJ9HqRjY9vCiTE8aZALHX3v8TqhyQ3TTF9VHKZQXkRYjPDweT9kK4rJw7dDLtZXGjav2z9y24vXCdRc6KgbwTBHYWRdTt5aD",
   "PoolPassword": "x",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",

@@ -2,11 +2,11 @@
   /* GENERAL CONFIGURATION - ALWAYS NEEDED */
 
   // Displayed name, can be anything.
-  "DisplayName": "Conceal",
+  "DisplayName": "Ryo",
   // Ticker symbol on minecryptonight.net, needed to get profit data
-  "TickerSymbol": "CCX",
+  "TickerSymbol": "RYO",
   // Mining algorithm of coin, look at the Algorithm Guide in the coin folder
-  "Algorithm": "CryptonightConseal",
+  "Algorithm": "ryo",
   // Used Miner, can be XmrStak, (CastXmr, SRBMiner or JceMiner are deprecated)
   "Miner": "XmrStak",
   // Path to script that runs before the miner starts, can be null.
@@ -15,10 +15,10 @@
   // Enables or disables this coin, can be true or false (default: true)
   "Enabled": true,
 
-  /* OVERRIDE SETTINGS - ENTER THE EXPEXTED HASHRATE FOR API DETECTION */
+  /* OVERRIDE SETTINGS - ENTER THE EXPEXTED HASHRATE FOR API DETECTION*/
 
   // Override the expected hashrate, can be a number or null.
-  "OverrideExpectedHashrate": 8420,
+  "OverrideExpectedHashrate": 3200,
   // Override the profit timeframe, can be Live, Day or null.
   "OverrideProfitTimeframe": null,
   // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, CryptunitApi, MinerRocksApi, HeroMinersApi, CryptoknightCCApi) or null.
@@ -28,9 +28,9 @@
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "sg.conceal.herominers.com:10361",
-  "PoolWalletAddress": "ccx7aoNYpGb7sndJtEDWvCBQhPAy9mC8QW5KWuCx8J1FJrDcDrER1XYA9LGtggrR7ZC4KfQmQ2uRN47L9WypBbNLAeq2Q4Q9WN+ab934fe6f70df31e6dedda0e7867c63c0715cda6508544cd145baa29e86083ec",
-  "PoolPassword": "RIG1",
+  "PoolAddress": "ryo.miner.rocks:5555",
+  "PoolWalletAddress": "SumipDETyjLYi8rqkmyE9c4SftzYzWPCGA3XvcXbGuBYcqDQJWe8wp8NEwNicFyzZgKTSjCjnpuXTitwn6VdBcFZEFXLcUphBvUWu3qSd12JNb",
+  "PoolPassword": "w=RIG1",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
   "PoolWeight": 1,
@@ -45,9 +45,9 @@
   // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak.
   "XmrStakApiPort": 4000,
   // Path to Xmr-Stak cpu config file, can be null.
-  "CpuPath": "XmrStak/cpu_v7.txt",
+  "CpuPath": "XmrStak/cpu_heavy.txt",
   // Path to Xmr-Stak amd gpu config file, can be null.
-  "AmdPath": "XmrStak/amd_v7.txt",
+  "AmdPath": "XmrStak/amd_heavy.txt",
   // Path to Xmr-Stak nvidea gpu config file, can be null.
   "NvidiaPath": null,
   // Set the path to Xmr-Stak pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
@@ -60,7 +60,7 @@
   // Extra arguments for setting the GPUs or tuning
   "CastXmrExtraArguments": "-G 0,1",
   // Set if you want to also start Xmr-Stak for CPU Mining
-  "CastXmrUseXmrStakCPUMining": false,
+  "CastXmrUseXmrStakCPUMining": true,
   // Port of the CastXmr JSON Api (0 = default (7777))
   "CastXmrApiPort": 0,
 
@@ -69,7 +69,7 @@
   // Path to SRBMiner executable
   "SRBMinerPath": "SRBMiner/SRBMiner-CN.exe",
   // Path to SRBMiner config file
-  "SRBMinerConfigPath": "SRBMiner/config_fast.txt",
+  "SRBMinerConfigPath": "SRBMiner/config_haven.txt",
   // Port of the SRBMiner REST API, should match the port in the config file of SRBMiner.
   "SRBMinerApiPort": 21555,
   // Set the path to SRBMiner pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
@@ -77,14 +77,14 @@
   // Extra arguments that will be passed over to SRBMiner, can be a string or null
   "SRBMinerExtraArguments": null,
   // Set if you want to also start Xmr-Stak for CPU Mining
-  "SRBMinerUseXmrStakCPUMining": false,
+  "SRBMinerUseXmrStakCPUMining": true,
 
   /* JCEMINER CONFIGURATION - NEEDED IF MINER IS JCEMINER */
 
   // Path to JceMiner executable
   "JceMinerPath": "JceMiner/jce_cn_gpu_miner64.exe",
   // Path to JceMiner config (can be null <- then auto configuration will be used)
-  "JceMinerConfig": "JceMiner/config_v7.txt",
+  "JceMinerConfig": "JceMiner/config_heavy.txt",
   // Port of the JceMiner JSON Api (0 = auto)
   "JceMinerApiPort": 0,
   // Extra arguments for JceMiner
@@ -92,3 +92,4 @@
 
 
 }
+
