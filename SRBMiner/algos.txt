@@ -1,0 +1,167 @@
+{
+"algos" :
+[
+	{
+		"algo" : "alloy",
+		"config" : "Config\\config-alloy.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "artocash",
+		"config" : "Config\\config-arto.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "b2n",
+		"config" : "Config\\config-b2n.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "bittubev2",
+		"config" : "Config\\config-bittubev2.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "conceal",
+		"config" : "Config\\config-conceal.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "fast",
+		"config" : "Config\\config-fast.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "fast2",
+		"config" : "Config\\config-fast2.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "gpu",
+		"config" : "Config\\config-gpu.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "graft",
+		"config" : "Config\\config-graft.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "haven",
+		"config" : "Config\\config-haven.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "heavy",
+		"config" : "Config\\config-heavy.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "hospital",
+		"config" : "Config\\config-hospital.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "hycon",
+		"config" : "Config\\config-hycon.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "litev7",
+		"config" : "Config\\config-litev7.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "marketcash",
+		"config" : "Config\\config-marketcash.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "mox",
+		"config" : "Config\\config-mox.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "normal",
+		"config" : "Config\\config-normal.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "normalv4",
+		"config" : "Config\\config-normalv4.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "normalv7",
+		"config" : "Config\\config-normalv7.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "normalv8",
+		"config" : "Config\\config-normalv8.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "stellitev8",
+		"config" : "Config\\config-stellitev8.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "turtle",
+		"config" : "Config\\config-turtle.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "upx",
+		"config" : "Config\\config-upx.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "upx2",
+		"config" : "Config\\config-upx2.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "wownero",
+		"config" : "Config\\config-wownero.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "xcash",
+		"config" : "Config\\config-xcash.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	},
+	{
+		"algo" : "zelerius",
+		"config" : "Config\\config-zelerius.txt",
+		"hashrate" : 1,
+		"startup_script": ""
+	}
+]
+}

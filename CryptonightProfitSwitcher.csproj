@@ -6,16 +6,19 @@
     <TrimUnusedDependencies>true</TrimUnusedDependencies>
     <LinkDuringPublish>true</LinkDuringPublish>
     <ShowLinkerSizeComparison>true</ShowLinkerSizeComparison>
-    <Version>6.1.2</Version>
+    <Version>6.1.3</Version>
     <Configurations>Debug;Release;ReleaseLinux</Configurations>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <AssemblyVersion>6.1.2.0</AssemblyVersion>
-    <FileVersion>6.1.2.0</FileVersion>
+    <AssemblyVersion>6.1.3.0</AssemblyVersion>
+    <FileVersion>6.1.3.0</FileVersion>
     <AssemblyName>WHALIEN</AssemblyName>
     <RootNamespace>WHALIEN</RootNamespace>
     <Copyright>rizkyaulya.info</Copyright>
     <PackageProjectUrl>https://github.com/rizkyaulya/WHALIEN</PackageProjectUrl>
     <PackageIconUrl>https://cdn0.iconfinder.com/data/icons/ui-glyph-1/100/ui-g-external_link-512.png</PackageIconUrl>
+    <Win32Resource />
+    <Authors>rizkyaulya</Authors>
+    <Company>Huweishen Digital Asset Management</Company>
   </PropertyGroup>
 
   <ItemGroup>
@@ -67,9 +70,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
 	<None Update="Coins\Triton.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-	<None Update="Coins\Ultranote.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
 	<None Update="Coins\Xcash.json">
@@ -188,31 +188,130 @@
     <None Update="XmrStak\xmrstak_opencl_backend.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SRBMiner\config_bittube.txt">
+    <None Update="SRBMiner\config-alloy.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SRBMiner\config_heavy.txt">
+    <None Update="SRBMiner\config-arto.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SRBMiner\config_lite.txt">
+    <None Update="SRBMiner\config-b2n.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SRBMiner\config_v7.txt">
+    <None Update="SRBMiner\config-bittubev2.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SRBMiner\config_v8.txt">
+    <None Update="SRBMiner\config-conseal.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SRBMiner\config_haven.txt">
+    <None Update="SRBMiner\config-dark.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SRBMiner\config_fast.txt">
+    <None Update="SRBMiner\config-fast.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SRBMiner\config_stellite.txt">
+    <None Update="SRBMiner\config-fast2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-festival.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-gpu.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-graft.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-haven.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-heavy.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-hospital.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-hycon.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-italo.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-litev7.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-masrketcash.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-mox.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-normal.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-normalv4.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-normalv4_64.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-normalv7.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-normalv8.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-stellitev4.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-stellitev8.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-swap.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-turtle.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-upx.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-upx2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-wownero.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-xcash.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\config-zelerius.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="SRBMiner\Devcon\devcon.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\SRB-Restarter\ReadMe.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\SRB-Restarter\SRB-Restarter.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\SRB-Restarter\SRB-Restarter-example.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\algos.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\benchmark-algos.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\guided-setup.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\pools.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SRBMiner\pools-algoswitch.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="SRBMiner\ReadMe.txt">
@@ -221,145 +320,16 @@
     <None Update="SRBMiner\reboot-windows.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="SRBMiner\start.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="SRBMiner\SRBMiner-CN.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SRBMiner\BinaryKernels\bittubev2\g1_tube_w9_k1.srb">
+    <None Update="SRBMiner\start-algo-switching">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SRBMiner\BinaryKernels\bittubev2\g2_tube_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\bittubev2\g4_tube_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\bittubev2\g5_tube_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\bittubev2\g7_tube_w12_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\bittubev2\g7_tube_w9_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\fast\g1_fast_w16_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\fast\g2_fast_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\fast\g4_fast_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\fast\g5_fast_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\fast\g7_fast_w12_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\haven\g1_xhv_w9_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\haven\g2_xhv_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\haven\g4_xhv_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\haven\g5_xhv_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\haven\g7_xhv_w12_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\haven\g7_xhv_w9_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\heavy\g1_cnh_w9_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\heavy\g2_cnh_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\heavy\g4_cnh_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\heavy\g5_cnh_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\heavy\g7_cnh_w12_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\heavy\g7_cnh_w9_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\litev7\g1_cnl7_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\litev7\g2_cnl7_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\litev7\g4_cnl7_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\litev7\g5_cnl7_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\litev7\g7_cnl7_w12_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\normalv7\g1_cnv7_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\normalv7\g2_cnv7_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\normalv7\g4_cnv7_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\normalv7\g5_cnv7_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\normalv7\g7_cnv7_w12_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\normalv7\g7_cnv7_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\normalv8\g1_cnv8_w16_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\normalv8\g2_cnv8_w16_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\normalv8\g4_cnv8_w16_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\normalv8\g5_cnv8_w16_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\normalv8\g7_cnv8_w16_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\normalv8\g7_cnv8_w32_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\stellitev4\g1_xtlv4_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\stellitev4\g2_xtlv4_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\stellitev4\g4_xtlv4_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\stellitev4\g5_xtlv4_w8_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\stellitev4\g7_xtlv4_w12_k1.srb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SRBMiner\BinaryKernels\stellitev4\g7_xtlv4_w8_k1.srb">
+    <None Update="SRBMiner\WinIo64.sys">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

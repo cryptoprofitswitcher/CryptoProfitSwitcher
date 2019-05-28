@@ -40,6 +40,7 @@
         turtlecoin,
         plenteum,
         xcash,
-        zelerius
+        zelerius,
+        SRBMiner
     }
 }

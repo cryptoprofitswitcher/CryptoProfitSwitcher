@@ -16,7 +16,7 @@ It is optimized for **Windows** but also works for **Linux**.
   - **Watchdog:** Compares your actual hashrate with the expected hashrate and runs a reset if certain conditions are met.
   - **Reset:** Restarts the miner and runs a user-defined Reset script
   - **Performance:** Resource friendly with 0%-CPU usage
-  - **Miners:** Xmr-Stak 
+  - **Miners:** Xmr-Stak, SRBMiner
   - **Profit data:** [MineCryptoNight API](http://minecryptonight.net/api), [CryptUnit API](https://www.cryptunit.com/api/), [miner.rocks API](https://miner.rocks/), [cryptoknight.cc API](https://cryptoknight.cc/), [HeroMiners API](https://herominers.com/), [MoneroOcean](https://moneroocean.stream)
   - **Multiple profit switching strategies:** Maximize fiat profit, maximize coin reward or a combination
   - **Manual mode:** You can switch between automatic mode and manual mode where you select the coin / NiceHash algorithm yourself
