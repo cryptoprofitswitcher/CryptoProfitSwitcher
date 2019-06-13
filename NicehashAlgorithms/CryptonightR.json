@@ -2,7 +2,7 @@
   /* GENERAL CONFIGURATION - ALWAYS NEEDED */
 
   // Displayed name, can be anything.
-  "DisplayName": "CryptonightR",
+  "DisplayName": "TRON",
   // Api ID listed on nicehash.com/doc-api, needed to get profit data
   "ApiId": 42,
   // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
@@ -13,7 +13,7 @@
   // For example:: Path to batch file that sets specific OverdriveN settings for this algorithm
   "PrepareScript": null,
   // Enables or disables this algorithm, can be true or false (default: true)
-  "Enabled": false,
+  "Enabled": true,
 
   /* OVERRIDE SETTINGS - NOT NEEDED */
 
@@ -27,8 +27,8 @@
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "cryptonightr.eu.nicehash.com:3367",
-  "PoolWalletAddress": "1JmWKF5Ayfk61RLmYpXwFo4anHSmsepS5h.Worker",
+  "PoolAddress": "cn.tron-mining.com:3333",
+  "PoolWalletAddress": "TW6YcGsrRc6mrxxJzNJYpCgjDhuTRpUxJZ.RIG1+125000",
   "PoolPassword": "x",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
@@ -38,7 +38,7 @@
   /* XMR-STAK CONFIGURATION - NEEDED IF MINER IS XMRSTAK OR FOR CPU MINING*/
 
   // Path to Xmr-Stak executable
-  "XmrStakPath": "$PlatformSpecificXmrStakPath",
+  "XmrStakPath": "XmrStak/xmr-stak.exe",
   // Path to Xmr-Stak config file
   "ConfigPath": "XmrStak/config.txt",
   // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak.
