@@ -8,7 +8,7 @@
   // Mining algorithm of coin, look at the Algorithm Guide in the coin folder
   "Algorithm": "CryptonightConseal",
   // Used Miner, can be XmrStak, (CastXmr, SRBMiner or JceMiner are deprecated)
-  "Miner": "XmrStak",
+  "Miner": "SRBMiner",
   // Path to script that runs before the miner starts, can be null.
   // For example:: Path to batch file that sets specific OverdriveN settings for this coin
   "PrepareScript": null,
@@ -18,7 +18,7 @@
   /* OVERRIDE SETTINGS - ENTER THE EXPEXTED HASHRATE FOR API DETECTION */
 
   // Override the expected hashrate, can be a number or null.
-  "OverrideExpectedHashrate": 8420,
+  "OverrideExpectedHashrate": 8334,
   // Override the profit timeframe, can be Live, Day or null.
   "OverrideProfitTimeframe": null,
   // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, CryptunitApi, MinerRocksApi, HeroMinersApi, CryptoknightCCApi) or null.
@@ -39,7 +39,7 @@
   /* XMR-STAK CONFIGURATION - NEEDED IF MINER IS XMRSTAK OR FOR CPU MINING*/
 
   // Path to Xmr-Stak executable
-  "XmrStakPath": "$PlatformSpecificXmrStakPath",
+  "XmrStakPath": "XmrStak/xmr-stak.exe",
   // Path to Xmr-Stak config file
   "ConfigPath": "XmrStak/config.txt",
   // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak.
@@ -69,7 +69,7 @@
   // Path to SRBMiner executable
   "SRBMinerPath": "SRBMiner/SRBMiner-CN.exe",
   // Path to SRBMiner config file
-  "SRBMinerConfigPath": "SRBMiner/config_fast.txt",
+  "SRBMinerConfigPath": "SRBMiner/config/config-conceal.txt",
   // Port of the SRBMiner REST API, should match the port in the config file of SRBMiner.
   "SRBMinerApiPort": 21555,
   // Set the path to SRBMiner pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)

@@ -2,23 +2,23 @@
   /* GENERAL CONFIGURATION - ALWAYS NEEDED */
 
   // Displayed name, can be anything.
-  "DisplayName": "Ryo",
+  "DisplayName": "Iridium",
   // Ticker symbol on minecryptonight.net, needed to get profit data
-  "TickerSymbol": "RYO",
+  "TickerSymbol": "IRD",
   // Mining algorithm of coin, look at the Algorithm Guide in the coin folder
-  "Algorithm": "CryptonightGpu",
+  "Algorithm": "CryptonightLiteV7",
   // Used Miner, can be XmrStak, (CastXmr, SRBMiner or JceMiner are deprecated)
-  "Miner": "SRBMiner",
+  "Miner": "XmrStak",
   // Path to script that runs before the miner starts, can be null.
   // For example:: Path to batch file that sets specific OverdriveN settings for this coin
   "PrepareScript": null,
   // Enables or disables this coin, can be true or false (default: true)
   "Enabled": true,
 
-  /* OVERRIDE SETTINGS - ENTER THE EXPEXTED HASHRATE FOR API DETECTION*/
+  /* OVERRIDE SETTINGS - ENTER THE EXPEXTED HASHRATE FOR API DETECTION */
 
   // Override the expected hashrate, can be a number or null.
-  "OverrideExpectedHashrate": 3300,
+  "OverrideExpectedHashrate": 9000,
   // Override the profit timeframe, can be Live, Day or null.
   "OverrideProfitTimeframe": null,
   // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, CryptunitApi, MinerRocksApi, HeroMinersApi, CryptoknightCCApi) or null.
@@ -28,9 +28,9 @@
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "ryo.miner.rocks:5555",
-  "PoolWalletAddress": "SumipDETyjLYi8rqkmyE9c4SftzYzWPCGA3XvcXbGuBYcqDQJWe8wp8NEwNicFyzZgKTSjCjnpuXTitwn6VdBcFZEFXLcUphBvUWu3qSd12JNb",
-  "PoolPassword": "w=RIG1",
+  "PoolAddress": "pool.triton.hashvault.pro:3333",
+  "PoolWalletAddress": "TixxgPgBkxgC4JM39WZuacjMLnJqm9YbjPq1YAR4BJbLXiCzf345r9SVbNuKMAG1CcjRMsv7kpatt7gStpUE3gGJRb8cS6D54CC4T6TdwiD8h:ir2btddJ78sicpKntYo3oRMLQh91VktzBfZzWbhwZnQxS815QLiG5WCAH9sgVGC5uwLZuMJCwW5CdFigNbJ3WTxU2CG5GnUDe.13e682e5bcdb4ae872367e3f45fe749978829b0d98ba925a8f6a40dbe7f0fd21",
+  "PoolPassword": "RIG1",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
   "PoolWeight": 1,
@@ -45,9 +45,9 @@
   // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak.
   "XmrStakApiPort": 4000,
   // Path to Xmr-Stak cpu config file, can be null.
-  "CpuPath": "XmrStak/cpu_heavy.txt",
+  "CpuPath": "XmrStak/cpu_v7.txt",
   // Path to Xmr-Stak amd gpu config file, can be null.
-  "AmdPath": "XmrStak/amd_heavy.txt",
+  "AmdPath": "XmrStak/amd_v7.txt",
   // Path to Xmr-Stak nvidea gpu config file, can be null.
   "NvidiaPath": null,
   // Set the path to Xmr-Stak pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
@@ -58,7 +58,7 @@
   // Path to CastXmr executable
   "CastXmrPath": "CastXmr/cast_xmr-vega.exe",
   // Extra arguments for setting the GPUs or tuning
-  "CastXmrExtraArguments": "-G 0,1",
+  "CastXmrExtraArguments": "-G 0,1 --algo=-1",
   // Set if you want to also start Xmr-Stak for CPU Mining
   "CastXmrUseXmrStakCPUMining": true,
   // Port of the CastXmr JSON Api (0 = default (7777))
@@ -69,7 +69,7 @@
   // Path to SRBMiner executable
   "SRBMinerPath": "SRBMiner/SRBMiner-CN.exe",
   // Path to SRBMiner config file
-  "SRBMinerConfigPath": "SRBMiner/config/config-gpu.txt",
+  "SRBMinerConfigPath": "SRBMiner/config_v7.txt",
   // Port of the SRBMiner REST API, should match the port in the config file of SRBMiner.
   "SRBMinerApiPort": 21555,
   // Set the path to SRBMiner pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
@@ -77,19 +77,17 @@
   // Extra arguments that will be passed over to SRBMiner, can be a string or null
   "SRBMinerExtraArguments": null,
   // Set if you want to also start Xmr-Stak for CPU Mining
-  "SRBMinerUseXmrStakCPUMining": false,
+  "SRBMinerUseXmrStakCPUMining": true,
 
   /* JCEMINER CONFIGURATION - NEEDED IF MINER IS JCEMINER */
 
   // Path to JceMiner executable
   "JceMinerPath": "JceMiner/jce_cn_gpu_miner64.exe",
   // Path to JceMiner config (can be null <- then auto configuration will be used)
-  "JceMinerConfig": "JceMiner/config_heavy.txt",
+  "JceMinerConfig": "JceMiner/config_v7.txt",
   // Port of the JceMiner JSON Api (0 = auto)
   "JceMinerApiPort": 0,
   // Extra arguments for JceMiner
   "JceMinerExtraArguments": null
 
-
 }
-

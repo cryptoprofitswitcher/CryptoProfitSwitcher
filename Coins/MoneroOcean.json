@@ -8,7 +8,7 @@
   // Mining algorithm of coin, can be CryptonightV7, CryptonightV8, CryptonightHeavy, CryptonightLite, CryptonightBittube, CryptonightStellite, CryptonightHaven or CryptonightMasari
   "Algorithm": "CryptonightR",
   // Used Miner, can be XmrStak, CastXmr, SRBMiner or JceMiner (Recommended: XmrStak)
-  "Miner": "XmrStak",
+  "Miner": "SRBMiner",
   // Path to script that runs before the miner starts, can be null.
   // For example:: Path to batch file that sets specific OverdriveN settings for this coin
   "PrepareScript": null,
@@ -18,7 +18,7 @@
   /* OVERRIDE SETTINGS - NOT NEEDED */
 
   // Override the expected hashrate, can be a number or null.
-  "OverrideExpectedHashrate": null,
+  "OverrideExpectedHashrate": 4200,
   // Override the profit timeframe, can be Live, Day or null.
   "OverrideProfitTimeframe": null,
   // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, CryptunitApi, MinerRocksApi, HeroMinersApi, CryptoknightCCApi) or null.
@@ -30,7 +30,7 @@
 
    "PoolAddress": "gulf.moneroocean.stream:80",
   "PoolWalletAddress": "4Cf2TfMKhCgJ2vsM3HeBUnYe52tXrvv8X1ajjuQEMUQ8iU8kvUzCSsCEacxFhEmeb2JgPpQ5chdyw3UiTfUgapJBhHQYsP1pQmg5fanhzK",
-  "PoolPassword": "RIG1",
+  "PoolPassword": "RIG1:rizkyaulya@gmail.com",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
   "PoolWeight": 1,
@@ -39,7 +39,7 @@
   /* XMR-STAK CONFIGURATION - NEEDED IF MINER IS XMRSTAK OR FOR CPU MINING*/
 
   // Path to Xmr-Stak executable
-  "XmrStakPath": "$PlatformSpecificXmrStakPath",
+  "XmrStakPath": "XmrStak/xmr-stak.exe",
   // Path to Xmr-Stak config file
   "ConfigPath": "XmrStak/config.txt",
   // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak.
@@ -69,15 +69,15 @@
   // Path to SRBMiner executable
   "SRBMinerPath": "SRBMiner/SRBMiner-CN.exe",
   // Path to SRBMiner config file
-  "SRBMinerConfigPath": "SRBMiner/config_v7.txt",
+  "SRBMinerConfigPath": "SRBMiner/Config/config-normalv4.txt",
   // Port of the SRBMiner REST API, should match the port in the config file of SRBMiner.
   "SRBMinerApiPort": 21555,
   // Set the path to SRBMiner pool config file directly (can be null, if you use AUTO POOL CONFIGURATION)
-  "SRBMinerPoolsPath": null,
+  "SRBMinerPoolsPath": "SRBMiner/pools-algoswitch.txt",
   // Extra arguments that will be passed over to SRBMiner, can be a string or null
-  "SRBMinerExtraArguments": null,
+  "SRBMinerExtraArguments": "--usealgoswitching",
   // Set if you want to also start Xmr-Stak for CPU Mining
-  "SRBMinerUseXmrStakCPUMining": true,
+  "SRBMinerUseXmrStakCPUMining": false,
 
   /* JCEMINER CONFIGURATION - NEEDED IF MINER IS JCEMINER */
 

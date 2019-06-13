@@ -18,7 +18,7 @@
   /* OVERRIDE SETTINGS - ENTER THE EXPEXTED HASHRATE FOR API DETECTION */
 
   // Override the expected hashrate, can be a number or null.
-  "OverrideExpectedHashrate": 8000,
+  "OverrideExpectedHashrate": 9000,
   // Override the profit timeframe, can be Live, Day or null.
   "OverrideProfitTimeframe": null,
   // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, CryptunitApi, MinerRocksApi, HeroMinersApi, CryptoknightCCApi) or null.
@@ -28,9 +28,9 @@
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "pool.arq.hackerknowledge.de:5252",
+  "PoolAddress": "arqma.herominers.com:10321",
   "PoolWalletAddress": "aRi1cDd6LkAcc1p6W58dkPi8xSfbZ5EuYFrHxwH3py1MQ9rFrzmSaghguD4GGpCfHSMmKXWJrd4e5CkabC3viWJKfHuDFrj5ug76NNUYvnsgn",
-  "PoolPassword": "ir2btddJ78sicpKntYo3oRMLQh91VktzBfZzWbhwZnQxS815QLiG5WCAH9sgVGC5uwLZuMJCwW5CdFigNbJ3WTxU2CG5GnUDe-13e682e5bcdb4ae872367e3f45fe749978829b0d98ba925a8f6a40dbe7f0fd21",
+  "PoolPassword": "TRTLv1Hqo3wHdqLRXuCyX3MwvzKyxzwXeBtycnkDy8ceFp4E23bm3P467xLEbUusH6Q1mqQUBiYwJ2yULJbvr5nKe8kcyc4uyps+951ac48f72b28d764f665f1e47af45a2d6f3e7709b1f2252077d2c343b58ba11",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
   "PoolWeight": 1,
@@ -39,7 +39,7 @@
   /* XMR-STAK CONFIGURATION - NEEDED IF MINER IS XMRSTAK OR FOR CPU MINING*/
 
   // Path to Xmr-Stak executable
-  "XmrStakPath": "$PlatformSpecificXmrStakPath",
+  "XmrStakPath": "XmrStak/xmr-stak.exe",
   // Path to Xmr-Stak config file
   "ConfigPath": "XmrStak/config.txt",
   // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak.

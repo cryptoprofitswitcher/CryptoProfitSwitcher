@@ -46,7 +46,34 @@ zelerius
 
 B. Others Miners
 I. SRBMiner
-use SRBMiner as algo if you mining with SRBMiner to avoid algorithm not found warning
+use SRBMiner as algo if you mining with SRBMiner to avoid algorithm not found warning and locate your config in json file at Coins.
+
+II. Xmrig
+https://github.com/xmrig/xmrig-proxy/blob/master/doc/STRATUM_EXT.md
+
+cryptonight	cn	-1	Autodetect works only for Monero.
+cryptonight/0	cn/0	0	Original/old CryptoNight.
+cryptonight/1	cn/1	1	Also known as monero7 and CryptoNightV7.
+cryptonight/2	cn/2	2	CryptoNight variant 2.
+cryptonight/xtl	cn/xtl	"xtl"	Stellite (XTL).
+cryptonight/msr	cn/msr	"msr"	Masari (MSR), also known as cryptonight-fast.
+cryptonight/xao	cn/xao	"xao"	Alloy (XAO)
+cryptonight/rto	cn/rto	"rto"	Arto (RTO)
+cryptonight/half	cn/half	"half"	CryptoNight variant 2 with half iterations.
+cryptonight/gpu	cn/gpu	"gpu"	CryptoNight-GPU (RYO).
+cryptonight/wow	cn/wow	"wow"	CryptoNightR (Wownero).
+cryptonight/r	cn/r	"r"	CryptoNightR (Monero's variant 4).
+cryptonight/rwz	cn/rwz	"rwz"	CryptoNight variant 2 "ReverseWaltz" (Graft).
+cryptonight/zls	cn/zls	"zls"	CryptoNight variant 2 with 3/4 iterations (Zelerius).
+cryptonight/double	cn/double	"double"	CryptoNight variant 2 with double iterations (X-CASH).
+cryptonight-lite	cn-lite	-1	Autodetect works only for Aeon.
+cryptonight-lite/0	cn-lite/0	0	Original/old CryptoNight-Lite.
+cryptonight-lite/1	cn-lite/1	1	Also known as aeon7
+cryptonight-lite/ipbc	cn-lite/ipbc	"ipbc"	IPBC variant, obsolete
+cryptonight-heavy	cn-heavy	0	Ryo and Loki
+cryptonight-heavy/xhv	cn-heavy/xhv	"xhv"	Haven Protocol
+cryptonight-heavy/tube	cn-heavy/tube	"tube"	BitTube (TUBE)
+cryptonight-pico/trtl	cn-pico/trtl	"trtl"	TurtleCoin (TRTL)
 
 
 

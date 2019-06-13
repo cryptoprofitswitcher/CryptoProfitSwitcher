@@ -18,7 +18,7 @@
   /* OVERRIDE SETTINGS - ENTER THE EXPEXTED HASHRATE FOR API DETECTION */
 
   // Override the expected hashrate, can be a number or null.
-  "OverrideExpectedHashrate": 2000,
+  "OverrideExpectedHashrate": 9000,
   // Override the profit timeframe, can be Live, Day or null.
   "OverrideProfitTimeframe": null,
   // Override the profit providers, can be a comma seperated ordered string (example: MineCryptonightApi, CryptunitApi, MinerRocksApi, HeroMinersApi, CryptoknightCCApi) or null.
@@ -28,9 +28,9 @@
 
   /* AUTO POOL CONFIGURATION - NEEDED FOR CASTXMR OR IF POOL CONFIG FILE IS NOT DIRECTLY SET */
 
-  "PoolAddress": "pool.xtri.hackerknowledge.de:7272",
-  "PoolWalletAddress": "TixxgPgBkxgC4JM39WZuacjMLnJqm9YbjPq1YAR4BJbLXiCzf345r9SVbNuKMAG1CcjRMsv7kpatt7gStpUE3gGJRb8cS6D54CC4T6TdwiD8h",
-  "PoolPassword": "ir2btddJ78sicpKntYo3oRMLQh91VktzBfZzWbhwZnQxS815QLiG5WCAH9sgVGC5uwLZuMJCwW5CdFigNbJ3WTxU2CG5GnUDe-13e682e5bcdb4ae872367e3f45fe749978829b0d98ba925a8f6a40dbe7f0fd21",
+  "PoolAddress": "pool.triton.hashvault.pro:3333",
+  "PoolWalletAddress": "TixxgPgBkxgC4JM39WZuacjMLnJqm9YbjPq1YAR4BJbLXiCzf345r9SVbNuKMAG1CcjRMsv7kpatt7gStpUE3gGJRb8cS6D54CC4T6TdwiD8h:ir2btddJ78sicpKntYo3oRMLQh91VktzBfZzWbhwZnQxS815QLiG5WCAH9sgVGC5uwLZuMJCwW5CdFigNbJ3WTxU2CG5GnUDe.13e682e5bcdb4ae872367e3f45fe749978829b0d98ba925a8f6a40dbe7f0fd21",
+  "PoolPassword": "RIG1",
   "PoolUseTls": false,
   "PoolTlsFingerprint": "",
   "PoolWeight": 1,
@@ -39,7 +39,7 @@
   /* XMR-STAK CONFIGURATION - NEEDED IF MINER IS XMRSTAK OR FOR CPU MINING*/
 
   // Path to Xmr-Stak executable
-  "XmrStakPath": "$PlatformSpecificXmrStakPath",
+  "XmrStakPath": "XmrStak/xmr-stak.exe",
   // Path to Xmr-Stak config file
   "ConfigPath": "XmrStak/config.txt",
   // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak.

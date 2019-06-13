@@ -39,7 +39,7 @@
   /* XMR-STAK CONFIGURATION - NEEDED IF MINER IS XMRSTAK OR FOR CPU MINING*/
 
   // Path to Xmr-Stak executable
-  "XmrStakPath": "$PlatformSpecificXmrStakPath",
+  "XmrStakPath": "XmrStak/xmr-stak.exe",
   // Path to Xmr-Stak config file
   "ConfigPath": "XmrStak/config.txt",
   // Port of the Xmr-Stak Json API, should match the port in the config file of Xmr-Stak.
