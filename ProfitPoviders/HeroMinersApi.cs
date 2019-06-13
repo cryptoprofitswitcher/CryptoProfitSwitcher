@@ -78,62 +78,66 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
         {
             switch(coin.TickerSymbol)
             {
+                case "ADON":
+                    return "https://adon.herominers.com/api/stats";
+                case "ARQ":
+				case "ARQTRTL":
+                    return "https://arqma.herominers.com//api/stats";
+                case "ARQPLE":
+                    return "https://arqple.herominers.com/api/stats";case "IPBC":
+                case "TUBE":
+                    return "https://tube.herominers.com/api/stats";
+                case "CCX":
+                    return "https://conceal.herominers.com/api/stats";
                 case "DERO":
                     return "https://dero.herominers.com/api/stats";
                 case "ETN":
                     return "https://electroneum.herominers.com/api/stats";
-                case "KRB":
-                    return "https://karbo.herominers.com/api/stats";
-                case "SUMO":
-                    return "https://sumo.herominers.com/api/stats";
-                case "CTL":
-                    return "https://citadel.herominers.com/api/stats";
                 case "GRFT":
                     return "https://graft.herominers.com/api/stats";
-                case "LTHN":
-                    return "https://lethean.herominers.com/api/stats";
-                case "XMR":
-                    return "https://monero.herominers.com/api/stats";
-                case "XMV":
-                    return "https://monerov.herominers.com/api/stats";
-                case "QRL":
-                    return "https://qrl.herominers.com/api/stats";
-                case "SAFE":
-                case "SFX":
-                    return "https://safex.herominers.com/api/stats";
-                case "XCA":
-                case "XCASH":
-                    return "https://xcash.herominers.com/api/stats";
-                case "BXB":
-                    return "https://bixbite.herominers.com/api/stats";
-                case "CCH":
-                    return "https://citadel.herominers.com/api/stats";
-                case "LOK":
-                case "LOKI":
-                    return "https://loki.herominers.com/api/stats";
-                case "RYO":
-                    return "https://ryo.herominers.com/api/stats";
-                case "XRN":
-				case "XTNC":
-                    return "https://xtendcash.herominers.com/api/stats";
-                case "BLOC":
-                    return "https://bloc.herominers.com/api/stats";
                 case "XHV":
                     return "https://haven.herominers.com/api/stats";
-                case "IPBC":
-                case "TUBE":
-                    return "https://tube.herominers.com/api/stats";
-                case "XTL":
-				case "XTC":
-                    return "https://torque.herominers.com//api/stats";
-                case "CCX":
-                    return "https://conceal.herominers.com/api/stats";
+                case "XHVBLOC":
+				case "HAVENBLOC":
+                    return "https://havenbloc.herominers.com/api/stats";
+                case "PLE":
+				case "LOKIPLE":
+                    return "https://plenteum.herominers.com//api/stats";
+                case "LOK":
+                case "LOKI":
+				case "LOKITRTL":
+				case "LOKITURTLE":
+                    return "https://lokiturtle.herominers.com/api/stats";
                 case "MSR":
                     return "https://masari.herominers.com/api/stats";
-                case "AEON":
-                    return "https://aeon.herominers.com/api/stats";
-                case "ARQ":
-                    return "https://arqma.herominers.com/api/stats";
+                case "XMR":
+                    return "https://monero.herominers.com/api/stats";
+                case "XSC":
+                    return "https://obscure.herominers.com/api/stats";
+				case "QRL":
+                    return "https://qrl.herominers.com/api/stats";
+                case "RYO":
+                    return "https://ryo.herominers.com/api/stats";
+                case "XWP":
+				case "SWAP":
+                    return "https://swap.herominers.com/api/stats";
+                case "XTL":
+				case "XTC":
+					return "https://torque.herominers.com//api/stats";               	
+				case "XTRI":
+                    return "https://triton.herominers.com/api/stats";
+                case "TRTL":
+					return "https://turtlecoin.herominers.com//api/stats";               	
+				case "XCA":
+                case "UPX":
+                    return "https://uplexa.herominers.com/api/stats";
+                case "XCASH":
+                    return "https://xcash.herominers.com/api/stats";
+                case "XTNCPLE":
+                    return "https://xtncple.herominers.com//api/stats";
+                case "XTNC":
+				case "XTNCTRTL":
+                    return "https://xtendcash.herominers.com/api/stats";
             }
             return $"https://{coin.TickerSymbol.ToLowerInvariant()}.herominers.com/api/stats";
         }

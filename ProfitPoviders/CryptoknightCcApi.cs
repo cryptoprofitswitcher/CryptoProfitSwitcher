@@ -125,6 +125,7 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                 case "XAO":
                     return "https://cryptoknight.cc/rpc/alloy/live_stats";
                 case "ARQ":
+				case "ARQPLE":
                     return "https://cryptoknight.cc/rpc/arq/live_stats";
                 case "RTO":
                     return "https://cryptoknight.cc/rpc/arto/live_stats";
@@ -151,6 +152,8 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                 case "GRF":
                     return "https://cryptoknight.cc/rpc/graft/live_stats";
                 case "XHV":
+				case "HAVENBLOC":
+				case "XHVBLOC":
                     return "https://cryptoknight.cc/rpc/haven/live_stats";
                 case "IRD":
                     return "https://cryptoknight.cc/rpc/iridium/live_stats";
@@ -164,7 +167,8 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                     return "https://cryptoknight.cc/rpc/lines/live_stats";
                 case "LOKI":
                 case "LOK":
-                    return "https://cryptoknight.cc/rpc/loki/live_stats";
+                case "LOKITRTL":
+					return "https://cryptoknight.cc/rpc/loki/live_stats";
                 case "MSR":
                     return "https://cryptoknight.cc/rpc/msr/live_stats";
                 case "XMR":
@@ -187,9 +191,12 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                 case "SOL":
                     return "https://cryptoknight.cc/rpc/solace/live_stats";
                 case "XTL":
+				case "XTC":
                     return "https://cryptoknight.cc/rpc/stellite/live_stats";
                 case "SUMO":
                     return "https://cryptoknight.cc/rpc/sumo/live_stats";
+                case "XWP":
+                    return "https://cryptoknight.cc/rpc/swap/live_stats";
                 case "TRIT":
                     return "https://cryptoknight.cc/rpc/triton/live_stats";
                 case "WOW":

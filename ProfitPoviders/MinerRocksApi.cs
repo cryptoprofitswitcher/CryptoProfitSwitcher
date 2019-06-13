@@ -87,18 +87,20 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                     return "https://sumokoin.miner.rocks/api/stats";
                 case "GRFT":
                     return "https://graft.miner.rocks/api/stats";
-                case "QRL":
-                    return "https://qrl.miner.rocks/api/stats";
                 case "XTL":
+				case "XTC":
                     return "https://stellite.miner.rocks/api/stats";
                 case "XMR":
                     return "https://monero.miner.rocks/api/stats";
                 case "LOK":
                 case "LOKI":
+				case "LOKITRTL":
                     return "https://loki.miner.rocks/api/stats";
                 case "RYO":
                     return "https://ryo.miner.rocks/api/stats";
                 case "XHV":
+				case "XHVBLOC":
+				case "HAVENBLOC":
                     return "https://haven.miner.rocks/api/stats";
                 case "IPBC":
                 case "TUBE":
