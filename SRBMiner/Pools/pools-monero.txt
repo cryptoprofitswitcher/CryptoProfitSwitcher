@@ -1,0 +1,29 @@
+{	
+"pools" :	
+[	
+{	
+"pool" : "cn.tron-mining.com:3333",	
+"password" : "x",	
+"nicehash" : false,	
+"pool_use_tls" : false,	
+"wallet" : "TW6YcGsrRc6mrxxJzNJYpCgjDhuTRpUxJZ.RIG1+125000",	
+"worker" : "test"	
+},
+{	
+"pool" : "gulf.moneroocean.stream:80",	
+"password" : "RIG1",	
+"nicehash" : false,	
+"pool_use_tls" : false,	
+"wallet" : "4Cf2TfMKhCgJ2vsM3HeBUnYe52tXrvv8X1ajjuQEMUQ8iU8kvUzCSsCEacxFhEmeb2JgPpQ5chdyw3UiTfUgapJBhHQYsP1pQmg5fanhzK",	
+"worker" : "test"	
+},
+{	
+"pool" : "xmrproxy.mineiota.com:8100",	
+"password" : "RIG1",	
+"nicehash" : false,	
+"pool_use_tls" : false,	
+"wallet" : "FUGWLGQHJCSFNNABQMZMQQLVUQDYKWVKHGLPIOCJVZXUSFDGFPO9YPGLTGRQMGPOHOKJUTBRISZKXMIRWGUMNAWHGB",	
+"worker" : "test"	
+}	
+]	
+}

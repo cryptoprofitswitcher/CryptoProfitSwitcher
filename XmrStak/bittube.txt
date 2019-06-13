@@ -42,14 +42,14 @@
   // gpu: Ellesmere  compute units: 36
   // memory:1984|3840|3968 MiB (used per thread|max per alloc|total free)
   { "index" : 0,
-    "intensity" : 100, "worksize" : 8,
+    "intensity" : 244, "worksize" : 8,
     "affine_to_cpu" : false, "strided_index" : 1, "mem_chunk" : 2,
     "unroll" : 8, "comp_mode" : true, "interleave" : 40
   },
   // gpu: Ellesmere  compute units: 36
   // memory:1984|3840|3968 MiB (used per thread|max per alloc|total free)
   { "index" : 0,
-    "intensity" : 100, "worksize" : 8,
+    "intensity" : 244, "worksize" : 8,
     "affine_to_cpu" : false, "strided_index" : 1, "mem_chunk" : 2,
     "unroll" : 8, "comp_mode" : true, "interleave" : 40
   },
@@ -97,4 +97,4 @@
 /*
  * Platform index. This will be 0 unless you have different OpenCL platform - eg. AMD and Intel.
  */
-"platform_index" : 0,
+"platform_index" : 1,
