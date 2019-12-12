@@ -46,6 +46,7 @@ All you need to do, is to edit the JSON file **Config.json**.
 | EnableLogging | true &#124; false | Enable or disable logging to a file
 | EnableManualModeByDefault | true &#124; false | Set if the manual mode is enabled by default
 | DisableBenchmarking | true &#124; false | Set if benchmarking on start should be disabled.
+| DisableDownloadMiners | true &#124; false | Set if downloading of miners on start should be disabled.
 | StartMinerMinimized | true &#124; false | Set if the miner should start minimized
 | MinerStartDelay | integer number | Delay in seconds before miner start
 | DisplayUpdateInterval | integer number | Time in seconds between display update

@@ -160,21 +160,24 @@ namespace CryptoProfitSwitcher
         {
             try
             {
-                var minersFolder = AppFolder.CreateSubdirectory("Miners");
-                if (!minersFolder.EnumerateFiles().Any())
+                if (!Config.DisableDownloadMiners)
                 {
-                    WriteInfo(" Downloading miners..");
-
-                    if (Helpers.IsWindows())
+                    var minersFolder = AppFolder.CreateSubdirectory("Miners");
+                    if (!minersFolder.EnumerateFiles().Any())
                     {
-                        DownloadAndExtractFromGithub("https://api.github.com/repos/todxx/teamredminer/releases/latest", "win", "teamredminer", minersFolder);
-                        DownloadAndExtractFromGithub("https://api.github.com/repos/xmrig/xmrig/releases/latest", "gcc-win64", "xmrig", minersFolder);
-                    }
+                        WriteInfo(" Downloading miners..");
 
-                    if (Helpers.IsLinux())
-                    {
-                        DownloadAndExtractFromGithub("https://api.github.com/repos/todxx/teamredminer/releases/latest", "linux", "teamredminer", minersFolder);
-                        DownloadAndExtractFromGithub("https://api.github.com/repos/xmrig/xmrig/releases/latest", "xenial-x64", "xmrig", minersFolder);
+                        if (Helpers.IsWindows())
+                        {
+                            DownloadAndExtractFromGithub("https://api.github.com/repos/todxx/teamredminer/releases/latest", "win", "teamredminer", minersFolder);
+                            DownloadAndExtractFromGithub("https://api.github.com/repos/xmrig/xmrig/releases/latest", "gcc-win64", "xmrig", minersFolder);
+                        }
+
+                        if (Helpers.IsLinux())
+                        {
+                            DownloadAndExtractFromGithub("https://api.github.com/repos/todxx/teamredminer/releases/latest", "linux", "teamredminer", minersFolder);
+                            DownloadAndExtractFromGithub("https://api.github.com/repos/xmrig/xmrig/releases/latest", "xenial-x64", "xmrig", minersFolder);
+                        }
                     }
                 }
             }
