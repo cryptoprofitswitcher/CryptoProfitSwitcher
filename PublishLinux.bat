@@ -1,1 +1,1 @@
-dotnet publish -c Release -r linux-x64 -o ./bin/publish/CryptonightProfitSwitcher_ubuntu64 -p:PublishSingleFile=true
+dotnet publish -c Release -r linux-x64 -o ./bin/publish/CryptoProfitSwitcher_ubuntu64 -p:PublishSingleFile=true

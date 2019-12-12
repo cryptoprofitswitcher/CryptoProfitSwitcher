@@ -1,1 +1,1 @@
-dotnet publish -c Release -r win-x64 -o ./bin/publish/CryptonightProfitSwitcher_win64 -p:PublishSingleFile=true
+dotnet publish -c Release -r win-x64 -o ./bin/publish/CryptorofitSwitcher_win64 -p:PublishSingleFile=true
