@@ -12,6 +12,7 @@ namespace CryptoProfitSwitcher.Models
         public bool EnableLogging { get; set; }
         public bool EnableManualModeByDefault { get; set; }
         public bool DisableBenchmarking { get; set; }
+        public bool DisableDownloadMiners { get; set; }
         public bool StartMinerMinimized { get; set; }
         public int MinerStartDelay { get; set; }
         public int DisplayUpdateInterval { get; set; }

@@ -5,6 +5,7 @@
   "EnableLogging": true,
   "EnableManualModeByDefault": false,
   "DisableBenchmarking": false,
+  "DisableDownloadMiners": false,
   "StartMinerMinimized": false,
   "MinerStartDelay": 5,
   "DisplayUpdateInterval": 30,
