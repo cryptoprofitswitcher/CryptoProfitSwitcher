@@ -1,5 +1,5 @@
 
-![Screenshot](Images/logo2.png?raw=true "Screenshot")
+![Screenshot](Images/logo.png?raw=true "Logo")
 
 Crypto Profit Switcher is an extensible open-source .Net Core console application that helps you to **always mine the most profitable coin on a pool or an algorithm on NiceHash**.
 
@@ -95,11 +95,11 @@ This value gives the profit provider information for which coin or algorithm you
 
 | Profit provider | Profit provider info |
 | --- | --- |
-| NiceHashApi | The API-ID of the algorithm (see the value of *order* in [https://api2.nicehash.com/main/api/v2/mining/algorithms] |
-| CryptunitApi | The ticker value of the coin (see the value of *ticker* in [https://www.cryptunit.com/api/coins] |
-| MinerRocksApi | The name of the subdomain for the coin e.g. for [https://monero.miner.rocks/] it would be *monero*. |
-| HeroMinersApi | The name of the subdomain for the coin e.g. for [https://monero.herominers.com/] it would be *monero*. |
-| WhatToMineApi | The key to the coin in [https://whattomine.com/coins.json] e.g. for Ethereum it would be *Ethereum*. |
+| NiceHashApi | The API-ID of the algorithm (see the value of *order* in https://api2.nicehash.com/main/api/v2/mining/algorithms |
+| CryptunitApi | The ticker value of the coin (see the value of *ticker* in https://www.cryptunit.com/api/coins |
+| MinerRocksApi | The name of the subdomain for the coin e.g. for https://monero.miner.rocks/ it would be *monero*. |
+| HeroMinersApi | The name of the subdomain for the coin e.g. for https://monero.herominers.com/ it would be *monero*. |
+| WhatToMineApi | The key to the coin in https://whattomine.com/coins.json e.g. for Ethereum it would be *Ethereum*. |
 | MoneroOceanApi | Not needed |
 | MineXmrApi | Not needed |
 
