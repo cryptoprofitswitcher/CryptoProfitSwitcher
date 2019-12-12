@@ -1,4 +1,4 @@
-﻿namespace CryptonightProfitSwitcher.Enums
+﻿namespace CryptoProfitSwitcher.Enums
 {
     public enum ProfitTimeframe
     {

@@ -1,9 +1,8 @@
-﻿namespace CryptonightProfitSwitcher.Enums
+﻿namespace CryptoProfitSwitcher.Enums
 {
     public enum ProfitSwitchingStrategy
     {
         MaximizeFiat,
-        MaximizeCoins,
-        WeightedCoinsPrice
+        PreferLowDifficulty
     }
 }

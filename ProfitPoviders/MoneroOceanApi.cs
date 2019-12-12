@@ -1,46 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
-using CryptonightProfitSwitcher.Enums;
-using CryptonightProfitSwitcher.Mineables;
-using CryptonightProfitSwitcher.Models;
+using CryptoProfitSwitcher.Enums;
+using CryptoProfitSwitcher.Models;
 using Newtonsoft.Json.Linq;
+using Serilog;
 
-namespace CryptonightProfitSwitcher.ProfitPoviders
+namespace CryptoProfitSwitcher.ProfitPoviders
 {
     public class MoneroOceanApi : IPoolProfitProvider
     {
-        public Dictionary<string, Profit> GetProfits(DirectoryInfo appRootFolder, Settings settings, IList<Coin> coins, CancellationToken ct)
+        public Dictionary<Pool, Profit> GetProfits(IList<Pool> pools, bool enableCaching, DirectoryInfo appRootFolder, CancellationToken ct)
         {
-            var poolProfitsDictionary = new Dictionary<string, Profit>();
-
-            foreach (var coin in coins)
+            var poolProfitsDictionary = new Dictionary<Pool, Profit>();
+            try
             {
-                if (coin.TickerSymbol == "MoneroOcean")
+
+                if (pools.Any())
                 {
-                    try
+                    const string apiUrl = "https://api.moneroocean.stream/pool/stats";
+                    var statsJson = Helpers.GetJsonFromUrl(apiUrl, enableCaching, appRootFolder, ct);
+                    JToken poolStats = JToken.Parse(statsJson)["pool_statistics"];
+
+                    double activePortProfit = poolStats.Value<double>("activePortProfit");
+                    double profitXmrPerDay = activePortProfit * Profit.BaseHashrate;
+                    double usdPriceXmr = poolStats["price"].Value<double>("usd");
+                    double usdReward = profitXmrPerDay * usdPriceXmr;
+
+                    foreach (Pool pool in pools)
                     {
-                        const string apiUrl = "https://api.moneroocean.stream/pool/stats";
-                        var statsJson = Helpers.GetJsonFromUrl(apiUrl, settings, appRootFolder,ct);
-                        dynamic lastStats = JObject.Parse(statsJson);
-
-                        decimal activePortProfit = lastStats.pool_statistics.activePortProfit;
-                        decimal profitXmrPerDay = activePortProfit * coin.GetExpectedHashrate(settings);
-
-                        decimal usdPriceXmr = lastStats.pool_statistics.price.usd;
-
-                        decimal usdRewardDec = profitXmrPerDay * usdPriceXmr;
-                        double usdReward = (double)usdRewardDec;
-
-                        poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdReward,0,0,0,ProfitProvider.MoneroOceanApi, ProfitTimeframe.Live);
-                        Console.WriteLine($"Got profit data for {coin.TickerSymbol} from MoneroOceanAPI");
+                        poolProfitsDictionary[pool] = new Profit(usdReward, 0, profitXmrPerDay, 0, ProfitProvider.MoneroOceanApi);
                     }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Couldn't get profits data for {coin.DisplayName} from MoneroOcean: " + ex.Message);
-                    } 
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.Warning("Failed to get profits data from XmrMinerApi: " + ex.Message);
             }
 
             return poolProfitsDictionary;

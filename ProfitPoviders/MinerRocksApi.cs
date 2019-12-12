@@ -2,59 +2,43 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
-using CryptonightProfitSwitcher.Enums;
-using CryptonightProfitSwitcher.Mineables;
-using CryptonightProfitSwitcher.Models;
+using CryptoProfitSwitcher.Enums;
+using CryptoProfitSwitcher.Models;
 using Newtonsoft.Json.Linq;
+using Serilog;
 
-namespace CryptonightProfitSwitcher.ProfitPoviders
+namespace CryptoProfitSwitcher.ProfitPoviders
 {
     public class MinerRocksApi : IPoolProfitProvider
     {
-        public Dictionary<string, Profit> GetProfits(DirectoryInfo appRootFolder, Settings settings, IList<Coin> coins, CancellationToken ct)
+        public Dictionary<Pool, Profit> GetProfits(IList<Pool> pools, bool enableCaching, DirectoryInfo appRootFolder, CancellationToken ct)
         {
-            var poolProfitsDictionary = new Dictionary<string, Profit>();
-
-            List<Task> tasks = new List<Task>();
-            foreach (var coin in coins)
+            var poolProfitsDictionary = new Dictionary<Pool, Profit>();
+            try
             {
-                var requestedProfitProviders = Helpers.GetPoolProfitProviders(settings, coin);
-                if (requestedProfitProviders.Contains(ProfitProvider.MinerRocksApi))
+                foreach (Pool pool in pools)
                 {
-                    tasks.Add(SetProfitForCoinTaskAsync(coin, settings, appRootFolder, poolProfitsDictionary, ct));
-                }
-            }
-            Task.WhenAll(tasks).Wait(ct);
-            return poolProfitsDictionary;
-        }
-        private Task SetProfitForCoinTaskAsync(Coin coin, Settings settings, DirectoryInfo appRootFolder, Dictionary<string, Profit> poolProfitsDictionary, CancellationToken ct)
-        {
-            return Task.Run(() =>
-            {
-                try
-                {
-                    string apiUrl = GetApiUrl(coin);
-                    if (!String.IsNullOrEmpty(apiUrl))
+                    if (!ct.IsCancellationRequested)
                     {
-                        var profitsJson = Helpers.GetJsonFromUrl(apiUrl, settings, appRootFolder, ct);
-                        dynamic lastStats = JObject.Parse(profitsJson);
-                        ProfitTimeframe timeFrame = coin.OverrideProfitTimeframe.HasValue ? coin.OverrideProfitTimeframe.Value : settings.ProfitTimeframe;
-                        decimal diffDay = lastStats.pool.stats.diffs["wavg24h"];
-                        decimal diffLive = lastStats.network.difficulty;
+                        string apiUrl = $"https://{pool.ProfitProviderInfo}.miner.rocks/api/stats";
+                        var profitsJson = Helpers.GetJsonFromUrl(apiUrl, enableCaching, appRootFolder, ct);
+                        JToken lastStats = JToken.Parse(profitsJson);
+                        decimal diffDay = lastStats["pool"]["stats"]["diffs"].Value<decimal>("wavg24h");
+                        JToken jNetwork = lastStats["network"];
+                        decimal diffLive = jNetwork.Value<decimal>("difficulty");
 
-                        decimal reward = lastStats.network.reward;
+                        decimal reward = jNetwork.Value<decimal>("reward");
 
-                        decimal profitDay = (coin.GetExpectedHashrate(settings) * (86400 / diffDay)) * reward;
-                        decimal profitLive = (coin.GetExpectedHashrate(settings) * (86400 / diffLive)) * reward;
+                        decimal profitDay = (Profit.BaseHashrate * (86400 / diffDay)) * reward;
+                        decimal profitLive = (Profit.BaseHashrate * (86400 / diffLive)) * reward;
 
                         // Get amount of coins
-                        decimal coinUnits = lastStats.config.coinUnits;
+                        decimal coinUnits = lastStats["config"].Value<decimal>("coinUnits");
                         decimal amountDay = profitDay / coinUnits;
                         decimal amountLive = profitLive / coinUnits;
 
                         //Get usd price
-                        decimal usdPrice = lastStats.coinPrice["coin-usd"];
+                        decimal usdPrice = lastStats["coinPrice"].Value<decimal>("coin-usd");
 
                         //Multiplicate
                         decimal usdRewardDecDay = amountDay * usdPrice;
@@ -63,52 +47,15 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
                         decimal usdRewardDecLive = amountLive * usdPrice;
                         double usdRewardLive = (double)usdRewardDecLive;
 
-                        poolProfitsDictionary[coin.TickerSymbol] = new Profit(usdRewardLive, usdRewardDay, (double)amountLive, (double)amountDay, ProfitProvider.MinerRocksApi, timeFrame);
-                        Console.WriteLine($"Got profit data for {coin.TickerSymbol} from MinerRocksAPI");
+                        poolProfitsDictionary[pool] = new Profit(usdRewardLive, usdRewardDay, (double)amountLive, (double)amountDay, ProfitProvider.MinerRocksApi);
                     }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Couldn't get profits data for {coin.DisplayName} from MinerRocksApi: " + ex.Message);
-                }
-            },ct);
-        }
-        private string GetApiUrl(Coin coin)
-        {
-            switch(coin.TickerSymbol)
-            {
-                case "DERO":
-                    return "https://dero.miner.rocks/api/stats";
-                case "ETN":
-                    return "https://etn.miner.rocks/api/stats";
-                case "KRB":
-                    return "https://krb.miner.rocks/api/stats";
-                case "SUMO":
-                    return "https://sumokoin.miner.rocks/api/stats";
-                case "GRFT":
-                    return "https://graft.miner.rocks/api/stats";
-                case "QRL":
-                    return "https://qrl.miner.rocks/api/stats";
-                case "XTL":
-                    return "https://stellite.miner.rocks/api/stats";
-                case "XMR":
-                    return "https://monero.miner.rocks/api/stats";
-                case "LOK":
-                case "LOKI":
-                    return "https://loki.miner.rocks/api/stats";
-                case "RYO":
-                    return "https://ryo.miner.rocks/api/stats";
-                case "XHV":
-                    return "https://haven.miner.rocks/api/stats";
-                case "IPBC":
-                case "TUBE":
-                    return "https://bittube.miner.rocks/api/stats";
-                case "AEON":
-                    return "https://aeon.miner.rocks/api/stats";
-                case "MSR":
-                    return "https://masari.miner.rocks/api/stats";
             }
-            return $"https://{coin.TickerSymbol.ToLowerInvariant()}.miner.rocks/api/stats";
+            catch (Exception ex)
+            {
+                Log.Warning("Failed to get profits data from MinerRocksApi: " + ex.Message);
+            }
+            return poolProfitsDictionary;
         }
     }
 }

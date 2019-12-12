@@ -1,8 +1,8 @@
-﻿using CryptonightProfitSwitcher.Enums;
-using CryptonightProfitSwitcher.ProfitPoviders;
-using System;
+﻿using System;
+using CryptoProfitSwitcher.Enums;
+using CryptoProfitSwitcher.ProfitPoviders;
 
-namespace CryptonightProfitSwitcher.Factories
+namespace CryptoProfitSwitcher.Factories
 {
     public static class PoolProfitProviderFactory
     {
@@ -10,18 +10,20 @@ namespace CryptonightProfitSwitcher.Factories
         {
             switch (profitProvider)
             {
-                case ProfitProvider.MineCryptonightApi:
-                    return new MineCryptonightApi();
                 case ProfitProvider.MinerRocksApi:
                     return new MinerRocksApi();
                 case ProfitProvider.MoneroOceanApi:
                     return new MoneroOceanApi();
-                case ProfitProvider.CryptoknightCCApi:
-                    return new CryptoknightCcApi();
                 case ProfitProvider.CryptunitApi:
                     return new CryptunitApi();
                 case ProfitProvider.HeroMinersApi:
                     return new HeroMinersApi();
+                case ProfitProvider.NiceHashApi:
+                    return new NiceHashApi();
+                case ProfitProvider.MineXmrApi:
+                    return new MineXmrApi();
+                case ProfitProvider.WhatToMineApi:
+                    return new WhatToMineApi();
                 default:
                     throw new NotImplementedException("Doesn't support ProfitProvider: " + profitProvider);
             }

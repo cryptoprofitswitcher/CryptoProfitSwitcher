@@ -1,14 +1,16 @@
-﻿using CryptonightProfitSwitcher.Mineables;
-using CryptonightProfitSwitcher.Models;
-using System.IO;
+﻿using System.Collections.Generic;
+using CryptoProfitSwitcher.Models;
 
-namespace CryptonightProfitSwitcher.Miners
+namespace CryptoProfitSwitcher.Miners
 {
     public interface IMiner
     {
-        void StartMiner(Mineable mineable, Settings settings, string appRoot, DirectoryInfo appRootFolder);
+        HashSet<DeviceConfig> DeviceConfigs { get; set; }
+        Pool Pool { get; set; }
+        void StartMiner(bool minimized);
         void StopMiner();
-        double GetCurrentHashrate(Settings settings, DirectoryInfo appRootFolder);
+        double GetCurrentHashrate(DeviceConfig deviceConfig);
         string Name { get; }
+        bool SupportsIndividualHashrate { get; }
     }
 }

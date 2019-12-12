@@ -1,13 +1,12 @@
-﻿using CryptonightProfitSwitcher.Mineables;
-using CryptonightProfitSwitcher.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using CryptoProfitSwitcher.Models;
 
-namespace CryptonightProfitSwitcher.ProfitPoviders
+namespace CryptoProfitSwitcher.ProfitPoviders
 {
     public interface IPoolProfitProvider
     {
-        Dictionary<string, Profit> GetProfits(DirectoryInfo appRootFolder, Settings settings, IList<Coin> coins, CancellationToken ct);
+        Dictionary<Pool, Profit> GetProfits(IList<Pool> pools, bool enableCaching, DirectoryInfo appRootFolder, CancellationToken ct);
     }
 }
