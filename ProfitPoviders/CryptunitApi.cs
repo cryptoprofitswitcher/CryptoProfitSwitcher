@@ -1,55 +1,99 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using CryptonightProfitSwitcher.Enums;
-using CryptonightProfitSwitcher.Mineables;
-using CryptonightProfitSwitcher.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using CryptoProfitSwitcher.Enums;
+using CryptoProfitSwitcher.Models;
+using Newtonsoft.Json.Linq;
+using Serilog;
 
-namespace CryptonightProfitSwitcher.ProfitPoviders
+namespace CryptoProfitSwitcher.ProfitPoviders
 {
     internal class CryptunitApi : IPoolProfitProvider
     {
-        public Dictionary<string, Profit> GetProfits(DirectoryInfo appRootFolder, Settings settings, IList<Coin> coins, CancellationToken ct)
+        private static Dictionary<string, int> TickerToAlgoId { get; set; }
+        public Dictionary<Pool, Profit> GetProfits(IList<Pool> pools, bool enableCaching, DirectoryInfo appRootFolder, CancellationToken ct)
         {
-            var poolProfitsDictionary = new Dictionary<string, Profit>();
+            var poolProfitsDictionary = new Dictionary<Pool, Profit>();
             try
             {
-                var profitsLiveJson = Helpers.GetJsonFromUrl("https://www.cryptunit.com/api/earnings/?hashrate=10000&device=GPU&dataavg=live&volumefilter=&algofilter=", settings, appRootFolder, ct);
-                var profitsDayJson = Helpers.GetJsonFromUrl("https://www.cryptunit.com/api/earnings/?hashrate=10000&device=GPU&dataavg=24h&volumefilter=&algofilter=", settings, appRootFolder, ct);
 
-                dynamic profitsLive = JsonConvert.DeserializeObject(profitsLiveJson);
-                dynamic profitsDay = JsonConvert.DeserializeObject(profitsDayJson);
-
-                foreach (dynamic rewardLive in profitsLive[0].coins)
+                if (pools.Any())
                 {
-                    string tickerSymbol = rewardLive.coin_ticker;
-                    //Adjust profits based on user defined hashrate
-                    Coin matchedCoin = coins.FirstOrDefault(c => c.TickerSymbol == tickerSymbol);
+                    var liveAlgorithms = new List<Pool>();
+                    var dayAlgorithms = new List<Pool>();
 
-                    if (matchedCoin != null)
+                    foreach (var pool in pools)
                     {
-                        double hashrate = rewardLive.hashrate_auto;
-                        double rewardUsdLive = rewardLive.reward_day_usd;
-                        double rewardCoinsLive = rewardLive.reward_day_coins;
-                        foreach (dynamic rewardDay in profitsDay[0].coins)
+                        if (pool.ProfitTimeframe == ProfitTimeframe.Day)
                         {
-                            if (rewardDay.coin_ticker == tickerSymbol)
+                            dayAlgorithms.Add(pool);
+                        }
+                        else
+                        {
+                            liveAlgorithms.Add(pool);
+                        }
+                    }
+
+                    if (TickerToAlgoId == null)
+                    {
+                        Dictionary<string, int> tickerToAlgoIdDictionary = new Dictionary<string, int>();
+                        var algosJson = Helpers.GetJsonFromUrl("https://www.cryptunit.com/api/coins/", enableCaching, appRootFolder, CancellationToken.None);
+                        foreach (JToken jAlgo in JToken.Parse(algosJson).Children())
+                        {
+                            tickerToAlgoIdDictionary[jAlgo.Value<string>("ticker")] = jAlgo.Value<int>("algo_id");
+                        }
+
+                        TickerToAlgoId = tickerToAlgoIdDictionary;
+                    }
+
+                    List<int> algoIds = new List<int>();
+                    foreach (Pool pool in pools)
+                    {
+                        int algoId = TickerToAlgoId[pool.ProfitProviderInfo];
+                        if (!algoIds.Contains(algoId))
+                        {
+                            algoIds.Add(algoId);
+                        }
+                    }
+
+                    if (algoIds.Count > 0)
+                    {
+                        StringBuilder apiRequestBuilder = new StringBuilder();
+                        apiRequestBuilder.Append("https://www.cryptunit.com/api/earningscustom/");
+                        apiRequestBuilder.Append("?hashrate[").Append(algoIds[0]).Append("]=").Append(Profit.BaseHashrate);
+                        for (var index = 1; index < algoIds.Count; index++)
+                        {
+                            int algoId = algoIds[index];
+                            apiRequestBuilder.Append("&hashrate[").Append(algoId).Append("]=").Append(Profit.BaseHashrate);
+                        }
+
+                        string apiRequest = apiRequestBuilder.ToString();
+                        if (liveAlgorithms.Count > 0)
+                        {
+                            try
                             {
-                                double rewardUsdDay = rewardDay.reward_day_usd;
-                                double rewardCoinsDay = rewardDay.reward_day_coins;
-                                ProfitTimeframe timeFrame = matchedCoin.OverrideProfitTimeframe.HasValue ? matchedCoin.OverrideProfitTimeframe.Value : settings.ProfitTimeframe;
-                                rewardUsdLive = (rewardUsdLive / hashrate) * matchedCoin.GetExpectedHashrate(settings);
-                                rewardCoinsLive = (rewardCoinsLive / hashrate) * matchedCoin.GetExpectedHashrate(settings);
-                                rewardUsdDay = (rewardUsdDay / hashrate) * matchedCoin.GetExpectedHashrate(settings);
-                                rewardCoinsDay = (rewardCoinsDay / hashrate) * matchedCoin.GetExpectedHashrate(settings);
-                                poolProfitsDictionary[tickerSymbol] = new Profit(rewardUsdLive, rewardUsdDay, rewardCoinsLive, rewardCoinsDay, ProfitProvider.CryptunitApi, timeFrame);
-                                Console.WriteLine($"Got profit data for {tickerSymbol} from CryptunitAPI");
+                                var liveProfitsJson = Helpers.GetJsonFromUrl(apiRequest + "&dataavg=live", enableCaching, appRootFolder, ct);
+                                SetProfitFromJson(liveProfitsJson, ProfitTimeframe.Live, liveAlgorithms, poolProfitsDictionary);
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Warning("Couldn't get live profits data from Cryptunit: " + ex.Message);
+                            }
+                        }
+
+                        if (dayAlgorithms.Count > 0)
+                        {
+                            try
+                            {
+                                var dayProfitsJson = Helpers.GetJsonFromUrl(apiRequest + "&dataavg=live", enableCaching, appRootFolder, ct);
+                                SetProfitFromJson(dayProfitsJson, ProfitTimeframe.Day, liveAlgorithms, poolProfitsDictionary);
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Warning("Couldn't get daily profits data from Cryptunit: " + ex.Message);
                             }
                         }
                     }
@@ -57,9 +101,29 @@ namespace CryptonightProfitSwitcher.ProfitPoviders
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to get profits data from Cryptunit Api: " + ex.Message);
+                Log.Warning("Failed to get profits data from Cryptunit Api: " + ex.Message);
             }
             return poolProfitsDictionary;
+        }
+
+        private void SetProfitFromJson(string json, ProfitTimeframe profitTimeframe, List<Pool> pools, Dictionary<Pool, Profit> poolProfitsDictionary)
+        {
+            foreach (JToken jCoin in JToken.Parse(json).First["coins"].Children())
+            {
+                foreach (Pool matchedPool in pools.Where(p => p.ProfitProviderInfo == jCoin.Value<string>("coin_ticker")))
+                {
+                    switch (profitTimeframe)
+                    {
+                        case ProfitTimeframe.Live:
+                            poolProfitsDictionary[matchedPool] = new Profit(jCoin.Value<double>("reward_day_usd"), 0, jCoin.Value<double>("reward_day_coins"), 0, ProfitProvider.CryptunitApi);
+                            break;
+                        case ProfitTimeframe.Day:
+                            poolProfitsDictionary[matchedPool] = new Profit(0, jCoin.Value<double>("reward_day_usd"), 0, jCoin.Value<double>("reward_day_coins"), ProfitProvider.CryptunitApi);
+                            break;
+                        default: throw new ArgumentOutOfRangeException();
+                    }
+                }
+            }
         }
     }
 }

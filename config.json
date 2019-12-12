@@ -1,0 +1,562 @@
+{
+  "ProcessPriority": "Normal",
+  "ProfitSwitchStrategy": "MaximizeFiat",
+  "EnableCaching": true,
+  "EnableLogging": true,
+  "EnableManualModeByDefault": false,
+  "DisableBenchmarking": false,
+  "StartMinerMinimized": false,
+  "MinerStartDelay": 5,
+  "DisplayUpdateInterval": 30,
+  "ProfitCheckInterval": 180,
+  "ProfitSwitchInterval": 600,
+  "ProfitSwitchThreshold": 0.1,
+  "Algorithms": [
+    {
+      "DisplayName": "RandomX",
+      "Enabled": true,
+      "DeviceConfigs": [
+        {
+          "DeviceType": "CPU",
+          "DeviceId": "0",
+          "Enabled": true,
+          "ExpectedHashrate": 14000.0,
+          "PrepareScript": null,
+          "Miner": "XmRig",
+          "MinerPath": "Miners/xmrig/xmrig.exe",
+          "MinerArguments": "--donate-level 1 --coin monero -k",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        }
+      ],
+      "Pools": [
+        {
+          "UniqueName": "NiceHash (RandomX)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "NiceHashApi",
+          "ProfitProviderInfo": "47",
+          "PreferFactor": 1.05,
+          "PoolUrl": "randomxmonero.eu.nicehash.com:3380",
+          "PoolUser": "3NRgzTV2hLKacRQoBfSmcDxDo8UQZQSLJ7",
+          "PoolPassword": "x"
+        },
+        {
+          "UniqueName": "MoneroOcean (Monero)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "MoneroOceanApi",
+          "ProfitProviderInfo": "",
+          "PreferFactor": 1.0,
+          "PoolUrl": "\"gulf.moneroocean.stream:10064,",
+          "PoolUser": "4GdoN7NCTi8a5gZug7PrwZNKjvHFmKeV11L6pNJPgj5QNEHsN6eeX3DaAQFwZ1ufD4LYCZKArktt113W7QjWvQ7CWBPzu9XXtDTKJEKu2r",
+          "PoolPassword": "x"
+        }
+      ]
+    },
+    {
+      "DisplayName": "RandomXL",
+      "Enabled": true,
+      "DeviceConfigs": [
+        {
+          "DeviceType": "CPU",
+          "DeviceId": "0",
+          "Enabled": true,
+          "ExpectedHashrate": 13500.0,
+          "PrepareScript": null,
+          "Miner": "XmRig",
+          "MinerPath": "Miners/xmrig/xmrig.exe",
+          "MinerArguments": "--donate-level 1 -a rx/loki -k",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        }
+      ],
+      "Pools": [
+        {
+          "UniqueName": "HeroMiners (Loki)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "HeroMinersApi",
+          "ProfitProviderInfo": "loki",
+          "PreferFactor": 1.0,
+          "PoolUrl": "loki.herominers.com:10111",
+          "PoolUser": "LZ8zHFY9w3c4jBPt9FjMRX9H4axzBmiBUZsuJy1M93bvXqCzsPRzju3X2HtXP7MZTRa9zVQqZ2LTE5XuTdx3WbjeHKyLTiH",
+          "PoolPassword": "x"
+        }
+      ]
+    },
+    {
+      "DisplayName": "DaggerHashimoto",
+      "Enabled": true,
+      "DeviceConfigs": [
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "0",
+          "Enabled": true,
+          "ExpectedHashrate": 50000000.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a ethash",
+          "MinerDeviceSpecificArguments": "--eth_config=A576",
+          "MinerApiPort": 0
+        },
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "1",
+          "Enabled": true,
+          "ExpectedHashrate": 49590000.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a ethash",
+          "MinerDeviceSpecificArguments": "--eth_config=A896",
+          "MinerApiPort": 0
+        }
+      ],
+      "Pools": [
+        {
+          "UniqueName": "NiceHash (DaggerHashimoto)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "NiceHashApi",
+          "ProfitProviderInfo": "20",
+          "PreferFactor": 1.05,
+          "PoolUrl": "daggerhashimoto.eu.nicehash.com:3353",
+          "PoolUser": "3NRgzTV2hLKacRQoBfSmcDxDo8UQZQSLJ7",
+          "PoolPassword": "x"
+        }
+      ]
+    },
+    {
+      "DisplayName": "CnConceal",
+      "Enabled": true,
+      "DeviceConfigs": [
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "0",
+          "Enabled": true,
+          "ExpectedHashrate": 4421.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a cn_conceal",
+          "MinerDeviceSpecificArguments": "--cn_config=13*13:AAA",
+          "MinerApiPort": 0
+        },
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "1",
+          "Enabled": true,
+          "ExpectedHashrate": 4715.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a cn_conceal",
+          "MinerDeviceSpecificArguments": "--cn_config=15*14:AAA",
+          "MinerApiPort": 0
+        }
+      ],
+      "Pools": [
+        {
+          "UniqueName": "HeroMiners (Conceal)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "HeroMinersApi",
+          "ProfitProviderInfo": "conceal",
+          "PreferFactor": 1.0,
+          "PoolUrl": "conceal.herominers.com:10361",
+          "PoolUser": "ccx7XZtFCLqJ2abT8pjChGQQ7RHHcMgnCWFxDQpLSMpMBw97voWyw6DLr2eTRmj4h5Xf7mskfAua5K9A1ixCxp3Q39ZwwZ3pCe",
+          "PoolPassword": "x"
+        }
+      ]
+    },
+    {
+      "DisplayName": "X16Rv2",
+      "Enabled": true,
+      "DeviceConfigs": [
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "0",
+          "Enabled": true,
+          "ExpectedHashrate": 23310000.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a x16rv2",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        },
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "1",
+          "Enabled": true,
+          "ExpectedHashrate": 29510000.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a x16rv2",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        }
+      ],
+      "Pools": [
+        {
+          "UniqueName": "NiceHash (X16Rv2)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "NiceHashApi",
+          "ProfitProviderInfo": "46",
+          "PreferFactor": 1.05,
+          "PoolUrl": "x16rv2.eu.nicehash.com:3379",
+          "PoolUser": "3NRgzTV2hLKacRQoBfSmcDxDo8UQZQSLJ7",
+          "PoolPassword": "x"
+        }
+      ]
+    },
+    {
+      "DisplayName": "Lyra2Rev3",
+      "Enabled": true,
+      "DeviceConfigs": [
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "0",
+          "Enabled": true,
+          "ExpectedHashrate": 86390000.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a lyra2rev3",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        },
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "1",
+          "Enabled": true,
+          "ExpectedHashrate": 98410000.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a lyra2rev3",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        }
+      ],
+      "Pools": [
+        {
+          "UniqueName": "NiceHash (Lyra2Rev3)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "NiceHashApi",
+          "ProfitProviderInfo": "40",
+          "PreferFactor": 1.05,
+          "PoolUrl": "lyra2rev3.eu.nicehash.com:3373",
+          "PoolUser": "3NRgzTV2hLKacRQoBfSmcDxDo8UQZQSLJ7",
+          "PoolPassword": "x"
+        }
+      ]
+    },
+    {
+      "DisplayName": "Cuckatoo31",
+      "Enabled": true,
+      "DeviceConfigs": [
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "0",
+          "Enabled": true,
+          "ExpectedHashrate": 0.791,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a cuckatoo31_grin",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        },
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "1",
+          "Enabled": true,
+          "ExpectedHashrate": 0.983,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a cuckatoo31_grin",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        }
+      ],
+      "Pools": [
+        {
+          "UniqueName": "NiceHash (Cuckatoo31)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "NiceHashApi",
+          "ProfitProviderInfo": "39",
+          "PreferFactor": 1.05,
+          "PoolUrl": "grincuckatoo31.eu.nicehash.com:3372",
+          "PoolUser": "3NRgzTV2hLKacRQoBfSmcDxDo8UQZQSLJ7",
+          "PoolPassword": "x"
+        }
+      ]
+    },
+    {
+      "DisplayName": "Cuckatoo29",
+      "Enabled": true,
+      "DeviceConfigs": [
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "0",
+          "Enabled": true,
+          "ExpectedHashrate": 5.861,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a cuckarood29_grin",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        },
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "1",
+          "Enabled": true,
+          "ExpectedHashrate": 6.146,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a cuckarood29_grin",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        }
+      ],
+      "Pools": [
+        {
+          "UniqueName": "NiceHash (Cuckatoo29)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "NiceHashApi",
+          "ProfitProviderInfo": "38",
+          "PreferFactor": 1.05,
+          "PoolUrl": "grincuckaroo29.eu.nicehash.com:3371",
+          "PoolUser": "3NRgzTV2hLKacRQoBfSmcDxDo8UQZQSLJ7",
+          "PoolPassword": "x"
+        }
+      ]
+    },
+    {
+      "DisplayName": "MTP",
+      "Enabled": true,
+      "DeviceConfigs": [
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "0",
+          "Enabled": true,
+          "ExpectedHashrate": 3136000.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a mtp",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        },
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "1",
+          "Enabled": true,
+          "ExpectedHashrate": 3668000.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a mtp",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        }
+      ],
+      "Pools": [
+        {
+          "UniqueName": "2Miners (ZCoin)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "WhatToMineApi",
+          "ProfitProviderInfo": "Zcoin",
+          "PreferFactor": 0.95,
+          "PoolUrl": "xzc.2miners.com:8080",
+          "PoolUser": "a8E1ZM7L6vK1P2LftB3ov47NPTxoyHa4s4",
+          "PoolPassword": "x"
+        }
+      ]
+    },
+    {
+      "DisplayName": "CnConceal",
+      "Enabled": true,
+      "DeviceConfigs": [
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "0",
+          "Enabled": true,
+          "ExpectedHashrate": 4423.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a cn_conceal",
+          "MinerDeviceSpecificArguments": "--cn_config=13*13:AAA",
+          "MinerApiPort": 0
+        },
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "1",
+          "Enabled": true,
+          "ExpectedHashrate": 4700.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a cn_conceal",
+          "MinerDeviceSpecificArguments": "--cn_config=15*14:AAA",
+          "MinerApiPort": 0
+        }
+      ],
+      "Pools": [
+        {
+          "UniqueName": "HeroMiners (Conceal)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "HeroMinersApi",
+          "ProfitProviderInfo": "conceal",
+          "PreferFactor": 1.0,
+          "PoolUrl": "conceal.herominers.com:10361",
+          "PoolUser": "ccx7XZtFCLqJ2abT8pjChGQQ7RHHcMgnCWFxDQpLSMpMBw97voWyw6DLr2eTRmj4h5Xf7mskfAua5K9A1ixCxp3Q39ZwwZ3pCe",
+          "PoolPassword": "x"
+        }
+      ]
+    },
+    {
+      "DisplayName": "ARG CHUKW",
+      "Enabled": true,
+      "DeviceConfigs": [
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "0",
+          "Enabled": true,
+          "ExpectedHashrate": 109300.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a trtl_chukwa",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        },
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "1",
+          "Enabled": true,
+          "ExpectedHashrate": 124600.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a trtl_chukwa",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        }
+      ],
+      "Pools": [
+        {
+          "UniqueName": "Mine2Gether (Turtle)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "HeroMinersApi",
+          "ProfitProviderInfo": "turtlecoin",
+          "PreferFactor": 1.0,
+          "PoolUrl": "trtl.pool.mine2gether.com:4445",
+          "PoolUser": "TRTLv1Hqo3wHdqLRXuCyX3MwvzKyxzwXeBtycnkDy8ceFp4E23bm3P467xLEbUusH6Q1mqQUBiYwJ2yULJbvr5nKe8kcyc4uyps.c97c7a612bcb33034f08f918a6a84f51a9f051545e3763cd79001c69d98c4d1c",
+          "PoolPassword": "x"
+        }
+      ]
+    },
+    {
+      "DisplayName": "CN Haven",
+      "Enabled": true,
+      "DeviceConfigs": [
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "0",
+          "Enabled": true,
+          "ExpectedHashrate": 2000.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a cn_haven",
+          "MinerDeviceSpecificArguments": "--cn_config=14*14:CBB",
+          "MinerApiPort": 0
+        },
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "1",
+          "Enabled": true,
+          "ExpectedHashrate": 2200.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a cn_haven",
+          "MinerDeviceSpecificArguments": "--cn_config=15+15:CBB",
+          "MinerApiPort": 0
+        }
+      ],
+      "Pools": [
+        {
+          "UniqueName": "MinerRocks (Haven)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "HeroMinersApi",
+          "ProfitProviderInfo": "haven",
+          "PreferFactor": 1.1,
+          "PoolUrl": "haven.miner.rocks:4005",
+          "PoolUser": "hvi1aCqoAZF19J8pijvqnrUkeAeP8Rvr4XyfDMGJcarhbL15KgYKM1hN7kiHMu3fer5k8JJ8YRLKCahDKFgLFgJMYAfncw5wUCX9LC2XKuoza",
+          "PoolPassword": "x"
+        }
+      ]
+    },
+    {
+      "DisplayName": "CN V8 Half",
+      "Enabled": true,
+      "DeviceConfigs": [
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "0",
+          "Enabled": true,
+          "ExpectedHashrate": 4203.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a cnv8_half",
+          "MinerDeviceSpecificArguments": "--cn_config=13*13:AAA",
+          "MinerApiPort": 0
+        },
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "1",
+          "Enabled": true,
+          "ExpectedHashrate": 4650.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a cnv8_half",
+          "MinerDeviceSpecificArguments": "--cn_config=15*14:AAA",
+          "MinerApiPort": 0
+        }
+      ],
+      "Pools": [
+        {
+          "UniqueName": "MinerRocks (Masari)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "HeroMinersApi",
+          "ProfitProviderInfo": "masari",
+          "PreferFactor": 1.0,
+          "PoolUrl": "masari.miner.rocks:5005",
+          "PoolUser": "5t5mEm254JNJ9HqRjY9vCiTE8aZALHX3v8TqhyQ3TTF9VHKZQXkRYjPDweT9kK4rJw7dDLtZXGjav2z9y24vXCdRc6BSJwUmapXC7NmVAM",
+          "PoolPassword": "x"
+        }
+      ]
+    }
+  ]
+}

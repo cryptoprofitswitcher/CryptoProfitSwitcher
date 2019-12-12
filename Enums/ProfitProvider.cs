@@ -1,7 +1,7 @@
-﻿namespace CryptonightProfitSwitcher.Enums
+﻿namespace CryptoProfitSwitcher.Enums
 {
     public enum ProfitProvider
     {
-        MineCryptonightApi, NiceHashApi, MinerRocksApi, MoneroOceanApi, CryptoknightCCApi, CryptunitApi, HeroMinersApi
+        NiceHashApi, CryptunitApi, MoneroOceanApi, MineXmrApi, MinerRocksApi, HeroMinersApi, WhatToMineApi
     }
 }

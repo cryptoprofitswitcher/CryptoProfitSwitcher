@@ -3,13 +3,13 @@ using CryptoProfitSwitcher.Models;
 
 namespace CryptoProfitSwitcher.ProfitSwitchingStrategies
 {
-    public class MaximizeFiatStrategy : IProfitSwitchingStrategy
+    public class PreferLowDifficultyStrategy : IProfitSwitchingStrategy
     {
         public bool IsProfitABetterThanB(Profit profitA, ProfitTimeframe timeframeA, Profit profitB, ProfitTimeframe timeframeB, double threshold)
         {
-            double usdRewardA = GetReward(profitA, timeframeA);
-            double usdRewardB = GetReward(profitB, timeframeB);
-            return usdRewardA > usdRewardB + (usdRewardB * threshold);
+            double relativeRewardA = GetReward(profitA, timeframeA);
+            double relativeRewardB = GetReward(profitB, timeframeB);
+            return relativeRewardA > relativeRewardB + (relativeRewardB * threshold);
         }
 
         private double GetReward(Profit profit, ProfitTimeframe timeframe)
@@ -24,7 +24,10 @@ namespace CryptoProfitSwitcher.ProfitSwitchingStrategies
                     reward = profit.UsdRewardLive;
                     break;
             }
-
+            if (profit.CoinRewardDay > 0 && profit.CoinRewardLive > 0)
+            {
+                reward *= (profit.CoinRewardLive / profit.CoinRewardDay);
+            }
             return reward;
         }
     }

@@ -1,7 +1,7 @@
-﻿using CryptonightProfitSwitcher.Enums;
-using CryptonightProfitSwitcher.ProfitSwitchingStrategies;
+﻿using CryptoProfitSwitcher.Enums;
+using CryptoProfitSwitcher.ProfitSwitchingStrategies;
 
-namespace CryptonightProfitSwitcher.Factories
+namespace CryptoProfitSwitcher.Factories
 {
     public static class ProfitSwitchingStrategyFactory
     {
@@ -9,10 +9,8 @@ namespace CryptonightProfitSwitcher.Factories
         {
             switch (strategy)
             {
-                case ProfitSwitchingStrategy.MaximizeCoins:
-                    return new MaximizeCoinsStrategy();
-                case ProfitSwitchingStrategy.WeightedCoinsPrice:
-                    return new WeightedCoinsPriceStrategy();
+                case ProfitSwitchingStrategy.PreferLowDifficulty:
+                    return new PreferLowDifficultyStrategy();
                 default:
                     return new MaximizeFiatStrategy();
             }

@@ -1,56 +1,86 @@
-﻿using Alba.CsConsoleFormat;
-using CryptonightProfitSwitcher.Enums;
-using CryptonightProfitSwitcher.Factories;
-using CryptonightProfitSwitcher.Mineables;
-using CryptonightProfitSwitcher.Models;
-using CryptonightProfitSwitcher.Miners;
-using CryptonightProfitSwitcher.ProfitPoviders;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CryptonightProfitSwitcher.ProfitSwitchingStrategies;
+using Alba.CsConsoleFormat;
+using CryptoProfitSwitcher.Enums;
+using CryptoProfitSwitcher.Factories;
+using CryptoProfitSwitcher.Miners;
+using CryptoProfitSwitcher.Models;
+using CryptoProfitSwitcher.ProfitSwitchingStrategies;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Serilog;
+using Serilog.Events;
 
-namespace CryptonightProfitSwitcher
+namespace CryptoProfitSwitcher
 {
     internal static class Program
     {
-        private const int VERSION = 11;
-
-        private static IMiner _currentMiner;
-        private static Mineable _currentMineable;
-        private static int _watchdogOvershots;
-        private static bool _requestQuit;
-        private static bool _manualSelection;
-        private static bool? _manualWatchdogEnabled;
-        private static Mineable _manualSelectedMineable;
+        private const int Version = 12;
+        private static Config Config { get; set; }
+        private static string AppFolderPath { get; set; }
+        private static DirectoryInfo AppFolder { get; set; }
         private static bool _newVersionAvailable;
-        private static CancellationTokenSource _mainResetCts;
-        private static CancellationTokenSource _watchdogCts;
-        private static CancellationTokenSource _keyPressesCts;
-        private static CancellationTokenSource _profitSwitcherTaskCts;
-        private static Task _profitSwitcherTask;
-        private static DateTimeOffset _lastProfitSwitch = DateTimeOffset.MinValue;
+        private static bool _requestQuit;
+        private static bool _manualMode;
+        private static ProfitSwitchingStrategy? _profitSwitchingStrategy;
+        private static CancellationTokenSource _displayUpdaterCts;
+        private static CancellationTokenSource _profitFetcherTaskCts;
+        private static CancellationTokenSource _miningSwitcherTaskCts;
+        private static CancellationTokenSource _keyPressesTaskCts;
+
+        private static Dictionary<Pool, Profit> _poolProfitData;
+        private static Dictionary<string, MiningConfig> _currentMininigConfigs = new Dictionary<string, MiningConfig>();
+        private static Dictionary<string, MiningConfig> _manualMininigConfigs = null;
 
         private static void Main(string[] args)
         {
-            //Get app root
-            var appFolderPath = Helpers.GetApplicationRoot();
-            var appFolder = new DirectoryInfo(appFolderPath);
+            ResetConsole();
+            InitAppFolder();
+            InitConfig();
+            SetProcessPriority();
+            ResetConsole();
+            InitLogging();
+            CheckForUpdates();
+            DownloadMiners();
 
-            //Initalize logging file
-            string logPath = Path.Combine(appFolderPath, "current_log.txt");
+            BenchmarkIfNeeded();
+            FetchPoolProfit(CancellationToken.None);
+
+            _manualMode = Config.EnableManualModeByDefault;
+            _profitSwitchingStrategy = Config.ProfitSwitchStrategy;
+            _keyPressesTaskCts = new CancellationTokenSource();
+
+            Task.WhenAll(
+                PoolProfitFetcherTaskAsync(),
+                MiningSwitcherTaskAsync(),
+                DisplayUpdaterTaskAsync(),
+                KeyPressesTaskAsync(_keyPressesTaskCts.Token)
+                ).Wait();
+        }
+
+        private static void InitAppFolder()
+        {
+            AppFolderPath = Helpers.GetApplicationRoot();
+            AppFolder = new DirectoryInfo(AppFolderPath);
+        }
+
+        private static void InitLogging()
+        {
+            WriteInfo(" Initialize logging..");
+            string logPath = Path.Combine(AppFolderPath, "current_log.txt");
             try
             {
                 var logFile = new FileInfo(logPath);
                 if (logFile.Exists)
                 {
-                    string oldlogPath = Path.Combine(appFolderPath, "previous_log.txt");
+                    string oldlogPath = Path.Combine(AppFolderPath, "previous_log.txt");
                     if (File.Exists(oldlogPath))
                     {
                         File.Delete(oldlogPath);
@@ -60,693 +90,243 @@ namespace CryptonightProfitSwitcher
             }
             catch (Exception e)
             {
-                Console.WriteLine("Couldn't initalize log file: " + e.Message);
+                Console.WriteLine(" Couldn't initalize logging " + e.Message);
             }
 
-            while (!_requestQuit)
+            if (Config.EnableLogging)
             {
-                _mainResetCts = new CancellationTokenSource();
-                //Welcome
-                ResetConsole();
+                Log.Logger = new LoggerConfiguration()
+                    .MinimumLevel.Debug()
+                    .WriteTo.Console(LogEventLevel.Information)
+                    .WriteTo.File(logPath)
+                    .CreateLogger();
+            }
+            else
+            {
+                Log.Logger = new LoggerConfiguration()
+                    .WriteTo.Console(LogEventLevel.Information)
+                    .CreateLogger();
+            }
+        }
 
-                //Initalize coins
-                Console.WriteLine("Initalize coins");
+        private static void InitConfig()
+        {
+            WriteInfo(" Initialize config..");
+            var configFile = AppFolder.GetFiles("config.json").First();
+            var configJson = File.ReadAllText(configFile.FullName);
+            Config = JsonConvert.DeserializeObject<Config>(configJson);
+        }
 
-                var coinsFolder = appFolder.GetDirectories("Coins").First();
-                var coins = new List<Coin>();
-                foreach (var coinFile in coinsFolder.GetFiles().Where(f => f.Extension == ".json"))
+        private static void SaveConfig()
+        {
+            WriteInfo(" Saving new config..");
+            var configFile = AppFolder.GetFiles("config.json").First();
+            var configJson = JsonConvert.SerializeObject(Config, Formatting.Indented, new Newtonsoft.Json.Converters.StringEnumConverter());
+            File.WriteAllText(configFile.FullName, configJson);
+        }
+
+        private static void SetProcessPriority()
+        {
+            WriteInfo(" Setting process priority to " + Config.ProcessPriority);
+            using Process p = Process.GetCurrentProcess();
+            p.PriorityClass = Config.ProcessPriority;
+        }
+
+        private static void CheckForUpdates()
+        {
+            try
+            {
+                WriteInfo(" Check for updates..");
+
+                var versionText = Helpers.GetJsonFromUrl("https://raw.githubusercontent.com/cryptoprofitswitcher/CryptonightProfitSwitcher/master/version.txt", false, AppFolder, CancellationToken.None);
+                int remoteVersion = Int32.Parse(versionText, CultureInfo.InvariantCulture);
+                if (remoteVersion > Version)
                 {
-                    var coinJson = File.ReadAllText(coinFile.FullName);
-                    var coin = JsonConvert.DeserializeObject<Coin>(coinJson);
-                    coins.Add(coin);
-                    Console.WriteLine("Initalized coin: " + coin.DisplayName);
-                }
-
-                //Initalize Nicehash algorithms
-                Console.WriteLine("Initalize Nicehash algorithms");
-
-                var nicehashAlgorithmsFolder = appFolder.GetDirectories("NicehashAlgorithms").First();
-                var nicehashAlgorithms = new List<NicehashAlgorithm>();
-                foreach (var nicehashAlgorithmFile in nicehashAlgorithmsFolder.GetFiles().Where(f => f.Extension == ".json"))
-                {
-                    var nicehashAlgorithmJson = File.ReadAllText(nicehashAlgorithmFile.FullName);
-                    var nicehashAlgorithm = JsonConvert.DeserializeObject<NicehashAlgorithm>(nicehashAlgorithmJson);
-                    nicehashAlgorithms.Add(nicehashAlgorithm);
-                    Console.WriteLine("Initalized Nicehash-Algorithm: " + nicehashAlgorithm.DisplayName);
-                }
-
-                //Initalize settings
-                Console.WriteLine("Initalize settings");
-
-                var settingsFile = appFolder.GetFiles("Settings.json").First();
-                var settingsJson = File.ReadAllText(settingsFile.FullName);
-                var settings = JsonConvert.DeserializeObject<Settings>(settingsJson);
-                Console.WriteLine("Initalized settings.");
-
-                //Initalize logging
-                if (settings.EnableLogging)
-                {
-                    Log.Logger = new LoggerConfiguration()
-                        .WriteTo.Console()
-                        .WriteTo.File(logPath)
-                        .CreateLogger();
+                    _newVersionAvailable = true;
+                    WriteInfo(" New update available!");
                 }
                 else
                 {
-                    Log.Logger = new LoggerConfiguration()
-                        .WriteTo.Console()
-                        .CreateLogger();
+                    WriteInfo(" Your version is up to date.");
                 }
-
-                //Start profit switching algorithm
-                Log.Information("Start profit switching algorithm");
-
-                _profitSwitcherTaskCts?.Cancel();
-                _profitSwitcherTaskCts = new CancellationTokenSource();
-                _profitSwitcherTask = ProfitSwitcherTaskAsync(appFolderPath, appFolder, settings, coins, nicehashAlgorithms, _profitSwitcherTaskCts.Token);
-
-                //Start key presses task
-                Log.Information("Start key presses task");
-
-                _keyPressesCts?.Cancel();
-                _keyPressesCts = new CancellationTokenSource();
-                var keyPressesTask = KeypressesTaskAsync(appFolderPath, appFolder, settings, coins, nicehashAlgorithms, _keyPressesCts.Token);
-
-                //Check for updates
-                try
-                {
-                    Log.Information("Check for updates");
-
-                    var versionText = Helpers.GetJsonFromUrl("https://raw.githubusercontent.com/cryptoprofitswitcher/CryptonightProfitSwitcher/master/version.txt", settings, appFolder, CancellationToken.None);
-                    int remoteVersion = Int32.Parse(versionText);
-                    if (remoteVersion > VERSION)
-                    {
-                        _newVersionAvailable = true;
-                        Log.Information("New update available!");
-                    }
-                    else
-                    {
-                        Log.Information("Your version is up to date.");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Information("Couldn't check for updates: " + ex.Message);
-                }
-                //Wait until reset
-                _mainResetCts.Token.WaitHandle.WaitOne();
-                Log.Information("Reset app");
+            }
+            catch (Exception ex)
+            {
+                Log.Warning("Couldn't check for updates: " + ex.Message);
             }
         }
 
-        private static Task ProfitSwitcherTaskAsync(string appFolderPath, DirectoryInfo appRootFolder, Settings settings, List<Coin> coins, List<NicehashAlgorithm> nicehashAlgorithms, CancellationToken token)
+        private static void DownloadMiners()
+        {
+            try
+            {
+                var minersFolder = AppFolder.CreateSubdirectory("Miners");
+                if (!minersFolder.EnumerateFiles().Any())
+                {
+                    WriteInfo(" Downloading miners..");
+
+                    if (Helpers.IsWindows())
+                    {
+                        DownloadAndExtractFromGithub("https://api.github.com/repos/todxx/teamredminer/releases/latest", "win", "teamredminer", minersFolder);
+                        DownloadAndExtractFromGithub("https://api.github.com/repos/xmrig/xmrig/releases/latest", "gcc-win64", "xmrig", minersFolder);
+                    }
+
+                    if (Helpers.IsLinux())
+                    {
+                        DownloadAndExtractFromGithub("https://api.github.com/repos/todxx/teamredminer/releases/latest", "linux", "teamredminer", minersFolder);
+                        DownloadAndExtractFromGithub("https://api.github.com/repos/xmrig/xmrig/releases/latest", "xenial-x64", "xmrig", minersFolder);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Warning(e, "Downloading miners failed.");
+            }
+        }
+
+        private static void DownloadAndExtractFromGithub(string apiUrl, string identifier, string folderName, DirectoryInfo minersFolder)
+        {
+            string lastReleaseJson = Helpers.GetJsonFromUrl(apiUrl, false, AppFolder, CancellationToken.None);
+            JToken jLastRelease = JToken.Parse(lastReleaseJson);
+            JToken jwinAsset = jLastRelease["assets"].Children<JToken>().First(asset => asset.Value<string>("name").Contains(identifier));
+            string winDownloadUrl = jwinAsset.Value<string>("browser_download_url");
+            using var wc = new System.Net.WebClient();
+            string teamRedDownloadPath = Path.Combine(minersFolder.FullName, jwinAsset.Value<string>("name"));
+            wc.DownloadFile(winDownloadUrl, teamRedDownloadPath);
+            ZipFile.ExtractToDirectory(teamRedDownloadPath, minersFolder.FullName);
+            DirectoryInfo newFolder = minersFolder.EnumerateDirectories().OrderByDescending(d => d.CreationTimeUtc).First();
+            newFolder.MoveTo(Path.Combine(minersFolder.FullName, folderName));
+        }
+
+        private static Task PoolProfitFetcherTaskAsync()
         {
             return Task.Run(() =>
             {
-                //Get pool profit data
-                while (!token.IsCancellationRequested)
+                while (!_requestQuit)
                 {
-                    var statusCts = new CancellationTokenSource();
-                    var watchdogCts = new CancellationTokenSource();
-
                     try
                     {
-                        ResetConsole();
-
-                        // Get pool mined coins profitability
-
-                        var timeoutCts = new CancellationTokenSource(60000);
-                        var childCts = CancellationTokenSource.CreateLinkedTokenSource(token, timeoutCts.Token);
-
-                        var profitProviders = Helpers.GetPoolProfitProviders(settings, null);
-                        foreach (var coin in coins.Where(c => !String.IsNullOrEmpty(c.OverridePoolProfitProviders)))
-                        {
-                            foreach (var profitProviderString in coin.OverridePoolProfitProviders.Split(","))
-                            {
-                                ProfitProvider profitProvider;
-                                if (Enum.TryParse(profitProviderString, out profitProvider))
-                                {
-                                    if (!profitProviders.Contains(profitProvider))
-                                    {
-                                        profitProviders.Add(profitProvider);
-                                    }
-                                }
-                            }
-                        }
-                        var poolProfitsDictionaryUnordered = new Dictionary<ProfitProvider, Dictionary<string, Profit>>();
-                        var profitProviderTasks = new List<Task>();
-                        foreach (var profitProvider in profitProviders)
-                        {
-                            if (!poolProfitsDictionaryUnordered.ContainsKey(profitProvider))
-                            {
-                                profitProviderTasks.Add(Task.Run(()=>
-                                {
-                                    IPoolProfitProvider profitProviderClass = PoolProfitProviderFactory.GetPoolProfitProvider(profitProvider);
-                                    poolProfitsDictionaryUnordered[profitProvider] = profitProviderClass.GetProfits(appRootFolder, settings, coins, childCts.Token);
-                                }, childCts.Token));
-                            }
-                        }
-#if DEBUG
-                        Stopwatch sw = new Stopwatch();
-                        sw.Start();
-#endif
-                        Task.WhenAll(profitProviderTasks).Wait(childCts.Token);
-#if DEBUG
-                        sw.Stop();
-                        Console.WriteLine($"Fetching profit data took {(int)sw.Elapsed.TotalSeconds} seconds.");
-#endif
-
-                        //Reorder because of async
-                        var poolProfitsDictionary = new Dictionary<ProfitProvider, Dictionary<string, Profit>>();
-                        foreach (var profitProvider in profitProviders)
-                        {
-                            if (poolProfitsDictionaryUnordered.ContainsKey(profitProvider))
-                            {
-                                poolProfitsDictionary[profitProvider] = poolProfitsDictionaryUnordered[profitProvider];
-                            }
-                        }
-
-                        IProfitSwitchingStrategy profitSwitchingStrategy = ProfitSwitchingStrategyFactory.GetProfitSwitchingStrategy(settings.ProfitSwitchingStrategy);
-
-                        MineableReward currentReward = null;
-
-                        // Get best pool mined coin
-                        MineableReward bestPoolminedCoin = null;
-                        if (!token.IsCancellationRequested)
-                        {
-                            var result = profitSwitchingStrategy.GetBestPoolminedCoin(coins,_currentMineable, poolProfitsDictionary, settings);
-                            bestPoolminedCoin = result?.Result;
-                            if (currentReward == null) currentReward = result?.Current;
-                            if (bestPoolminedCoin?.Mineable != null)
-                            {
-                                Console.WriteLine("Got best pool mined coin: " + bestPoolminedCoin.Mineable.DisplayName);
-                            }
-                            else
-                            {
-                                Console.WriteLine("Couldn't determine best pool mined coin.");
-                            }
-                        }
-
-                        //Get Nicehash Profit
-                        Dictionary<int, Profit> nicehashProfitsDictionary = null;
-                        if (!token.IsCancellationRequested)
-                        {
-                            nicehashProfitsDictionary = NicehashApi.GetProfits(appRootFolder, settings, nicehashAlgorithms, childCts.Token);
-                        }
-
-                        //Get best nicehash algorithm
-                        MineableReward bestNicehashAlgorithm = null;
-                        if (!token.IsCancellationRequested && nicehashProfitsDictionary != null)
-                        {
-                            var result = profitSwitchingStrategy.GetBestNicehashAlgorithm(nicehashAlgorithms,_currentMineable, nicehashProfitsDictionary, settings);
-                            bestNicehashAlgorithm = result?.Result;
-                            if (currentReward == null) currentReward = result?.Current;
-                            if (bestNicehashAlgorithm?.Mineable != null)
-                            {
-                                Console.WriteLine("Got best nicehash algorithm: " + bestNicehashAlgorithm.Mineable.DisplayName);
-                            }
-                            else
-                            {
-                                Console.WriteLine("Couldn't determine best nicehash algorithm.");
-                            }
-                        }
-
-                        //Sort profit table
-                        if (settings.ProfitSorting != SortingMode.None)
-                        {
-                            var coinProfitComparer = new CoinProfitComparer(settings.ProfitSorting, poolProfitsDictionary);
-                            coins.Sort(coinProfitComparer);
-                            var nicehashProfitComparer = new NicehashProfitComparer(settings.ProfitSorting, nicehashProfitsDictionary);
-                            nicehashAlgorithms.Sort(nicehashProfitComparer);
-                        }
-
-                        //Print table
-                        if (!token.IsCancellationRequested && nicehashProfitsDictionary != null)
-                        {
-                            PrintProfitTable(coins, poolProfitsDictionary, nicehashAlgorithms, nicehashProfitsDictionary, settings);
-                        }
-
-                        //Mine using best algorithm/coin
-                        if (!token.IsCancellationRequested)
-                        {
-                            Console.WriteLine();
-                            Mineable bestOverallMineable = null;
-                            if (_manualSelection && _manualSelectedMineable != null)
-                            {
-                                bestOverallMineable = _manualSelectedMineable;
-                            }
-                            else
-                            {
-                                bestOverallMineable = profitSwitchingStrategy.GetBestMineable(bestPoolminedCoin, bestNicehashAlgorithm, currentReward, settings)?.Mineable;
-                            }
-                            if (bestOverallMineable != null)
-                            {
-                                Console.WriteLine($"Determined best mining method: {bestOverallMineable.DisplayName}");
-                                if (_currentMineable == null || _currentMineable.Id != bestOverallMineable.Id)
-                                {
-                                    StartMiner(bestOverallMineable, settings, appFolderPath, appRootFolder);
-                                }
-                            }
-                            else
-                            {
-                                Log.Information("Couldn't determine best mining method.");
-                            }
-                        }
-
-                        var statusUpdaterTask = StatusUpdaterTaskAsync(DateTimeOffset.Now.AddSeconds(settings.ProfitCheckInterval), settings, appRootFolder, coins, poolProfitsDictionary, nicehashAlgorithms, nicehashProfitsDictionary, statusCts.Token);
-
-                        if (!token.IsCancellationRequested)
-                        {
-                            if (settings.ProfitCheckInterval > 0)
-                            {
-                                Task.Delay(TimeSpan.FromSeconds(settings.ProfitCheckInterval), token).Wait(token);
-                            }
-                            else
-                            {
-                                token.WaitHandle.WaitOne();
-                            }
-                        }
-
-                        statusCts.Cancel();
+                        _profitFetcherTaskCts = new CancellationTokenSource();
+                        CancellationToken ct = _profitFetcherTaskCts.Token;
+                        FetchPoolProfit(ct);
+                        Task.Delay(TimeSpan.FromSeconds(Config.ProfitCheckInterval), ct).Wait(ct);
                     }
-                    catch (TaskCanceledException)
+                    catch (Exception e)
                     {
-                        Log.Information("Cancelled profit task.");
-                        statusCts.Cancel();
-                        
-                    }
-                    catch (AggregateException)
-                    {
-                        Log.Information("Cancelled profit task 2.");
-                        statusCts.Cancel();
-                        
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        Log.Information("Cancelled profit task 3.");
-                        statusCts.Cancel();
-                        
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error("Profit switcher task failed: " + ex);
-                        statusCts.Cancel();
+                        Log.Debug("Profit fetching cancelled:" + e);
                     }
                 }
-            }, token);
+            });
         }
 
-        private static Task StatusUpdaterTaskAsync(DateTimeOffset estReset, Settings settings, DirectoryInfo appRootFolder, List<Coin> coins, Dictionary<ProfitProvider, Dictionary<string, Profit>> poolProfitsDictionary, List<NicehashAlgorithm> nicehashAlgorithms, Dictionary<int, Profit> nicehashProfitsDictionary, CancellationToken token)
+        private static void FetchPoolProfit(CancellationToken ct)
+        {
+            try
+            {
+                WriteInfo(" Fetching profit data..");
+                Dictionary<Pool, Profit> poolProfitData = new Dictionary<Pool, Profit>();
+                Dictionary<ProfitProvider, List<Pool>> profitProviderFetches = new Dictionary<ProfitProvider, List<Pool>>();
+                foreach (Algorithm algorithm in Config.Algorithms)
+                {
+                    if (algorithm.Enabled)
+                    {
+                        foreach (Pool algorithmPool in algorithm.Pools.Where(p => p.Enabled))
+                        {
+                            if (!profitProviderFetches.ContainsKey(algorithmPool.ProfitProvider))
+                            {
+                                profitProviderFetches[algorithmPool.ProfitProvider] = new List<Pool>() { algorithmPool };
+                            }
+                            else
+                            {
+                                profitProviderFetches[algorithmPool.ProfitProvider].Add(algorithmPool);
+                            }
+                        }
+                    }
+                }
+
+                foreach (var profitProviderFetch in profitProviderFetches)
+                {
+                    var profitProvider = PoolProfitProviderFactory.GetPoolProfitProvider(profitProviderFetch.Key);
+                    var profits = profitProvider.GetProfits(profitProviderFetch.Value, Config.EnableCaching, AppFolder, ct);
+                    foreach (var profit in profits)
+                    {
+                        poolProfitData[profit.Key] = profit.Value;
+                    }
+                }
+
+                _poolProfitData = poolProfitData;
+            }
+            catch (Exception e)
+            {
+                Log.Debug("Fetching profit data failed: " + e);
+            }
+        }
+
+        private static Task MiningSwitcherTaskAsync()
         {
             return Task.Run(() =>
             {
-                try
+                while (!_requestQuit)
                 {
-                    while (!token.IsCancellationRequested)
+                    try
                     {
-                        ResetConsole();
-
-                        Console.Write(" Press '");
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("p");
-                        Console.ResetColor();
-                        Console.WriteLine("' to refresh profits immediately.");
-
-                        if(_manualSelection)
-                        {
-                            Console.Write(" Press '");
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.Write("m");
-                            Console.ResetColor();
-                            Console.WriteLine("' to disable manual selection.");
-                        }
-                        else
-                        {
-                            Console.Write(" Press '");
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.Write("m");
-                            Console.ResetColor();
-                            Console.WriteLine("' to select a coin / NiceHash algorithm to mine manually.");
-                        }
-
-                        if ((_manualWatchdogEnabled.HasValue && _manualWatchdogEnabled.Value) || (!_manualWatchdogEnabled.HasValue && settings.EnableWatchdog))
-                        {
-                            Console.Write(" Press '");
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.Write("w");
-                            Console.ResetColor();
-                            Console.WriteLine("' to disable watchdog.");
-                        }
-                        else
-                        {
-                            Console.Write(" Press '");
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.Write("w");
-                            Console.ResetColor();
-                            Console.WriteLine("' to enable watchdog.");
-                        }
-
-                        Console.Write(" Press '");
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("r");
-                        Console.ResetColor();
-                        Console.WriteLine("' to reset the app and run the reset script if it is set.");
-
-                        Console.Write(" Press '");
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("s");
-                        Console.ResetColor();
-                        Console.WriteLine("' to reload the app without reset.");
-
-                        Console.Write(" Press '");
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("q");
-                        Console.ResetColor();
-                        Console.WriteLine("' to quit.");
-
-                        PrintProfitTable(coins, poolProfitsDictionary, nicehashAlgorithms, nicehashProfitsDictionary, settings);
-
-                        WriteInCyan(" CURRENT STATUS: ");
-
-                        if (_currentMineable != null && _currentMiner != null)
-                        {
-                            var currentHashrate = _currentMiner.GetCurrentHashrate(settings, appRootFolder);
-                            var roundedHashRate = Math.Round(currentHashrate, 2, MidpointRounding.AwayFromZero);
-                            var estimatedProfit = _currentMineable is Coin ? Helpers.GetPoolProfitForCoin((Coin)_currentMineable, poolProfitsDictionary, settings) : nicehashProfitsDictionary[((NicehashAlgorithm)_currentMineable).ApiId];
-                            double currentUsdReward = 0;
-                            double currentCoinReward = 0;
-
-                            if (estimatedProfit.UsdRewardLive > 0)
-                            {
-                                currentUsdReward = (estimatedProfit.UsdRewardLive / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
-                            }
-                            else if (estimatedProfit.UsdRewardDay > 0)
-                            {
-                                currentUsdReward = (estimatedProfit.UsdRewardDay / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
-                            }
-
-                            if (estimatedProfit.CoinRewardLive > 0)
-                            {
-                                currentCoinReward = (estimatedProfit.CoinRewardLive / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
-                            }
-                            else if (estimatedProfit.CoinRewardDay > 0)
-                            {
-                                currentCoinReward = (estimatedProfit.CoinRewardDay / _currentMineable.GetExpectedHashrate(settings)) * currentHashrate;
-                            }
-
-                            if (_currentMineable is Coin currentCoin)
-                            {
-                                Console.Write(" Mining:     ");
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.Write(_currentMineable.DisplayName);
-                                Console.ResetColor();
-                                Console.Write(" at ");
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.Write(roundedHashRate + "H/s");
-                                Console.ResetColor();
-                                if (currentUsdReward > 0 || currentCoinReward > 0)
-                                {
-                                    Console.Write(" (");
-                                    if (currentUsdReward > 0)
-                                    {
-                                        Console.ForegroundColor = ConsoleColor.Yellow;
-                                        Console.Write(currentUsdReward.ToCurrency("$"));
-                                        Console.ResetColor();
-                                    }
-                                    if (currentCoinReward > 0)
-                                    {
-                                        if (currentUsdReward > 0)
-                                        {
-                                            Console.Write(" / ");
-                                        }
-                                        Console.ForegroundColor = ConsoleColor.Yellow;
-                                        Console.Write($"{Math.Round(currentCoinReward, 4)} {currentCoin.TickerSymbol}");
-                                        Console.ResetColor();
-                                    }
-
-                                    Console.WriteLine(" per day)");
-                                }
-                            }
-                            else
-                            {
-                                Console.Write(" Hashing:    ");
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.Write(_currentMineable.DisplayName);
-                                Console.ResetColor();
-                                Console.Write(" on NiceHash at ");
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.Write(roundedHashRate + "H/s");
-                                Console.ResetColor();
-                                if (currentUsdReward > 0)
-                                {
-                                    Console.Write(" (");
-                                    Console.ForegroundColor = ConsoleColor.Yellow;
-                                    Console.Write(currentUsdReward.ToCurrency("$"));
-                                    Console.ResetColor();
-                                    Console.WriteLine(" per day)");
-                                }
-                            }
-
-                            var differenceToLastProfitSwitch = DateTimeOffset.Now.Subtract(_lastProfitSwitch).TotalSeconds;
-                            if (differenceToLastProfitSwitch < settings.ProfitSwitchCooldown)
-                            {
-                                Console.Write(" Cooldown:   Must wait ");
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.Write(Math.Round(settings.ProfitSwitchCooldown - differenceToLastProfitSwitch, 0, MidpointRounding.AwayFromZero));
-                                Console.ResetColor();
-                                Console.WriteLine(" seconds before switching.");
-                            }
-                            else
-                            {
-                                Console.WriteLine(" Cooldown:   Ready to switch.");
-                            }
-
-                            if (_manualSelection)
-                            {
-                                if (_manualSelectedMineable != null)
-                                {
-                                    Console.WriteLine($" Switching:  Manual -> {_manualSelectedMineable.DisplayName}");
-                                }
-                                else
-                                {
-                                    Console.WriteLine(" Switching:  Manual -> Press the corresponding key to select a specific coin / NiceHash algorithm");
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine($" Switching:  {settings.ProfitSwitchingStrategy.ToString()}");
-                            }
-
-                            if ((_manualWatchdogEnabled.HasValue && _manualWatchdogEnabled.Value) || (!_manualWatchdogEnabled.HasValue && settings.EnableWatchdog))
-                            {
-                                Console.Write(" Watchdog:   ");
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.Write(_watchdogOvershots);
-                                Console.ResetColor();
-                                Console.Write(" consecutive overshot(s) out of ");
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.Write(settings.WatchdogAllowedOversteps);
-                                Console.ResetColor();
-                                Console.WriteLine(" allowed.");
-                            }
-                            else
-                            {
-                                Console.WriteLine(" Watchdog:   Not activated.");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine(" Not mining.");
-                        }
-
-                        Console.WriteLine();
-                        if (settings.ProfitCheckInterval > 0)
-                        {
-                            var remainingSeconds = estReset.Subtract(DateTimeOffset.Now).TotalSeconds;
-                            Console.Write(" Will refresh automatically in ");
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.Write(Math.Round(remainingSeconds, 0, MidpointRounding.AwayFromZero));
-                            Console.ResetColor();
-                            Console.WriteLine(" seconds.");
-                        }
-                        else
-                        {
-                            Console.WriteLine(" Won't refresh automatically.");
-                        }
-                        Task.Delay(TimeSpan.FromSeconds(settings.DisplayUpdateInterval), token).Wait(token);
+                        _miningSwitcherTaskCts = new CancellationTokenSource();
+                        CancellationToken ct = _miningSwitcherTaskCts.Token;
+                        CheckSwitching();
+                        Task.Delay(TimeSpan.FromSeconds(Config.ProfitSwitchInterval), ct).Wait(ct);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Debug("Check switching cancelled:" + e);
                     }
                 }
-                catch (TaskCanceledException)
-                {
-                    Log.Information(" Cancelled status task.");
-                    return;
-                }
-                catch (AggregateException)
-                {
-                    Log.Information(" Cancelled status task 2.");
-                    return;
-                }
-                catch (OperationCanceledException)
-                {
-                    Log.Information("Cancelled status task 3.");
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(" Status task failed: " + ex);
-                }
-            }, token);
+
+            });
         }
 
-        private static Task WatchdogTaskAsync(Settings settings, string appFolderPath, DirectoryInfo appRootFolder, CancellationToken token)
+        private static void CheckSwitching()
         {
-            return Task.Run(() =>
+            try
             {
-                try
+                WriteInfo(" Check switching..");
+                IProfitSwitchingStrategy profitSwitchingStrategy = ProfitSwitchingStrategyFactory.GetProfitSwitchingStrategy(_profitSwitchingStrategy ?? ProfitSwitchingStrategy.MaximizeFiat);
+                // Find optimal configs
+                Dictionary<string, MiningConfig> optimalMiningConfigs = new Dictionary<string, MiningConfig>();
+                if (_manualMode)
                 {
-                    Task.Delay(TimeSpan.FromSeconds(settings.WatchdogDelay), token);
-                    while (!token.IsCancellationRequested)
+                    foreach (var manualMininigConfig in _manualMininigConfigs)
                     {
-                        if (_currentMineable != null && _currentMiner != null)
-                        {
-                            double estimatedHashrate = _currentMineable.GetExpectedHashrate(settings);
-                            double actualHashrate = _currentMiner.GetCurrentHashrate(settings, appRootFolder);
-                            double differenceRatio = actualHashrate / estimatedHashrate;
-
-                            if (!token.IsCancellationRequested)
-                            {
-                                if (differenceRatio < settings.WatchdogCriticalThreshold)
-                                {
-                                    _watchdogOvershots++;
-                                }
-                                else
-                                {
-                                    _watchdogOvershots = 0;
-                                }
-                            }
-
-                            if (_watchdogOvershots > settings.WatchdogAllowedOversteps && !token.IsCancellationRequested)
-                            {
-                                Log.Information("Watchdog: Too many overshots -> Requesting reset");
-                                ResetApp(settings, appFolderPath, true);
-                            }
-                        }
-                        Task.Delay(TimeSpan.FromSeconds(settings.WatchdogInterval), token).Wait(token);
+                        MiningConfig miningConfig = new MiningConfig(manualMininigConfig.Value.DeviceConfig, manualMininigConfig.Value.Pool);
+                        optimalMiningConfigs.Add(manualMininigConfig.Key, miningConfig);
                     }
                 }
-                catch (TaskCanceledException)
+                else
                 {
-                    Log.Information("Cancelled watchdog task.");
-                    return;
-                }
-                catch (AggregateException)
-                {
-                    Log.Information("Cancelled watchdog task 2.");
-                    return;
-                }
-                catch (OperationCanceledException)
-                {
-                    Log.Information("Cancelled watchdog task 3.");
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("Watchdog task failed: " + ex);
-                }
-            }, token);
-        }
-
-        private static Task KeypressesTaskAsync(string appFolderPath, DirectoryInfo appFolder, Settings settings, List<Coin> coins, List<NicehashAlgorithm> nicehashAlgorithms, CancellationToken token)
-        {
-            return Task.Run(() =>
-            {
-                try
-                {
-                    while (!token.IsCancellationRequested)
+                    foreach (Algorithm algorithm in Config.Algorithms)
                     {
-                        var readKey = Console.ReadKey(true);
-
-                        if (!token.IsCancellationRequested)
+                        if (algorithm.Enabled)
                         {
-                            if (readKey.Key == ConsoleKey.Q)
+                            foreach (DeviceConfig algorithmDeviceConfig in algorithm.DeviceConfigs)
                             {
-                                //Quit app
-                                StopMiner();
-                                Environment.Exit(0);
-                                _requestQuit = true;
-                                return;
-                            }
-                            else if (readKey.Key == ConsoleKey.P)
-                            {
-                                //Restart profit task
-                                RestartProfitTask(appFolderPath,appFolder,settings,coins,nicehashAlgorithms);
-                            }
-                            else if (readKey.Key == ConsoleKey.S)
-                            {
-                                //Relaunch app without reset script
-                                ResetApp(settings, appFolderPath, false);
-                            }
-                            else if (readKey.Key == ConsoleKey.R)
-                            {
-                                //Reset app
-                                ResetApp(settings, appFolderPath, true);
-                            }
-                            else if (readKey.Key == ConsoleKey.M)
-                            {
-                                //Toggle manual mode
-                                _manualSelection = !_manualSelection;
-                                _lastProfitSwitch = DateTimeOffset.MinValue;
-                                RestartProfitTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms);
-                            }
-                            else if (readKey.Key == ConsoleKey.W)
-                            {
-                                //Toggle watchdog mode
-                                if (!_manualWatchdogEnabled.HasValue)
+                                if (algorithmDeviceConfig.Enabled)
                                 {
-                                    _manualWatchdogEnabled = !settings.EnableWatchdog;
-                                }
-                                else
-                                {
-                                    _manualWatchdogEnabled = !_manualWatchdogEnabled.Value;
-                                }
-
-                                if (_manualWatchdogEnabled.Value)
-                                {
-                                    _watchdogCts?.Cancel();
-                                    _watchdogCts = new CancellationTokenSource();
-                                    var watchdogTask = WatchdogTaskAsync(settings, appFolderPath, appFolder, _watchdogCts.Token);
-                                }
-                                else
-                                {
-                                    _watchdogCts?.Cancel();
-                                }
-                               
-                            }
-                            else
-                            {
-                                //Manual selection
-                                int keyIndex = Helpers.ManualSelectionDictionary.Keys.ToList().IndexOf(readKey.Key);
-                                if (keyIndex >= 0)
-                                {
-                                    if (keyIndex < coins.Count)
+                                    foreach (Pool algorithmPool in algorithm.Pools.Where(p => p.Enabled))
                                     {
-                                        if (_manualSelectedMineable != coins[keyIndex])
+                                        Profit? profit = GetAdjustedProfit(algorithmPool, algorithmDeviceConfig.ExpectedHashrate, true);
+                                        if (profit.HasValue)
                                         {
-                                            _manualSelectedMineable = coins[keyIndex];
-                                            _lastProfitSwitch = DateTimeOffset.MinValue;
-                                            RestartProfitTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        int nicehashIndex = keyIndex - coins.Count;
-                                        if (nicehashIndex < nicehashAlgorithms.Count)
-                                        {
-                                            if (_manualSelectedMineable != nicehashAlgorithms[nicehashIndex])
+                                            if (!optimalMiningConfigs.ContainsKey(algorithmDeviceConfig.FullDeviceId))
                                             {
-                                                _manualSelectedMineable = nicehashAlgorithms[nicehashIndex];
-                                                _lastProfitSwitch = DateTimeOffset.MinValue;
-                                                RestartProfitTask(appFolderPath, appFolder, settings, coins, nicehashAlgorithms);
+                                                SetOptimalMiningConfigWithThreshold(profit.Value, profitSwitchingStrategy, algorithmDeviceConfig, algorithmPool, optimalMiningConfigs);
+                                            }
+                                            else
+                                            {
+                                                MiningConfig bestMiningConfig = optimalMiningConfigs[algorithmDeviceConfig.FullDeviceId];
+                                                Profit? bestProfit = GetAdjustedProfit(bestMiningConfig.Pool, bestMiningConfig.DeviceConfig.ExpectedHashrate, true);
+                                                if (!bestProfit.HasValue || profitSwitchingStrategy.IsProfitABetterThanB(profit.Value, algorithmPool.ProfitTimeframe, bestProfit.Value, bestMiningConfig.Pool.ProfitTimeframe, 0))
+                                                {
+                                                    SetOptimalMiningConfigWithThreshold(profit.Value, profitSwitchingStrategy, algorithmDeviceConfig, algorithmPool, optimalMiningConfigs);
+                                                }
                                             }
                                         }
                                     }
@@ -755,63 +335,236 @@ namespace CryptonightProfitSwitcher
                         }
                     }
                 }
-                catch (TaskCanceledException)
+
+                // Merge miners and get list of optimal miners
+                List<IMiner> optimalMiners = new List<IMiner>();
+                foreach (var optimalMiningConfigKeyValue in optimalMiningConfigs)
                 {
-                    Log.Information("Cancelled key presses task.");
-                    //ResetApp(settings,appFolderPath);
-                    return;
+                    MiningConfig miningConfig = optimalMiningConfigKeyValue.Value;
+                    IMiner miner = MinerFactory.GetMiner(new HashSet<DeviceConfig>() { miningConfig.DeviceConfig }, miningConfig.Pool);
+                    IMiner existingMiner = optimalMiners.FirstOrDefault(m => m.Name == miner.Name && m.Pool.Equals(miner.Pool));
+                    if (existingMiner != null)
+                    {
+                        existingMiner.DeviceConfigs.Add(miningConfig.DeviceConfig);
+                        miningConfig.Miner = existingMiner;
+                    }
+                    else
+                    {
+                        miningConfig.Miner = miner;
+                        optimalMiners.Add(miner);
+                    }
                 }
-                catch (AggregateException)
+
+                bool displayNeedsUpdate = false;
+                // Get list of current miners
+                List<IMiner> currentMiners = GetCurrentMiners();
+
+                //Check if existing miner will be kept
+                foreach (IMiner currentMiner in currentMiners)
                 {
-                    Log.Information("Cancelled key presses task 2.");
-                    //ResetApp(settings, appFolderPath);
-                    return;
+                    if (optimalMiners.Any(om => om.Pool.Equals(currentMiner.Pool) && om.DeviceConfigs.SetEquals(currentMiner.DeviceConfigs)))
+                    {
+                        foreach (DeviceConfig currentMinerDeviceConfig in currentMiner.DeviceConfigs)
+                        {
+                            optimalMiningConfigs[currentMinerDeviceConfig.FullDeviceId].Miner = currentMiner;
+                        }
+                    }
                 }
-                catch (OperationCanceledException)
+
+                //Check if existing miner has to be closed
+                foreach (IMiner currentMiner in currentMiners.ToArray())
                 {
-                    Log.Information("Cancelled key presses task 3.");
-                    return;
+                    if (!optimalMiners.Any(om => om.Pool.Equals(currentMiner.Pool) && om.DeviceConfigs.SetEquals(currentMiner.DeviceConfigs)))
+                    {
+                        displayNeedsUpdate = true;
+                        currentMiner.StopMiner();
+                        currentMiners.Remove(currentMiner);
+                    }
                 }
-                catch (Exception ex)
+
+                //Check if new miner has to start
+                foreach (IMiner optimalMiner in optimalMiners)
                 {
-                    Log.Error("Key presses task failed: " + ex);
+                    if (!currentMiners.Any(cm => cm.Pool.Equals(optimalMiner.Pool) && cm.DeviceConfigs.SetEquals(optimalMiner.DeviceConfigs)))
+                    {
+                        displayNeedsUpdate = true;
+                        foreach (DeviceConfig deviceConfig in optimalMiner.DeviceConfigs)
+                        {
+                            if (!string.IsNullOrEmpty(deviceConfig.PrepareScript))
+                            {
+                                Helpers.ExecuteScript(deviceConfig.MinerPath, AppFolderPath);
+                            }
+                        }
+                        Task.Delay(TimeSpan.FromSeconds(Config.MinerStartDelay)).Wait();
+                        optimalMiner.StartMiner(Config.StartMinerMinimized);
+                    }
                 }
-            }, token);
+
+                _currentMininigConfigs = optimalMiningConfigs;
+
+                if (displayNeedsUpdate)
+                {
+                    _displayUpdaterCts?.Cancel();
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Debug("Check switching failed: " + e);
+            }
         }
 
-        private static void RestartProfitTask(string appFolderPath, DirectoryInfo appFolder, Settings settings, List<Coin> coins, List<NicehashAlgorithm> nicehashAlgorithms)
+        private static void SetOptimalMiningConfigWithThreshold(Profit profit, IProfitSwitchingStrategy profitSwitchingStrategy, DeviceConfig algorithmDeviceConfig, Pool algorithmPool, Dictionary<string, MiningConfig> optimalMiningConfigs)
         {
-            _profitSwitcherTaskCts.Cancel();
-            _profitSwitcherTask.Wait(10000);
-            _profitSwitcherTaskCts = new CancellationTokenSource();
-            _profitSwitcherTask = ProfitSwitcherTaskAsync(appFolderPath, appFolder, settings, coins, nicehashAlgorithms, _profitSwitcherTaskCts.Token);
+            MiningConfig newMiningConfig = new MiningConfig(algorithmDeviceConfig, algorithmPool);
+            if (_currentMininigConfigs.ContainsKey(algorithmDeviceConfig.FullDeviceId))
+            {
+                MiningConfig currentMiningConfig = _currentMininigConfigs[algorithmDeviceConfig.FullDeviceId];
+                Profit? currentProfit = GetAdjustedProfit(currentMiningConfig.Pool, currentMiningConfig.DeviceConfig.ExpectedHashrate, true);
+                if (!currentProfit.HasValue || profitSwitchingStrategy.IsProfitABetterThanB(profit, algorithmPool.ProfitTimeframe, currentProfit.Value, currentMiningConfig.Pool.ProfitTimeframe, Config.ProfitSwitchThreshold))
+                {
+                    newMiningConfig = new MiningConfig(currentMiningConfig.DeviceConfig, currentMiningConfig.Pool);
+                }
+            }
+            optimalMiningConfigs[newMiningConfig.DeviceConfig.FullDeviceId] = newMiningConfig;
         }
 
-        private static void ResetConsole()
+        private static Task KeyPressesTaskAsync(CancellationToken ct)
         {
-            Console.CursorVisible = false;
-            Console.Clear();
-            string updateText = _newVersionAvailable ? " (NEW UPDATE AVAILABLE!)" : String.Empty;
-            WriteInCyan($" CRYPTONIGHT PROFIT SWITCHER | VERSION: {Helpers.GetApplicationVersion()}{updateText}");
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine(" https://github.com/cryptoprofitswitcher/CryptonightProfitSwitcher");
-            Console.ResetColor();
-            Console.WriteLine();
+            return Task.Run(() =>
+            {
+                try
+                {
+                    while (!ct.IsCancellationRequested)
+                    {
+                        Task.Delay(1000, ct).Wait(ct);
+                        while (Console.CursorVisible)
+                        {
+                            Task.Delay(1000, ct).Wait(ct);
+                        }
+                        ConsoleKeyInfo readKey = Console.ReadKey(true);
+                        if (!Console.CursorVisible)
+                        {
+                            switch (readKey.Key)
+                            {
+                                case ConsoleKey.A:
+                                    if (_manualMode)
+                                    {
+                                        WriteInfo(" Disabling manual mode..");
+                                        _manualMode = false;
+                                        _manualMininigConfigs = null;
+                                        _miningSwitcherTaskCts?.Cancel();
+                                    }
+                                    else
+                                    {
+                                        WriteInfo(" Reconfigure profit switching strategy due to key press..");
+                                        _profitSwitchingStrategy = null;
+                                        _displayUpdaterCts?.Cancel();
+                                    }
+                                    break;
+                                case ConsoleKey.U:
+                                    WriteInfo(" Updating display due to key press..");
+                                    _displayUpdaterCts?.Cancel();
+                                    break;
+                                case ConsoleKey.F:
+                                    WriteInfo(" Fetching profits due to key press..");
+                                    _profitFetcherTaskCts?.Cancel();
+                                    break;
+                                case ConsoleKey.C:
+                                    WriteInfo(" Check switching due to key press..");
+                                    _miningSwitcherTaskCts?.Cancel();
+                                    break;
+                                case ConsoleKey.M:
+                                    if (_manualMode)
+                                    {
+                                        WriteInfo(" Reconfigure manual mode due to key press..");
+                                        _manualMininigConfigs = null;
+                                        _displayUpdaterCts?.Cancel();
+                                    }
+                                    else
+                                    {
+                                        WriteInfo(" Activating manual mode..");
+                                        _manualMininigConfigs = null;
+                                        _manualMode = true;
+                                        _displayUpdaterCts?.Cancel();
+                                    }
+                                    break;
+                                case ConsoleKey.R:
+                                    WriteInfo(" Reloading config due to key press..");
+                                    InitConfig();
+                                    break;
+                                case ConsoleKey.Q:
+                                    WriteInfo(" Quitting due to key press..");
+                                    Quit();
+                                    break;
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Debug("Key presses task failed:" + e);
+                    throw;
+                }
+            }, ct);
         }
 
-        private static void WriteInCyan(string text)
+        private static Task DisplayUpdaterTaskAsync()
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine(text);
-            Console.ResetColor();
+            return Task.Run(() =>
+            {
+                while (!_requestQuit)
+                {
+                    try
+                    {
+                        _displayUpdaterCts = new CancellationTokenSource();
+                        CancellationToken ct = _displayUpdaterCts.Token;
+                        UpdateDisplay();
+                        Task.Delay(TimeSpan.FromSeconds(Config.DisplayUpdateInterval), ct).Wait(ct);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Debug("Update display cancelled:" + e);
+                    }
+                }
+            });
         }
 
-        private static void PrintProfitTable(List<Coin> coins, Dictionary<ProfitProvider, Dictionary<string, Profit>> poolProfitsDictionary, List<NicehashAlgorithm> nicehashAlgorithms, Dictionary<int, Profit> nicehashProfitsDictionary, Settings settings)
+        private static void UpdateDisplay()
         {
-            Console.WriteLine();
+            try
+            {
+                ResetConsole();
+                if (_poolProfitData != null)
+                {
+                    List<Pool> printedPools = PrintProfits();
+                    if (_manualMode && _manualMininigConfigs == null)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine();
+                        PrintManualModeConfig(printedPools);
+                    }
+                }
+                if (!_manualMode && _profitSwitchingStrategy == null)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    PrintAutoModeConfig();
+                }
+                Console.WriteLine();
+                Console.WriteLine();
+                PrintMiningStatus();
+                Console.WriteLine();
+            }
+            catch (Exception e)
+            {
+                Log.Debug("Update display failed: " + e);
+            }
+        }
 
-            WriteInCyan(" POOL MINED COINS SUMMARY: ");
-
+        private static List<Pool> PrintProfits()
+        {
+            var printedPools = new List<Pool>();
+            WriteLineColor(" EXPECTED PROFIT FOR POOLS: ", ConsoleColor.Cyan);
             var headerThickness = new LineThickness(LineWidth.Double, LineWidth.Single);
             var poolGrid = new Grid
             {
@@ -820,203 +573,458 @@ namespace CryptonightProfitSwitcher
                 Columns = { GridLength.Auto },
                 Children =
                 {
-                        new Cell("Name") { Stroke = headerThickness, Color = ConsoleColor.Magenta, Padding = new Thickness(2,0,10,0) },
+                        new Cell("Pool") { Stroke = headerThickness, Color = ConsoleColor.Magenta, Padding = new Thickness(2,0,10,0) },
                 },
             };
 
-            foreach (var profits in poolProfitsDictionary)
+            HashSet<string> deviceIds = GetActiveDeviceIds();
+
+            foreach (var deviceId in deviceIds)
             {
                 poolGrid.Columns.Add(GridLength.Auto);
-                poolGrid.Children.Add(new Cell(profits.Key.ToString()) { Stroke = headerThickness, Color = ConsoleColor.Magenta, Padding = new Thickness(2, 0, 2, 0) });
+                poolGrid.Children.Add(new Cell(deviceId) { Stroke = headerThickness, Color = ConsoleColor.Magenta, Padding = new Thickness(2, 0, 2, 0) });
             }
 
-            int mineableIndex = -1;
-            foreach (var coin in coins)
+            List<DevicePoolProfitData> devicePoolProfitDatas = new List<DevicePoolProfitData>();
+            foreach (var poolProfit in _poolProfitData)
             {
-                mineableIndex++;
-                string displayName = _manualSelection ? $"[{Helpers.ManualSelectionDictionary.ElementAt(mineableIndex).Value}] {coin.DisplayName}" : coin.DisplayName;
-                poolGrid.Children.Add(new Cell(displayName) { Color = coin.IsEnabled() ? ConsoleColor.Yellow : ConsoleColor.DarkGray, Padding = new Thickness(2, 0, 10, 0) });
-                foreach (var profits in poolProfitsDictionary)
+                DevicePoolProfitData devicePoolProfitData = new DevicePoolProfitData(poolProfit.Key);
+                foreach (string deviceId in deviceIds)
                 {
-                    var profit = profits.Value.GetValueOrDefault(coin.TickerSymbol, new Profit());
-                    poolGrid.Children.Add(profit.UsdRewardLive <= 0
-                        ? new Cell("No data") { Color = ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) }
-                        : new Cell(profit.ToString()) { Color = coin.IsEnabled() ? ConsoleColor.Gray : ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) });
+                    double expectedHashrate = 0;
+                    DeviceConfig deviceConfig = GetDeviceConfigForPool(poolProfit.Key, deviceId);
+                    if (deviceConfig != null)
+                    {
+                        expectedHashrate = deviceConfig.ExpectedHashrate;
+                    }
+
+                    Profit? profit = GetAdjustedProfit(poolProfit.Key, expectedHashrate, false);
+                    devicePoolProfitData.DeviceProfits[deviceId] = profit;
+                }
+                devicePoolProfitDatas.Add(devicePoolProfitData);
+            }
+
+            Dictionary<string, double> maxProfits = new Dictionary<string, double>();
+            foreach (string deviceId in deviceIds)
+            {
+                maxProfits[deviceId] = devicePoolProfitDatas.Max(dppds => dppds.DeviceProfits[deviceId]?.GetMostCurrentUsdReward() ?? 0);
+            }
+
+            int poolIndex = 0;
+            foreach (DevicePoolProfitData devicePoolProfitData in devicePoolProfitDatas)
+            {
+                poolIndex++;
+                printedPools.Add(devicePoolProfitData.Pool);
+                string displayName = _manualMode && _manualMininigConfigs == null ? $"[{poolIndex}] " + devicePoolProfitData.Pool.UniqueName : devicePoolProfitData.Pool.UniqueName;
+                poolGrid.Children.Add(new Cell(displayName) { Color = ConsoleColor.Yellow, Padding = new Thickness(2, 0, 10, 0) });
+                foreach (string deviceId in deviceIds)
+                {
+                    double maxProfit = maxProfits[deviceId];
+                    Profit? profit = devicePoolProfitData.DeviceProfits[deviceId];
+                    if (profit != null)
+                    {
+                        ConsoleColor color = profit.Value.GetMostCurrentUsdReward() < maxProfit ? ConsoleColor.Gray : ConsoleColor.Green;
+                        poolGrid.Children.Add(!profit.Value.HasValues()
+                            ? new Cell("No data") { Color = ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) }
+                            : new Cell(profit) { Color = color, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) });
+                    }
                 }
             }
+
             var poolDoc = new Document(poolGrid);
             ConsoleRenderer.RenderDocument(poolDoc);
+            return printedPools;
+        }
+
+        private static void PrintManualModeConfig(List<Pool> printedPools)
+        {
+            var manualMininigConfigs = new Dictionary<string, MiningConfig>();
+            WriteLineColor(" MANUAL MODE CONFIG: ", ConsoleColor.Cyan);
+            WriteLineColor(" Use the numbers above to set a pool.", ConsoleColor.DarkGray);
+            WriteLineColor(" Or use \"0\" to disable the device.", ConsoleColor.DarkGray);
             Console.WriteLine();
-            WriteInCyan(" NICEHASH ALGORITHMS SUMMARY: ");
-
-            int firstColumnWidth = 0;
-            int otherColumnWidth = 0;
-            for (int i = 0; i < poolGrid.Columns.Count; i++)
+            Console.CursorVisible = true;
+            foreach (string deviceId in GetActiveDeviceIds())
             {
-                if (i == 0)
+                DeviceConfig deviceConfig = null;
+                Pool selectedPool = null;
+                bool noPool = false;
+                while ((selectedPool == null || deviceConfig == null) && !noPool)
                 {
-                    firstColumnWidth = poolGrid.Columns[i].ActualWidth;
+                    Console.Write(" Set the pool for ");
+                    WriteColor(deviceId, ConsoleColor.Yellow);
+                    Console.Write(": ");
+
+                    string userInput = Console.ReadLine();
+                    if (int.TryParse(userInput, out int poolUserIndex))
+                    {
+                        if (poolUserIndex == 0)
+                        {
+                            noPool = true;
+                        }
+                        else if (poolUserIndex > 0 && poolUserIndex <= printedPools.Count)
+                        {
+                            selectedPool = printedPools[poolUserIndex - 1];
+                            deviceConfig = GetDeviceConfigForPool(selectedPool, deviceId);
+                            if (deviceConfig == null)
+                            {
+                                Console.WriteLine(" The selected pool is not valid for this device.");
+                            }
+                        }
+                    }
                 }
-                else
+
+                if (!noPool)
                 {
-                    otherColumnWidth += poolGrid.Columns[i].ActualWidth;
+                    manualMininigConfigs[deviceConfig.FullDeviceId] = new MiningConfig(deviceConfig, selectedPool);
                 }
             }
-            var nicehashGrid = new Grid
-            {
-                Color = ConsoleColor.White,
-                MinWidth = poolGrid.ActualWidth,
-                Margin = new Thickness(1, 0, 0, 0),
-                Columns = { new GridLength(firstColumnWidth, GridUnit.Char), new GridLength(otherColumnWidth, GridUnit.Char) },
-                Children =
-                {
-                        new Cell("Name") { Stroke = headerThickness, Color = ConsoleColor.Magenta , Padding = new Thickness(2, 0, 2, 0)},
-                        new Cell("NiceHash API") { Stroke = headerThickness, Color = ConsoleColor.Magenta, Padding = new Thickness(2, 0, 2, 0) }
-                }
-            };
+            Console.CursorVisible = false;
 
-            foreach (var nicehashAlgorithm in nicehashAlgorithms)
-            {
-                mineableIndex++;
-                string displayName = _manualSelection ? $"[{Helpers.ManualSelectionDictionary.ElementAt(mineableIndex).Value}] {nicehashAlgorithm.DisplayName}" : nicehashAlgorithm.DisplayName;
-                nicehashGrid.Children.Add(new Cell(displayName) { Color = nicehashAlgorithm.IsEnabled() ? ConsoleColor.Yellow : ConsoleColor.DarkGray, Padding = new Thickness(2, 0, 2, 0) });
-                var profit = nicehashProfitsDictionary.GetValueOrDefault(nicehashAlgorithm.ApiId, new Profit());
-                nicehashGrid.Children.Add(profit.UsdRewardLive <= 0
-                    ? new Cell("No data") { Color = ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) }
-                    : new Cell(profit.ToString()) { Color = nicehashAlgorithm.IsEnabled() ? ConsoleColor.Gray : ConsoleColor.DarkGray, Align = Align.Center, Padding = new Thickness(2, 0, 2, 0) });
-            }
-            var nicehashDoc = new Document(nicehashGrid);
-            ConsoleRenderer.RenderDocument(nicehashDoc);
-
+            _manualMininigConfigs = manualMininigConfigs;
+            _miningSwitcherTaskCts?.Cancel();
             Console.WriteLine();
         }
 
-        private static void ResetApp(Settings settings, string appFolderPath, bool runResetScript)
+        private static void PrintAutoModeConfig()
         {
-            Log.Information(runResetScript ? "Resetting app with reset script!" : "Resetting app without reset script!");
-            _profitSwitcherTaskCts.Cancel();
-            _profitSwitcherTask.Wait(10000);
-            StopMiner();
-            Thread.Sleep(TimeSpan.FromSeconds(settings.MinerStartDelay));
-            if (runResetScript)
+            Console.CursorVisible = true;
+            WriteLineColor(" AUTO MODE CONFIG: ", ConsoleColor.Cyan);
+            WriteLineColor(" Use the numbers below to set the profit switching strategy.", ConsoleColor.DarkGray);
+            Console.WriteLine();
+            var strategies = Enum.GetValues(typeof(ProfitSwitchingStrategy)).Cast<ProfitSwitchingStrategy>().ToList();
+            for (var index = 0; index < strategies.Count; index++)
             {
-                ExecuteScript(settings.ResetScript, appFolderPath);
+                ProfitSwitchingStrategy profitSwitchingStrategy = strategies[index];
+                Console.Write(" [");
+                WriteColor((index + 1).ToString(CultureInfo.InvariantCulture), ConsoleColor.Yellow);
+                Console.WriteLine($"] {profitSwitchingStrategy.ToString()}");
             }
-            _keyPressesCts?.Cancel();
-            _mainResetCts?.Cancel();
-            _lastProfitSwitch = DateTimeOffset.MinValue;
+            Console.WriteLine();
+
+            while (!_profitSwitchingStrategy.HasValue)
+            {
+                Console.Write(" Type the number: ");
+                string userInput = Console.ReadLine();
+                if (int.TryParse(userInput, out int userIndex))
+                {
+                    if (userIndex > 0 && userIndex <= strategies.Count)
+                    {
+                        _profitSwitchingStrategy = strategies[userIndex - 1];
+                    }
+                }
+            }
+            Console.CursorVisible = false;
+            Console.WriteLine();
+            _miningSwitcherTaskCts?.Cancel();
         }
 
-        private static void StartMiner(Mineable mineable, Settings settings, string appRoot, DirectoryInfo appRootFolder)
+        private static void PrintMiningStatus()
         {
-            var differenceToLastProfitSwitch = DateTimeOffset.Now.Subtract(_lastProfitSwitch).TotalSeconds;
-            if (differenceToLastProfitSwitch > settings.ProfitSwitchCooldown)
+            const int extraPadding = 3;
+            const string total = "Total";
+
+            WriteLineColor(" CURRENT STATUS: ", ConsoleColor.Cyan);
+            Console.WriteLine();
+            if (_currentMininigConfigs.Count > 0)
             {
-                StopMiner();
+                List<IMiner> currentMiners = GetCurrentMiners();
+                var deviceStatuses = new List<DeviceStatus>();
 
-                _currentMineable = mineable;
-
-                ExecuteScript(mineable.PrepareScript, appRoot);
-
-                _currentMiner = MinerFactory.GetMiner(mineable.Miner);
-                _lastProfitSwitch = DateTimeOffset.Now;
-
-                try
+                foreach (var currentMiner in currentMiners)
                 {
-                    Log.Information($"Starting {_currentMiner.Name} with {mineable.DisplayName}.");
-                    _currentMiner.StartMiner(mineable, settings, appRoot, appRootFolder);
-                }
-                catch (Exception ex)
-                {
-                    Log.Warning("Couldn't start miner: " + ex);
-                    ResetApp(settings, appRoot, false);
-                }
-
-                if(_manualWatchdogEnabled.HasValue)
-                {
-                    if (_manualWatchdogEnabled.Value)
+                    if (currentMiner.SupportsIndividualHashrate || currentMiner.DeviceConfigs.Count == 1)
                     {
-                        _watchdogCts?.Cancel();
-                        _watchdogCts = new CancellationTokenSource();
-                        var watchdogTask = WatchdogTaskAsync(settings, appRoot, appRootFolder, _watchdogCts.Token);
+                        foreach (DeviceConfig deviceConfig in currentMiner.DeviceConfigs)
+                        {
+                            double currentHashrate = currentMiner.GetCurrentHashrate(deviceConfig);
+                            Profit? profit = GetAdjustedProfit(currentMiner.Pool, currentHashrate, false);
+                            if (profit.HasValue)
+                            {
+                                deviceStatuses.Add(new DeviceStatus(deviceConfig.FullDeviceId, currentMiner.Pool, currentHashrate, profit.Value));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        double currentHashrate = currentMiner.GetCurrentHashrate(null);
+                        Profit? profit = GetAdjustedProfit(currentMiner.Pool, currentHashrate, false);
+                        string combinedDeviceNames = string.Join(" | ", currentMiner.DeviceConfigs.Select(dc => dc.FullDeviceId));
+                        if (profit.HasValue)
+                        {
+                            deviceStatuses.Add(new DeviceStatus(combinedDeviceNames, currentMiner.Pool, currentHashrate, profit.Value));
+                        }
                     }
                 }
-                else
+
+                int maxDeviceNameLength = Math.Max(deviceStatuses.Max(ds => ds.Name.Length), total.Length);
+
+                PrintMode(maxDeviceNameLength + extraPadding);
+
+                foreach (DeviceStatus deviceStatus in deviceStatuses)
                 {
-                    if (settings.EnableWatchdog)
+                    Console.WriteLine();
+                    string leftText = $" {deviceStatus.Name}:".PadRight(maxDeviceNameLength + extraPadding);
+                    WriteColor(leftText, ConsoleColor.Magenta);
+                    Console.Write(" Mining on ");
+                    WriteColor(deviceStatus.Pool.UniqueName, ConsoleColor.Yellow);
+                    Console.Write(" at ");
+                    WriteColor(deviceStatus.Hashrate.ToHashrate(), ConsoleColor.Yellow);
+                    double usdProfit = deviceStatus.Profit.GetMostCurrentUsdReward();
+                    if (usdProfit > 0)
                     {
-                        _watchdogCts?.Cancel();
-                        _watchdogCts = new CancellationTokenSource();
-                        var watchdogTask = WatchdogTaskAsync(settings, appRoot, appRootFolder, _watchdogCts.Token);
+                        Console.Write(" (");
+                        WriteColor(usdProfit.ToCurrency("$"), ConsoleColor.Yellow);
+                        Console.Write(" per day)");
                     }
                 }
-                
+                Console.WriteLine();
+                Console.WriteLine();
+                WriteColor($" {total}:".PadRight(maxDeviceNameLength + extraPadding), ConsoleColor.Magenta);
+                Console.Write(" You are currently earning ");
+                double totalUsdProfit = deviceStatuses.Sum(ds => ds.Profit.GetMostCurrentUsdReward());
+                WriteColor(totalUsdProfit.ToCurrency("$"), ConsoleColor.Green);
+                Console.Write(" per day.");
+                Console.WriteLine();
             }
             else
             {
-                Console.WriteLine($"Didn't switched to {mineable.DisplayName}! Waiting {settings.ProfitSwitchCooldown} seconds to cooldown.");
+                PrintMode(4 + extraPadding);
+                Console.WriteLine();
+                WriteLineColor(" Not mining.", ConsoleColor.Yellow);
             }
         }
 
-        private static void StopMiner()
+        private static void PrintMode(int leftWidth)
         {
-            if (_currentMiner != null)
+            Console.Write(" Mode:".PadRight(leftWidth));
+            if (_manualMode)
             {
-                Log.Information($"Stopping {_currentMiner.Name}.");
+                Console.Write(" Manual -> switch pools using the key '");
+                WriteColor("m", ConsoleColor.Yellow);
+                Console.WriteLine("'");
             }
-            _watchdogCts?.Cancel();
-            _currentMiner?.StopMiner();
-            _currentMiner = null;
-            _currentMineable = null;
-            _watchdogOvershots = 0;
+            else
+            {
+                Console.Write(" Auto -> profit switching with ");
+                WriteColor(_profitSwitchingStrategy.Value.ToString(), ConsoleColor.Yellow);
+                Console.Write(" strategy (press '");
+                WriteColor("a", ConsoleColor.Yellow);
+                Console.WriteLine("' to change strategy)");
+            }
         }
 
-        private static void ExecuteScript(string scriptPath, string appFolderPath)
+        private static void ResetConsole()
         {
-            try
+            Console.CursorVisible = false;
+            Console.Clear();
+            string updateText = _newVersionAvailable ? " (NEW UPDATE AVAILABLE!)" : String.Empty;
+            WriteLineColor($" CRYPTO PROFIT SWITCHER | VERSION: {Helpers.GetApplicationVersion()}{updateText}", ConsoleColor.Cyan);
+            WriteLineColor(" https://github.com/cryptoprofitswitcher/CryptoProfitSwitcher", ConsoleColor.DarkGray);
+
+            if (Config != null)
             {
-                if (!String.IsNullOrEmpty(scriptPath))
+                Console.Write(" Config:  DisplayUpdateInterval ");
+                WriteColor(Config.DisplayUpdateInterval.ToString(CultureInfo.InvariantCulture), ConsoleColor.Yellow);
+                Console.Write("s | ProfitCheckInterval ");
+                WriteColor(Config.ProfitCheckInterval.ToString(CultureInfo.InvariantCulture), ConsoleColor.Yellow);
+                Console.Write("s | SwitchInterval ");
+                WriteColor(Config.ProfitSwitchInterval.ToString(CultureInfo.InvariantCulture), ConsoleColor.Yellow);
+                Console.Write("s | SwitchThreshold ");
+                WriteLineColor(Config.ProfitSwitchThreshold.ToString(CultureInfo.InvariantCulture), ConsoleColor.Yellow);
+            }
+            Console.Write(" Hotkeys: ");
+            WriteColor("u", ConsoleColor.Yellow);
+            Console.Write(" - update display, ");
+            WriteColor("f", ConsoleColor.Yellow);
+            Console.Write(" - fetch profits, ");
+            WriteColor("c", ConsoleColor.Yellow);
+            Console.Write(" - check switch, ");
+            if (_manualMode)
+            {
+                WriteColor("a", ConsoleColor.Yellow);
+                Console.Write(" - auto mode, ");
+            }
+            else
+            {
+                WriteColor("m", ConsoleColor.Yellow);
+                Console.Write(" - manual mode, ");
+            }
+            WriteColor("r", ConsoleColor.Yellow);
+            Console.Write(" - reload config, ");
+            WriteColor("q", ConsoleColor.Yellow);
+            Console.WriteLine(" - quit");
+            Console.WriteLine();
+        }
+
+        private static void BenchmarkIfNeeded()
+        {
+            if (!Config.DisableBenchmarking)
+            {
+                WriteInfo(" Checking if benchmarking is needed..");
+                List<MiningConfig> configsToTest = new List<MiningConfig>();
+                foreach (Algorithm algorithm in Config.Algorithms)
                 {
-                    //Execute reset script
-                    var fileInfo = new FileInfo(Helpers.ResolveToFullPath(scriptPath, appFolderPath));
-                    switch (fileInfo.Extension)
+                    if (algorithm.Enabled)
                     {
-                        case ".bat":
-                        case ".BAT":
-                        case ".cmd":
-                        case ".CMD":
+                        foreach (DeviceConfig deviceConfig in algorithm.DeviceConfigs)
+                        {
+                            if (deviceConfig.Enabled && deviceConfig.ExpectedHashrate <= 0)
                             {
-                                // Run batch in Windows
-                                var resetProcess = new Process();
-                                resetProcess.StartInfo.FileName = "cmd.exe";
-                                resetProcess.StartInfo.Arguments = $"/c {Helpers.ResolveToArgumentPath(scriptPath, appFolderPath)}";
-                                resetProcess.StartInfo.UseShellExecute = true;
-                                resetProcess.StartInfo.CreateNoWindow = false;
-                                resetProcess.StartInfo.RedirectStandardOutput = false;
-                                resetProcess.Start();
-                                resetProcess.WaitForExit();
-                                break;
+                                configsToTest.Add(new MiningConfig(deviceConfig, algorithm.Pools.First(p => p.Enabled)));
                             }
-                        case ".sh":
-                            {
-                                // Run sh script in Linux
-                                var resetProcess = new Process();
-                                resetProcess.StartInfo.FileName = "x-terminal-emulator";
-                                resetProcess.StartInfo.Arguments = $"-e \"'{Helpers.ResolveToFullPath(scriptPath, appFolderPath)}'\"";
-                                resetProcess.StartInfo.UseShellExecute = true;
-                                resetProcess.StartInfo.CreateNoWindow = false;
-                                resetProcess.StartInfo.RedirectStandardOutput = false;
-                                resetProcess.Start();
-                                resetProcess.WaitForExit();
-                                break;
-                            }
+                        }
+                    }
+                }
+
+                if (configsToTest.Count == 0)
+                {
+                    WriteInfo(" Benchmarking not needed: All algorithm-device-combinations have a valid expected hashrate.");
+                }
+                else
+                {
+                    WriteInfo(" Benchmarking needed: Not all algorithm-device-combinations have a valid expected hashrate.");
+                    Console.WriteLine();
+                    WriteLineColor(" BENCHMARKING:", ConsoleColor.Cyan);
+                    foreach (MiningConfig miningConfig in configsToTest)
+                    {
+                        Console.WriteLine();
+                        Console.Write(" Benchmarking ");
+                        WriteColor(miningConfig.DeviceConfig.FullDeviceId, ConsoleColor.Yellow);
+                        Console.Write(" on ");
+                        WriteColor(miningConfig.Pool.UniqueName, ConsoleColor.Yellow);
+                        Console.WriteLine("..");
+                        IMiner miner = MinerFactory.GetMiner(new HashSet<DeviceConfig>() { miningConfig.DeviceConfig }, miningConfig.Pool);
+                        miner.StartMiner(Config.StartMinerMinimized);
+                        int userInputHashrate = 0;
+                        while (userInputHashrate <= 0)
+                        {
+                            Console.Write(" Please enter the hashrate: ");
+                            Console.CursorVisible = true;
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            string input = Console.ReadLine();
+                            Console.ResetColor();
+                            int.TryParse(input, out userInputHashrate);
+                        }
+                        Console.CursorVisible = false;
+                        miningConfig.DeviceConfig.ExpectedHashrate = userInputHashrate;
+                        SaveConfig();
+                        miner.StopMiner();
                     }
                 }
             }
-            catch (Exception ex)
+        }
+
+        private static void Quit()
+        {
+            _requestQuit = true;
+            _profitFetcherTaskCts?.Cancel();
+            _miningSwitcherTaskCts?.Cancel();
+            _displayUpdaterCts?.Cancel();
+            _keyPressesTaskCts?.Cancel();
+            StopMiners();
+        }
+
+        private static void StopMiners()
+        {
+            if (_currentMininigConfigs != null)
             {
-                Log.Error("Couldn't execute script: " + scriptPath);
-                Log.Error("Exception: " + ex);
+                foreach (var currentMininigConfig in _currentMininigConfigs)
+                {
+                    currentMininigConfig.Value.Miner?.StopMiner();
+                }
+            }
+
+            _currentMininigConfigs = new Dictionary<string, MiningConfig>();
+        }
+
+        private static void WriteLineColor(string text, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ResetColor();
+        }
+
+        private static void WriteColor(string text, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.Write(text);
+            Console.ResetColor();
+        }
+
+        private static List<IMiner> GetCurrentMiners()
+        {
+            var currentMiners = new List<IMiner>();
+            foreach (var currentMininigConfigKeyValue in _currentMininigConfigs)
+            {
+                MiningConfig miningConfig = currentMininigConfigKeyValue.Value;
+                if (!currentMiners.Contains(miningConfig.Miner))
+                {
+                    currentMiners.Add(miningConfig.Miner);
+                }
+            }
+
+            return currentMiners;
+        }
+
+        private static HashSet<string> GetActiveDeviceIds()
+        {
+            var deviceIds = new HashSet<string>();
+            foreach (Algorithm algorithm in Config.Algorithms)
+            {
+                if (algorithm.Enabled)
+                {
+                    foreach (DeviceConfig deviceConfig in algorithm.DeviceConfigs)
+                    {
+                        if (!deviceIds.Contains(deviceConfig.FullDeviceId))
+                        {
+                            deviceIds.Add(deviceConfig.FullDeviceId);
+                        }
+                    }
+                }
+            }
+
+            return deviceIds;
+        }
+
+        private static DeviceConfig GetDeviceConfigForPool(Pool pool, string deviceId)
+        {
+            foreach (Algorithm algorithm in Config.Algorithms)
+            {
+                if (algorithm.Enabled)
+                {
+                    if (algorithm.Pools.Contains(pool))
+                    {
+                        return algorithm.DeviceConfigs.FirstOrDefault(dc => dc.FullDeviceId == deviceId);
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private static Profit? GetAdjustedProfit(Pool pool, double expectedHashrate, bool withPreferFactor)
+        {
+            if (_poolProfitData != null && _poolProfitData.ContainsKey(pool))
+            {
+                Profit p = _poolProfitData[pool];
+                double hf = expectedHashrate / Profit.BaseHashrate;
+                double pf = withPreferFactor ? pool.PreferFactor : 1;
+                return new Profit(
+                    p.UsdRewardLive * pf * hf,
+                    p.UsdRewardDay * pf * hf,
+                    p.CoinRewardLive * pf * hf,
+                    p.CoinRewardDay * pf * hf, 
+                    p.Source);
+            }
+            return null;
+        }
+
+        private static void WriteInfo(string text)
+        {
+            if (!Console.CursorVisible)
+            {
+                Console.WriteLine(text);
             }
         }
     }

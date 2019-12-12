@@ -1,7 +1,7 @@
 ﻿namespace CryptoProfitSwitcher.Enums
 {
-    public enum Miner
+    public enum DeviceType
     {
-        TeamRedMiner, XmRig
+        CPU, AMD, NVIDIA
     }
 }

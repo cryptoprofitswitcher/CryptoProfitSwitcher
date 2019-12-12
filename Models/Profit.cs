@@ -1,19 +1,18 @@
-﻿using CryptonightProfitSwitcher.Enums;
-using CryptonightProfitSwitcher.Mineables;
-using System;
+﻿using System;
+using CryptoProfitSwitcher.Enums;
 
-namespace CryptonightProfitSwitcher
+namespace CryptoProfitSwitcher.Models
 {
     public struct Profit
     {
-        public Profit(double usdRewardLive, double usdRewardDay, double coinRewardLive, double coinRewardDay, ProfitProvider source, ProfitTimeframe timeframe)
+        public const int BaseHashrate = 1000;
+        public Profit(double usdRewardLive, double usdRewardDay, double coinRewardLive, double coinRewardDay, ProfitProvider source)
         {
             UsdRewardLive = usdRewardLive;
             UsdRewardDay = usdRewardDay;
             CoinRewardLive = coinRewardLive;
             CoinRewardDay = coinRewardDay;
             Source = source;
-            Timeframe = timeframe;
         }
 
         public double UsdRewardLive { get; set; }
@@ -21,7 +20,26 @@ namespace CryptonightProfitSwitcher
         public double CoinRewardLive { get; set; }
         public double CoinRewardDay { get; set; }
         public ProfitProvider Source { get; set; }
-        public ProfitTimeframe Timeframe { get; set; }
+
+        public bool HasValues()
+        {
+            if (UsdRewardLive > 0) return true;
+            if (UsdRewardDay > 0) return true;
+            if (CoinRewardLive > 0) return true;
+            if (CoinRewardDay > 0) return true;
+            
+            return false;
+        }
+
+        public double GetMostCurrentUsdReward()
+        {
+            if (UsdRewardLive > 0)
+            {
+                return UsdRewardLive;
+            }
+
+            return UsdRewardDay;
+        }
 
         public override string ToString()
         {
@@ -45,7 +63,7 @@ namespace CryptonightProfitSwitcher
                     result += "\n";
                 }
                 double relativeCoinReward = CoinRewardLive / CoinRewardDay;
-                result += "Coins: " + (Math.Round(relativeCoinReward, 4) * 100) + "%"; ;
+                result += "Diff: " + Math.Round(relativeCoinReward * 100, 0, MidpointRounding.AwayFromZero) + "%"; ;
             }
             return result;
         }

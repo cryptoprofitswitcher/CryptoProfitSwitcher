@@ -1,8 +1,0 @@
-﻿
-"gpu_threads_conf" : [ 
-    { "index" : 0, "intensity" : 968, "worksize" : 8, "affine_to_cpu" : 1, "strided_index" : 2, "mem_chunk" : 8, "unroll" : 8, "comp_mode" : false },
-    { "index" : 0, "intensity" : 968, "worksize" : 8, "affine_to_cpu" : 1, "strided_index" : 2, "mem_chunk" : 8, "unroll" : 8, "comp_mode" : false },
-    { "index" : 1, "intensity" : 952, "worksize" : 8, "affine_to_cpu" : 1, "strided_index" : 2, "mem_chunk" : 8, "unroll" : 8, "comp_mode" : false },
-    { "index" : 1, "intensity" : 952, "worksize" : 8, "affine_to_cpu" : 1, "strided_index" : 2, "mem_chunk" : 8, "unroll" : 8, "comp_mode" : false },
-],
-"platform_index" : 0,

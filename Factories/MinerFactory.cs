@@ -1,25 +1,24 @@
-﻿using CryptonightProfitSwitcher.Enums;
-using CryptonightProfitSwitcher.Miners;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using CryptoProfitSwitcher.Enums;
+using CryptoProfitSwitcher.Miners;
+using CryptoProfitSwitcher.Models;
 
-namespace CryptonightProfitSwitcher.Factories
+namespace CryptoProfitSwitcher.Factories
 {
     public static class MinerFactory
     {
-        public static IMiner GetMiner(Miner miner)
+        public static IMiner GetMiner(HashSet<DeviceConfig> deviceConfigs, Pool pool)
         {
-            switch (miner)
+            switch (deviceConfigs.First().Miner)
             {
-                case Miner.XmrStak:
-                    return new XmrStakMiner(false);
-                case Miner.CastXmr:
-                    return new CastXmrMiner();
-                case Miner.SRBMiner:
-                    return new SrbMiner();
-                case Miner.JceMiner:
-                    return new JceMiner();
+                case Miner.XmRig:
+                    return new XmRigMiner(deviceConfigs, pool);
+                case Miner.TeamRedMiner:
+                    return new TeamRedMiner(deviceConfigs, pool);
                 default:
-                    throw new NotImplementedException("Couldn't start miner, unknown miner: " + miner);
+                    throw new NotImplementedException("Couldn't start miner, unknown miner: " + deviceConfigs.First().Miner);
             }
         }
     }
