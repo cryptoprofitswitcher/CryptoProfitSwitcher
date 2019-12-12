@@ -23,19 +23,19 @@ Crypto Profit Switcher is an extensible open-source .Net Core console applicatio
 # How to use?
 
 1. Download and extract the latest release of the app ([Latest release](https://github.com/cryptoprofitswitcher/CryptoProfitSwitcher/releases/latest))
-2. Edit the *Config.json* to configure it.
+2. Edit the *config.json* to configure it.
 3. Start the app and profit.
 
 # How does it work?
 
-1. The app loads the configuration from the file **Config.json**.
+1. The app loads the configuration from the file **config.json**.
 2. It downloads the miners if they have not been downloaded already.
 3. It will benchmark all enabled algorithms that don't have a valid expected hashrate.
 4. It starts to mine the most profitable combination of device, algorithm and pool.
 
 # How to configure it?
 
-All you need to do, is to edit the JSON file **Config.json**.
+All you need to do, is to edit the JSON file **config.json**.
 
 ### Config
 | Property | Valid Values | Explanation |
