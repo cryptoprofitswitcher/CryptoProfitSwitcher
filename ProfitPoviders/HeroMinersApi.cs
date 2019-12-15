@@ -19,7 +19,7 @@ namespace CryptoProfitSwitcher.ProfitPoviders
                 foreach (Pool pool in pools)
                 {
                     if (!ct.IsCancellationRequested)
-                    {<
+                    {
                         string apiUrl = $"https://{pool.ProfitProviderInfo}.herominers.com/api/stats";
                         var profitsJson = Helpers.GetJsonFromUrl(apiUrl, enableCaching, appRootFolder, ct);
                         JToken lastStats = JToken.Parse(profitsJson);
@@ -41,11 +41,9 @@ namespace CryptoProfitSwitcher.ProfitPoviders
                         double usdPrice = lastStats["charts"].Value<double>("price_1h");
 
                         //Multiplicate
-                        double usdRewardDecDay = amountDay * usdPrice;
-                        double usdRewardDay = (double)usdRewardDecDay;
+                        double usdRewardDay = amountDay * usdPrice;
 
-                        double usdRewardDecLive = amountLive * usdPrice;
-                        double usdRewardLive = (double)usdRewardDecLive;
+                        double usdRewardLive = amountLive * usdPrice;
 
                         poolProfitsDictionary[pool] = new Profit(usdRewardLive, usdRewardDay, amountLive, amountDay, ProfitProvider.HeroMinersApi);
                     }
