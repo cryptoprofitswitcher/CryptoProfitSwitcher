@@ -19,35 +19,35 @@ namespace CryptoProfitSwitcher.ProfitPoviders
                 foreach (Pool pool in pools)
                 {
                     if (!ct.IsCancellationRequested)
-                    {
+                    {<
                         string apiUrl = $"https://{pool.ProfitProviderInfo}.herominers.com/api/stats";
                         var profitsJson = Helpers.GetJsonFromUrl(apiUrl, enableCaching, appRootFolder, ct);
-                        dynamic lastStats = JObject.Parse(profitsJson);
+                        JToken lastStats = JToken.Parse(profitsJson);
 
-                        decimal diffDay = lastStats.charts.difficulty_1d;
-                        decimal diffLive = lastStats.network.difficulty;
+                        double diffDay = lastStats["charts"].Value<double>("difficulty_1d");
+                        double diffLive = lastStats["network"].Value<double>("difficulty");
 
-                        decimal reward = lastStats.lastblock.reward;
+                        double reward = lastStats["lastblock"].Value<double>("reward");
 
-                        decimal profitDay = (Profit.BaseHashrate * (86400 / diffDay)) * reward;
-                        decimal profitLive = (Profit.BaseHashrate * (86400 / diffLive)) * reward;
+                        double profitDay = (Profit.BaseHashrate * (86400 / diffDay)) * reward;
+                        double profitLive = (Profit.BaseHashrate * (86400 / diffLive)) * reward;
 
                         // Get amount of coins
-                        decimal coinUnits = lastStats.config.coinUnits;
-                        decimal amountDay = profitDay / coinUnits;
-                        decimal amountLive = profitLive / coinUnits;
+                        double coinUnits = lastStats["config"].Value<double>("coinUnits");
+                        double amountDay = profitDay / coinUnits;
+                        double amountLive = profitLive / coinUnits;
 
                         //Get usd price
-                        decimal usdPrice = lastStats.charts.price_1h;
+                        double usdPrice = lastStats["charts"].Value<double>("price_1h");
 
                         //Multiplicate
-                        decimal usdRewardDecDay = amountDay * usdPrice;
+                        double usdRewardDecDay = amountDay * usdPrice;
                         double usdRewardDay = (double)usdRewardDecDay;
 
-                        decimal usdRewardDecLive = amountLive * usdPrice;
+                        double usdRewardDecLive = amountLive * usdPrice;
                         double usdRewardLive = (double)usdRewardDecLive;
 
-                        poolProfitsDictionary[pool] = new Profit(usdRewardLive, usdRewardDay, (double)amountLive, (double)amountDay, ProfitProvider.HeroMinersApi);
+                        poolProfitsDictionary[pool] = new Profit(usdRewardLive, usdRewardDay, amountLive, amountDay, ProfitProvider.HeroMinersApi);
                     }
                 }
             }

@@ -23,31 +23,29 @@ namespace CryptoProfitSwitcher.ProfitPoviders
                         string apiUrl = $"https://{pool.ProfitProviderInfo}.miner.rocks/api/stats";
                         var profitsJson = Helpers.GetJsonFromUrl(apiUrl, enableCaching, appRootFolder, ct);
                         JToken lastStats = JToken.Parse(profitsJson);
-                        decimal diffDay = lastStats["pool"]["stats"]["diffs"].Value<decimal>("wavg24h");
+                        double diffDay = lastStats["pool"]["stats"]["diffs"].Value<double>("wavg24h");
                         JToken jNetwork = lastStats["network"];
-                        decimal diffLive = jNetwork.Value<decimal>("difficulty");
+                        double diffLive = jNetwork.Value<double>("difficulty");
 
-                        decimal reward = jNetwork.Value<decimal>("reward");
+                        double reward = jNetwork.Value<double>("reward");
 
-                        decimal profitDay = (Profit.BaseHashrate * (86400 / diffDay)) * reward;
-                        decimal profitLive = (Profit.BaseHashrate * (86400 / diffLive)) * reward;
+                        double profitDay = (Profit.BaseHashrate * (86400 / diffDay)) * reward;
+                        double profitLive = (Profit.BaseHashrate * (86400 / diffLive)) * reward;
 
                         // Get amount of coins
-                        decimal coinUnits = lastStats["config"].Value<decimal>("coinUnits");
-                        decimal amountDay = profitDay / coinUnits;
-                        decimal amountLive = profitLive / coinUnits;
+                        double coinUnits = lastStats["config"].Value<double>("coinUnits");
+                        double amountDay = profitDay / coinUnits;
+                        double amountLive = profitLive / coinUnits;
 
                         //Get usd price
-                        decimal usdPrice = lastStats["coinPrice"].Value<decimal>("coin-usd");
+                        double usdPrice = lastStats["coinPrice"].Value<double>("coin-usd");
 
                         //Multiplicate
-                        decimal usdRewardDecDay = amountDay * usdPrice;
-                        double usdRewardDay = (double)usdRewardDecDay;
+                        double usdRewardDay = amountDay * usdPrice;
 
-                        decimal usdRewardDecLive = amountLive * usdPrice;
-                        double usdRewardLive = (double)usdRewardDecLive;
+                        double usdRewardLive = amountLive * usdPrice;
 
-                        poolProfitsDictionary[pool] = new Profit(usdRewardLive, usdRewardDay, (double)amountLive, (double)amountDay, ProfitProvider.MinerRocksApi);
+                        poolProfitsDictionary[pool] = new Profit(usdRewardLive, usdRewardDay, amountLive, amountDay, ProfitProvider.MinerRocksApi);
                     }
                 }
             }
