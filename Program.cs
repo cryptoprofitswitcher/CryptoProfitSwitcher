@@ -439,7 +439,7 @@ namespace CryptoProfitSwitcher
                 {
                     while (!ct.IsCancellationRequested)
                     {
-                        Task.Delay(1000, ct).Wait(ct);
+                        Task.Delay(3000, ct).Wait(ct);
                         while (Console.CursorVisible)
                         {
                             Task.Delay(1000, ct).Wait(ct);
