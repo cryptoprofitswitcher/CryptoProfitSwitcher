@@ -15,7 +15,7 @@ Crypto Profit Switcher is an extensible open-source .Net Core console applicatio
   - **Benchmarking:** It helps you to find the expected hashrate.
   - **Easy Configuration:** Only one config file.
   - **Performance:** Resource friendly with 0%-CPU usage
-  - **Miners:** TeamRedMiner, XmRig
+  - **Miners:** TeamRedMiner, XmRig, Claymore's Dual Ethereum
   - **Profit data:** It supports a lot of profit providers e.g. CryptUnit, WhatToMine, NiceHash etc.
   - **Manual mode:** You can switch between automatic mode and manual mode
 
@@ -41,7 +41,7 @@ All you need to do, is to edit the JSON file **config.json**.
 | Property | Valid Values | Explanation |
 | --- | --- | --- |
 | ProcessPriority | Normal &#124; AboveNormal &#124; BelowNormal &#124; High &#124; RealTime | Sets the process priority
-| ProfitSwitchStrategy | MaximizeFiat &#124; PreferLowDifficulty | **MaximizeFiat**: Will select the miner pool combination that has the most profit in USD per day.<br>**PreferLowDifficulty**: It will multiplicate the profit in USD per day with the relative coin difficulty and maximize this new value. If the the profit provider of a pool does not have data about the relative difficulty, it will use a default value of 1.
+| ProfitSwitchStrategy | MaximizeFiat &#124; PreferLowDifficulty | **MaximizeFiat**: Will select the miner pool combination that has the most profit in USD per day.<br>**PreferLowDifficulty**: It will multiplicate the profit in USD per day with the relative coin difficulty and maximize this new value. If the profit provider of a pool does not have data about the relative difficulty, it will use a default value of 1.
 | EnableCaching | true &#124; false | Enable or disable caching of JSON Api calls
 | EnableLogging | true &#124; false | Enable or disable logging to a file
 | EnableManualModeByDefault | true &#124; false | Set if the manual mode is enabled by default
@@ -71,7 +71,7 @@ All you need to do, is to edit the JSON file **config.json**.
 | Enabled | true &#124; false | Set if device config is enabled
 | ExpectedHashrate | decimal number | Expected hash rate in H/s
 | PrepareScript | Path or empty | A script that will be executed before the miner starts
-| Miner | TeamRedMiner &#124; XmRig | Type of the miner
+| Miner | TeamRedMiner &#124; XmRig &#124; Claymore | Type of the miner
 | MinerPath | Path| Path to the executable of the miner
 | MinerArguments | arguments | Arguments that will be forwarded to the miner. These should include the algorithm but not information about the pool or devices.
 | MinerDeviceSpecificArguments | arguments | Arguments like *eth_config* or *cn_config* that are device specific.
@@ -126,6 +126,7 @@ BTW: There are no fees from my side in this app :)
 
 * [TeamRedMiner](https://github.com/todxx/teamredminer)
 * [XmRig](https://github.com/xmrig/xmrig)
+* [Claymore](https://bitcointalk.org/index.php?topic=1433925.0)
 * [CoinGecko API](https://www.coingecko.com/api/documentations/v3)
 * [MineCryptoNight API](http://minecryptonight.net/api)
 * [CryptUnit API](https://www.cryptunit.com/api/)

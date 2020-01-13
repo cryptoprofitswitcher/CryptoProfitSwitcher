@@ -2,6 +2,6 @@
 {
     public enum Miner
     {
-        TeamRedMiner, XmRig
+        TeamRedMiner, XmRig, Claymore
     }
 }

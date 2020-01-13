@@ -167,7 +167,7 @@
           "ProfitProviderInfo": "conceal",
           "PreferFactor": 1.0,
           "PoolUrl": "conceal.herominers.com:10361",
-          "PoolUser": "ccx7XZtFCLqJ2abT8pjChGQQ7RHHcMgnCWFxDQpLSMpMBw97voWyw6DLr2eTRmj4h5Xf7mskfAua5K9A1ixCxp3Q39ZwwZ3pCe",
+          "PoolUser": "ccx7aoNYpGb7sndJtEDWvCBQhPAy9mC8QW5KWuCx8J1FJrDcDrER1XYA9LGtggrR7ZC4KfQmQ2uRN47L9WypBbNLAeq2Q4Q9WN+119069486ac1ddaaa25a36de30c86010cca3b3c8c7e4f7d745b7dff2d6404d24",
           "PoolPassword": "x"
         }
       ]
@@ -383,49 +383,6 @@
           "PreferFactor": 0.95,
           "PoolUrl": "xzc.2miners.com:8080",
           "PoolUser": "a8E1ZM7L6vK1P2LftB3ov47NPTxoyHa4s4",
-          "PoolPassword": "x"
-        }
-      ]
-    },
-    {
-      "DisplayName": "CnConceal",
-      "Enabled": true,
-      "DeviceConfigs": [
-        {
-          "DeviceType": "AMD",
-          "DeviceId": "0",
-          "Enabled": true,
-          "ExpectedHashrate": 4423.0,
-          "PrepareScript": null,
-          "Miner": "TeamRedMiner",
-          "MinerPath": "Miners/teamredminer/teamredminer.exe",
-          "MinerArguments": "-a cn_conceal",
-          "MinerDeviceSpecificArguments": "--cn_config=13*13:AAA",
-          "MinerApiPort": 0
-        },
-        {
-          "DeviceType": "AMD",
-          "DeviceId": "1",
-          "Enabled": true,
-          "ExpectedHashrate": 4700.0,
-          "PrepareScript": null,
-          "Miner": "TeamRedMiner",
-          "MinerPath": "Miners/teamredminer/teamredminer.exe",
-          "MinerArguments": "-a cn_conceal",
-          "MinerDeviceSpecificArguments": "--cn_config=15*14:AAA",
-          "MinerApiPort": 0
-        }
-      ],
-      "Pools": [
-        {
-          "UniqueName": "HeroMiners (Conceal)",
-          "Enabled": true,
-          "ProfitTimeframe": "Live",
-          "ProfitProvider": "HeroMinersApi",
-          "ProfitProviderInfo": "conceal",
-          "PreferFactor": 1.0,
-          "PoolUrl": "conceal.herominers.com:10361",
-          "PoolUser": "ccx7XZtFCLqJ2abT8pjChGQQ7RHHcMgnCWFxDQpLSMpMBw97voWyw6DLr2eTRmj4h5Xf7mskfAua5K9A1ixCxp3Q39ZwwZ3pCe",
           "PoolPassword": "x"
         }
       ]

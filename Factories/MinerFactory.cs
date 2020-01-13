@@ -17,6 +17,8 @@ namespace CryptoProfitSwitcher.Factories
                     return new XmRigMiner(deviceConfigs, pool);
                 case Miner.TeamRedMiner:
                     return new TeamRedMiner(deviceConfigs, pool);
+                case Miner.Claymore:
+                    return new ClaymoreMiner(deviceConfigs, pool);
                 default:
                     throw new NotImplementedException("Couldn't start miner, unknown miner: " + deviceConfigs.First().Miner);
             }

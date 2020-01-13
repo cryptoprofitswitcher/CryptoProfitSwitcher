@@ -22,7 +22,7 @@ namespace CryptoProfitSwitcher
 {
     internal static class Program
     {
-        private const int Version = 12;
+        private const int Version = 13;
         private static Config Config { get; set; }
         private static string AppFolderPath { get; set; }
         private static DirectoryInfo AppFolder { get; set; }
@@ -439,7 +439,7 @@ namespace CryptoProfitSwitcher
                 {
                     while (!ct.IsCancellationRequested)
                     {
-                        Task.Delay(1000, ct).Wait(ct);
+                        Task.Delay(3000, ct).Wait(ct);
                         while (Console.CursorVisible)
                         {
                             Task.Delay(1000, ct).Wait(ct);

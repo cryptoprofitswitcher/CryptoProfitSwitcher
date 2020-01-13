@@ -63,7 +63,7 @@ namespace CryptoProfitSwitcher.Models
                     result += "\n";
                 }
                 double relativeCoinReward = CoinRewardLive / CoinRewardDay;
-                result += "Diff: " + Math.Round(relativeCoinReward * 100, 0, MidpointRounding.AwayFromZero) + "%"; ;
+                result += "Diff-: " + Math.Round(relativeCoinReward * 100, 0, MidpointRounding.AwayFromZero) + "%"; ;
             }
             return result;
         }
