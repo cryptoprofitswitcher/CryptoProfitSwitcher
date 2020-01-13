@@ -1,4 +1,4 @@
-name: .NET Core
+name: Build CryptoProfitSwitcher
 
 on: [push]
 
@@ -15,3 +15,5 @@ jobs:
         dotnet-version: 3.1.100
     - name: Build with dotnet
       run: dotnet publish -c Release -r win-x64 -o ./bin/publish/CryptoProfitSwitcher_win64 -p:PublishSingleFile=true
+    - name: Build with dotnet
+      run: dotnet publish -c Release -r linux-x64 -o ./bin/publish/CryptoProfitSwitcher_ubuntu64 -p:PublishSingleFile=true
