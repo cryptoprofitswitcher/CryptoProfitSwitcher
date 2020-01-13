@@ -22,7 +22,7 @@ namespace CryptoProfitSwitcher
 {
     internal static class Program
     {
-        private const int Version = 12;
+        private const int Version = 13;
         private static Config Config { get; set; }
         private static string AppFolderPath { get; set; }
         private static DirectoryInfo AppFolder { get; set; }
