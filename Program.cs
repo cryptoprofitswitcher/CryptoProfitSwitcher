@@ -427,6 +427,10 @@ namespace CryptoProfitSwitcher
                 {
                     optimalMiningConfigs[newMiningConfig.DeviceConfig.FullDeviceId] = newMiningConfig;
                 }
+                else
+                {
+                    optimalMiningConfigs[algorithmDeviceConfig.FullDeviceId] = new MiningConfig(currentMiningConfig.DeviceConfig, currentMiningConfig.Pool);
+                }
             }
             else
             {
