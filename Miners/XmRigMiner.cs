@@ -157,6 +157,7 @@ namespace CryptoProfitSwitcher.Miners
             if (_process != null)
             {
                 _requestClose = true;
+                Log.Debug($"Stopping miner={Name}, args={_process?.StartInfo?.Arguments}");
                 try
                 {
                     _process.CloseMainWindow();

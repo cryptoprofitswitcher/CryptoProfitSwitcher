@@ -22,7 +22,7 @@ namespace CryptoProfitSwitcher
 {
     internal static class Program
     {
-        private const int Version = 13;
+        private const int Version = 14;
         private static Config Config { get; set; }
         private static string AppFolderPath { get; set; }
         private static DirectoryInfo AppFolder { get; set; }
@@ -203,7 +203,7 @@ namespace CryptoProfitSwitcher
 
         private static Task PoolProfitFetcherTaskAsync()
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 while (!_requestQuit)
                 {
@@ -219,7 +219,7 @@ namespace CryptoProfitSwitcher
                         Log.Debug("Profit fetching cancelled:" + e);
                     }
                 }
-            });
+            }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
         private static void FetchPoolProfit(CancellationToken ct)
@@ -267,7 +267,7 @@ namespace CryptoProfitSwitcher
 
         private static Task MiningSwitcherTaskAsync()
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 while (!_requestQuit)
                 {
@@ -284,7 +284,7 @@ namespace CryptoProfitSwitcher
                     }
                 }
 
-            });
+            }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
         private static void CheckSwitching()
@@ -425,15 +425,22 @@ namespace CryptoProfitSwitcher
                 Profit? currentProfit = GetAdjustedProfit(currentMiningConfig.Pool, currentMiningConfig.DeviceConfig.ExpectedHashrate, true);
                 if (!currentProfit.HasValue || profitSwitchingStrategy.IsProfitABetterThanB(profit, algorithmPool.ProfitTimeframe, currentProfit.Value, currentMiningConfig.Pool.ProfitTimeframe, Config.ProfitSwitchThreshold))
                 {
-                    newMiningConfig = new MiningConfig(currentMiningConfig.DeviceConfig, currentMiningConfig.Pool);
+                    optimalMiningConfigs[newMiningConfig.DeviceConfig.FullDeviceId] = newMiningConfig;
+                }
+                else
+                {
+                    optimalMiningConfigs[algorithmDeviceConfig.FullDeviceId] = new MiningConfig(currentMiningConfig.DeviceConfig, currentMiningConfig.Pool);
                 }
             }
-            optimalMiningConfigs[newMiningConfig.DeviceConfig.FullDeviceId] = newMiningConfig;
+            else
+            {
+                optimalMiningConfigs[newMiningConfig.DeviceConfig.FullDeviceId] = newMiningConfig;
+            }
         }
 
         private static Task KeyPressesTaskAsync(CancellationToken ct)
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 try
                 {
@@ -508,17 +515,18 @@ namespace CryptoProfitSwitcher
                     Log.Debug("Key presses task failed:" + e);
                     throw;
                 }
-            }, ct);
+            }, ct, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
         private static Task DisplayUpdaterTaskAsync()
         {
-            return Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 while (!_requestQuit)
                 {
                     try
                     {
+                        Thread.CurrentThread.Priority = ThreadPriority.Highest;
                         _displayUpdaterCts = new CancellationTokenSource();
                         CancellationToken ct = _displayUpdaterCts.Token;
                         UpdateDisplay();
@@ -528,8 +536,12 @@ namespace CryptoProfitSwitcher
                     {
                         Log.Debug("Update display cancelled:" + e);
                     }
+                    finally
+                    {
+                        Thread.CurrentThread.Priority = ThreadPriority.Normal;
+                    }
                 }
-            });
+            }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Current);
         }
 
         private static void UpdateDisplay()
