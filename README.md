@@ -101,8 +101,9 @@ This value gives the profit provider information for which coin or algorithm you
 | MinerRocksApi | The name of the subdomain for the coin e.g. for https://monero.miner.rocks/ it would be *monero*. |
 | HeroMinersApi | The name of the subdomain for the coin e.g. for https://monero.herominers.com/ it would be *monero*. |
 | WhatToMineApi | The key to the coin in https://whattomine.com/coins.json e.g. for Ethereum it would be *Ethereum*. |
-| MoneroOceanApi | Not needed |
-| MineXmrApi | Not needed |
+| MoneroOceanApi | Not needed -> defaults to XMR |
+| MineXmrApi | Not needed -> defaults to XMR|
+| NimiqApi | Not needed -> deafaults to Nimiq|
 
 
 
@@ -136,6 +137,7 @@ BTW: There are no fees from my side in this app :)
 * [MineXmr API](https://minexmr.com/)
 * [WhatToMine API](https://whattomine.com/)
 * [NiceHash API](https://docs.nicehash.com/main/index.html)
+* [NimiqX API](https://api.nimiqx.com/docs/about)
 * [CsConsoleFormat](https://github.com/Athari/CsConsoleFormat)
 * [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
 
