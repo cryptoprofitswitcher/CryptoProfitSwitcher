@@ -24,6 +24,8 @@ namespace CryptoProfitSwitcher.Factories
                     return new MineXmrApi();
                 case ProfitProvider.WhatToMineApi:
                     return new WhatToMineApi();
+                case ProfitProvider.NimiqApi:
+                    return new NimiqApi();
                 default:
                     throw new NotImplementedException("Doesn't support ProfitProvider: " + profitProvider);
             }

@@ -2,6 +2,6 @@
 {
     public enum ProfitProvider
     {
-        NiceHashApi, CryptunitApi, MoneroOceanApi, MineXmrApi, MinerRocksApi, HeroMinersApi, WhatToMineApi
+        NiceHashApi, CryptunitApi, MoneroOceanApi, MineXmrApi, MinerRocksApi, HeroMinersApi, WhatToMineApi, NimiqApi
     }
 }
