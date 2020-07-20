@@ -103,7 +103,7 @@ This value gives the profit provider information for which coin or algorithm you
 | WhatToMineApi | The key to the coin in https://whattomine.com/coins.json e.g. for Ethereum it would be *Ethereum*. |
 | MoneroOceanApi | Not needed -> defaults to XMR |
 | MineXmrApi | Not needed -> defaults to XMR|
-| NimiqApi | Not needed -> deafaults to Nimiq|
+| NimiqApi | Not needed -> defaults to Nimiq|
 
 
 
