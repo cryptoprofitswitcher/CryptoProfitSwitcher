@@ -130,6 +130,49 @@
       ]
     },
     {
+      "DisplayName": "KAWPOW",
+      "Enabled": true,
+      "DeviceConfigs": [
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "0",
+          "Enabled": true,
+          "ExpectedHashrate": 25040000.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a kawpow",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        },
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "1",
+          "Enabled": true,
+          "ExpectedHashrate": 25640000.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a kawpow",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        }
+      ],
+      "Pools": [
+        {
+          "UniqueName": "NiceHash (KAWPOW)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "NiceHashApi",
+          "ProfitProviderInfo": "52",
+          "PreferFactor": 1.05,
+          "PoolUrl": "kawpow.eu.nicehash.com:3385",
+          "PoolUser": "3NRgzTV2hLKacRQoBfSmcDxDo8UQZQSLJ7",
+          "PoolPassword": "x"
+        }
+      ]
+    },
+    {
       "DisplayName": "CnConceal",
       "Enabled": true,
       "DeviceConfigs": [
@@ -512,6 +555,49 @@
           "PreferFactor": 1.0,
           "PoolUrl": "masari.miner.rocks:5005",
           "PoolUser": "5t5mEm254JNJ9HqRjY9vCiTE8aZALHX3v8TqhyQ3TTF9VHKZQXkRYjPDweT9kK4rJw7dDLtZXGjav2z9y24vXCdRc6BSJwUmapXC7NmVAM",
+          "PoolPassword": "x"
+        }
+      ]
+    },
+    {
+      "DisplayName": "Nimiq",
+      "Enabled": true,
+      "DeviceConfigs": [
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "0",
+          "Enabled": true,
+          "ExpectedHashrate": 500.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a cn_haven",
+          "MinerDeviceSpecificArguments": "--cn_config=14*14:CBB",
+          "MinerApiPort": 0
+        },
+        {
+          "DeviceType": "AMD",
+          "DeviceId": "1",
+          "Enabled": true,
+          "ExpectedHashrate": 490.0,
+          "PrepareScript": null,
+          "Miner": "TeamRedMiner",
+          "MinerPath": "Miners/teamredminer/teamredminer.exe",
+          "MinerArguments": "-a nimiq",
+          "MinerDeviceSpecificArguments": "",
+          "MinerApiPort": 0
+        }
+      ],
+      "Pools": [
+        {
+          "UniqueName": "IceMining (Nimiq)",
+          "Enabled": true,
+          "ProfitTimeframe": "Live",
+          "ProfitProvider": "NimiqApi",
+          "ProfitProviderInfo": "",
+          "PreferFactor": 1.0,
+          "PoolUrl": "nimiq.icemining.ca:2053",
+          "PoolUser": "NQ0982L11U8T50AY8CR9NBEPUS0Y0MJKRAJF",
           "PoolPassword": "x"
         }
       ]
