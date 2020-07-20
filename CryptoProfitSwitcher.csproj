@@ -6,11 +6,11 @@
     <TrimUnusedDependencies>true</TrimUnusedDependencies>
     <LinkDuringPublish>true</LinkDuringPublish>
     <ShowLinkerSizeComparison>true</ShowLinkerSizeComparison>
-    <Version>7.2.0</Version>
+    <Version>7.3.0</Version>
     <Configurations>Debug;Release;</Configurations>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <AssemblyVersion>7.2.0.0</AssemblyVersion>
-    <FileVersion>7.2.0.0</FileVersion>
+    <AssemblyVersion>7.3.0.0</AssemblyVersion>
+    <FileVersion>7.3.0.0</FileVersion>
     <IncludeSymbolsInSingleFile>true</IncludeSymbolsInSingleFile>
     <AssemblyName>CryptoProfitSwitcher</AssemblyName>
     <RootNamespace>CryptoProfitSwitcher</RootNamespace>
