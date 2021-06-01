@@ -22,7 +22,7 @@ namespace CryptoProfitSwitcher
 {
     internal static class Program
     {
-        private const int Version = 14;
+        private const int Version = 16;
         private static Config Config { get; set; }
         private static string AppFolderPath { get; set; }
         private static DirectoryInfo AppFolder { get; set; }
@@ -138,7 +138,7 @@ namespace CryptoProfitSwitcher
             {
                 WriteInfo(" Check for updates..");
 
-                var versionText = Helpers.GetJsonFromUrl("https://raw.githubusercontent.com/cryptoprofitswitcher/CryptonightProfitSwitcher/master/version.txt", false, AppFolder, CancellationToken.None);
+                var versionText = Helpers.GetJsonFromUrl("https://raw.githubusercontent.com/cryptoprofitswitcher/CryptoProfitSwitcher/master/version.txt", false, AppFolder, CancellationToken.None);
                 int remoteVersion = Int32.Parse(versionText, CultureInfo.InvariantCulture);
                 if (remoteVersion > Version)
                 {
@@ -395,7 +395,7 @@ namespace CryptoProfitSwitcher
                         {
                             if (!string.IsNullOrEmpty(deviceConfig.PrepareScript))
                             {
-                                Helpers.ExecuteScript(deviceConfig.MinerPath, AppFolderPath);
+                                Helpers.ExecuteScript(deviceConfig.PrepareScript, AppFolderPath);
                             }
                         }
                         Task.Delay(TimeSpan.FromSeconds(Config.MinerStartDelay)).Wait();
