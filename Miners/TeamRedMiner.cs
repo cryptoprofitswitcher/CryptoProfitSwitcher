@@ -120,16 +120,38 @@ namespace CryptoProfitSwitcher.Miners
             string minerFolderPath = Path.GetDirectoryName(minerPath);
             _process.StartInfo.FileName = "cmd";
             List<string> userDefindedArgs = new List<string>();
+            List<string> userDefinedZilDualMineArgs = new List<string>();
 
             if (!String.IsNullOrEmpty(firstDeviceConfig.MinerArguments))
             {
-                userDefindedArgs.AddRange(firstDeviceConfig.MinerArguments.Split(" "));
+                bool isInZilDualMineContext = false;
+                string[] minerArgs = firstDeviceConfig.MinerArguments.Split(" ");
+                foreach (string minerArg in minerArgs)
+                {
+                    if (string.Equals(minerArg, "--zil", StringComparison.OrdinalIgnoreCase))
+                    {
+                        isInZilDualMineContext = true;
+                        userDefinedZilDualMineArgs.Add(minerArg);
+                        continue;
+                    }
+                    if (string.Equals(minerArg, "--zil_end", StringComparison.OrdinalIgnoreCase))
+                    {
+                        isInZilDualMineContext = false;
+                        userDefinedZilDualMineArgs.Add(minerArg);
+                        continue;
+                    }
+
+                    if (isInZilDualMineContext)
+                    {
+                        userDefinedZilDualMineArgs.Add(minerArg);
+                    }
+                    else
+                    {
+                        userDefindedArgs.Add(minerArg);
+                    }
+                }
             }
 
-            if (!String.IsNullOrEmpty(firstDeviceConfig.MinerDeviceSpecificArguments))
-            {
-                userDefindedArgs.AddRange(firstDeviceConfig.MinerDeviceSpecificArguments.Split(" "));
-            }
 
             string args = "";
             string space = "";
@@ -166,28 +188,38 @@ namespace CryptoProfitSwitcher.Miners
                 space = " ";
             }
 
-            if (!String.IsNullOrEmpty(firstDeviceConfig.MinerArguments))
+            if (userDefindedArgs.Any())
             {
-                args += space + firstDeviceConfig.MinerArguments;
+                foreach (string userDefinedArg in userDefindedArgs)
+                {
+                    args += space + userDefinedArg;
+                }
             }
+
 
             if (DeviceConfigs.Any(dc => !string.IsNullOrEmpty(dc.MinerDeviceSpecificArguments)))
             {
                 Dictionary<string, List<string>> combinedArgumentsDictionary = new Dictionary<string, List<string>>();
+                List<string> distinctArgs = new List<string>();
                 foreach (DeviceConfig deviceConfig in DeviceConfigs)
                 {
                     var splittedArguments = deviceConfig.MinerDeviceSpecificArguments.Split(" ");
                     foreach (string splittedArgument in splittedArguments)
                     {
                         const string cnConfigArgmument = "--cn_config=";
+                        const string ethConfigArgmument = "--eth_config=";
+
                         if (splittedArgument.StartsWith(cnConfigArgmument, StringComparison.OrdinalIgnoreCase))
                         {
                             AddToListInDictionary(combinedArgumentsDictionary, cnConfigArgmument, splittedArgument.Substring(cnConfigArgmument.Length));
                         }
-                        const string ethConfigArgmument = "--eth_config=";
-                        if (splittedArgument.StartsWith(ethConfigArgmument, StringComparison.OrdinalIgnoreCase))
+                        else if (splittedArgument.StartsWith(ethConfigArgmument, StringComparison.OrdinalIgnoreCase))
                         {
                             AddToListInDictionary(combinedArgumentsDictionary, ethConfigArgmument, splittedArgument.Substring(ethConfigArgmument.Length));
+                        }
+                        else
+                        {
+                            distinctArgs.Add(splittedArgument);
                         }
                     }
                 }
@@ -205,6 +237,19 @@ namespace CryptoProfitSwitcher.Miners
                     argumentsBuilder.Append(string.Join(',', combinedArgument.Value));
                 }
                 args += space + argumentsBuilder;
+
+                foreach (string distinctArg in distinctArgs)
+                {
+                    args += space + distinctArg;
+                }
+            }
+
+            if (userDefinedZilDualMineArgs.Any())
+            {
+                foreach (string userDefinedZilDualMineArg in userDefinedZilDualMineArgs)
+                {
+                    args += space + userDefinedZilDualMineArg;
+                }
             }
 
             _process.EnableRaisingEvents = true;
